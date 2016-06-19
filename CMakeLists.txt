@@ -24,3 +24,7 @@ add_test(Engine_check Engine_check)
 add_dependencies(check Engine_check)
 
 target_link_libraries(Engine_check ${CMAKE_DL_LIBS})
+
+add_custom_target(deep_clean
+  COMMAND find . -iwholename '*cmake*' -not -name CMakeLists.txt -delete
+)
