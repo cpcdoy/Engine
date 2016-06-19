@@ -23,7 +23,7 @@ add_executable(Engine_check EXCLUDE_FROM_ALL
 add_test(Engine_check Engine_check)
 add_dependencies(check Engine_check)
 
-target_link_libraries(Engine_check ${CMAKE_DL_LIBS})
+target_link_libraries(Engine_check ${CMAKE_DL_LIBS} GL GLEW glfw)
 
 add_custom_target(deep_clean
   COMMAND find . -iwholename '*cmake*' -not -name CMakeLists.txt -delete
