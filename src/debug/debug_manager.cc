@@ -45,15 +45,25 @@ namespace debug
   void debug_manager::trigger_capture()
   {
     if (handle)
+    {
       rdoc_api->TriggerCapture();
+      Log().Get(LogLevel::logDEBUG) << "Triggered frame capture (to be saved in ./"
+                                    << rdoc_api->GetLogFilePathTemplate() << ")"
+                                    << std::endl;
+    }
     else
-      Log().Get(LogLevel::logERROR) << "Error: cannot trigger a capture because the API isn't loaded"
+      Log().Get(LogLevel::logERROR) << "Error: cannot trigger a capture because the debug API isn't loaded"
                                            << std::endl;
   }
 
   debug_manager::~debug_manager()
   {
     if (handle)
+    {
+      rdoc_api->Shutdown();
       dlclose(handle);
+      Log().Get(LogLevel::logDEBUG) << "Shutting down the debug API"
+        << std::endl;
+    }
   }
 }
