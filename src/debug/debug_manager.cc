@@ -6,7 +6,7 @@ namespace debug
   debug_manager::debug_manager(std::string path)
   {
     Log().Get(LogLevel::logINFO) << "Loading the debug manager"
-                                  << std::endl;
+                                 << std::endl;
     handle = dlopen(path.c_str(), RTLD_LAZY);
 
     if (!handle)
