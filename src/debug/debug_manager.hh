@@ -8,9 +8,8 @@ namespace debug
   class debug_manager
   {
     public:
-      debug_manager();
       ~debug_manager();
-      debug_manager(std::string path);
+      debug_manager(std::string path = std::string("libs/librenderdoc.so"));
 
       void trigger_capture();
     private:

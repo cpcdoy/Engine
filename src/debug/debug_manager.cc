@@ -5,7 +5,6 @@ namespace debug
   debug_manager::debug_manager(std::string path)
   {
     handle = dlopen(path.c_str(), RTLD_LAZY);
-
     if (!handle)
       std::cerr << "Error: cannot find/open the debugger's shared object" << std::endl;
     else
@@ -38,11 +37,6 @@ namespace debug
     }
   }
 
-  debug_manager::debug_manager()
-    : debug_manager::debug_manager(std::string("libs/librenderdoc.so"))
-  {
-  }
-
   void debug_manager::trigger_capture()
   {
     if (handle)
@@ -53,6 +47,7 @@ namespace debug
 
   debug_manager::~debug_manager()
   {
-    dlclose(handle);
+    if (handle)
+      dlclose(handle);
   }
 }
