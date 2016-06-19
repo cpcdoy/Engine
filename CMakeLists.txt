@@ -27,4 +27,5 @@ target_link_libraries(Engine_check ${CMAKE_DL_LIBS})
 
 add_custom_target(deep_clean
   COMMAND find . -iwholename '*cmake*' -not -name CMakeLists.txt -delete
+  COMMAND rm -rf Testing
 )
