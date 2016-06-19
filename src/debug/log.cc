@@ -16,8 +16,10 @@ namespace debug
 
     if (level == LogLevel::logERROR)
       std::cout << COLOR_RED << "ERROR";
+    else if (level == LogLevel::logINFO)
+      std::cout << COLOR_BLUE << "INFO";
     else
-      std::cout << COLOR_RED << "DEBUG";
+      std::cout << COLOR_MAGENTA << "DEBUG";
 
     std::cout << COLOR_RESET  << "] ";
 
