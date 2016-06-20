@@ -1,33 +1,45 @@
 #include "log.hh"
-#include "utils.hh"
 
 namespace debug
 {
-  Log::Log()
+  log::log()
   {
   }
 
-  std::ostream& Log::Get(LogLevel level)
+  std::ostream& log::get(log_level level, int indent)
   {
-    static Log l;
+    static log l;
 
-    std::cout << "[" << current_date_time() << 
-      "][";
+    int ind = 29;
+    static int prev_ind = ind;
 
-    if (level == LogLevel::logERROR)
+    if (level < logINDENT)
+      std::cout << "[" << current_date_time() << 
+        "][";
+
+    if (level == log_level::logERROR)
       std::cout << COLOR_RED << "ERROR";
-    else if (level == LogLevel::logINFO)
+    else if (level == log_level::logINFO)
       std::cout << COLOR_BLUE << "INFO";
-    else
+    else if (level < logINDENT)
       std::cout << COLOR_MAGENTA << "DEBUG";
-
-    std::cout << COLOR_RESET  << "] ";
+    
+    if (level < logINDENT)
+      std::cout << COLOR_RESET  << "] "
+        << (level == log_level::logINFO ? " " : "");
+    else if (level == logREINDENT)
+      std::cout << COLOR_RESET << std::string(prev_ind + indent, ' ');
+    else
+      std::cout << COLOR_RESET << std::string(ind + indent, ' ');
+    
+    if (level == logINDENT)
+      prev_ind += indent; // + len of the string to be displayed;
 
     l.messageLevel = level;
     return std::cout;
   }
 
-  Log::~Log()
+  log::~log()
   {
   }
 }
