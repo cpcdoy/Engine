@@ -1,7 +1,9 @@
-#include <iostream>
-#include <cassert>
-#include <dlfcn.h>
-#include "renderdoc_app.h"
+#pragma once
+
+# include <iostream>
+# include <cassert>
+# include <dlfcn.h>
+# include "renderdoc_app.h"
 
 namespace debug
 {
