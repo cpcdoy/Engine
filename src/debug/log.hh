@@ -1,10 +1,16 @@
-#include <string>
-#include <sstream>
-#include <iostream>
+#pragma once
+
+# include <string>
+# include <sstream>
+# include <iostream>
+# include <iomanip>
+
+# include "utils.hh"
+
 
 namespace debug
 {
-  enum LogLevel
+  enum log_level
   {
     logERROR,
     logWARNING,
@@ -13,17 +19,19 @@ namespace debug
     logDEBUG1,
     logDEBUG2,
     logDEBUG3,
-    logDEBUG4
+    logDEBUG4,
+    logINDENT,
+    logREINDENT,
   };
 
-  class Log
+  class log
   {
     public:
-      Log();
-      ~Log();
-      static std::ostream& Get(LogLevel level = logINFO);
+      log();
+      ~log();
+      static std::ostream& get(log_level level = logINFO, int indent = 0);
 
     private:
-      LogLevel messageLevel;
+      log_level messageLevel;
   };
 }
