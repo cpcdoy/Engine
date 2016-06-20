@@ -13,6 +13,8 @@ namespace debug
     int ind = 29;
     static int prev_ind = ind;
 
+    indent = indent < 0 ? 0 : indent;
+
     if (level < logINDENT)
       std::cout << "[" << current_date_time() << 
         "][";
@@ -28,12 +30,12 @@ namespace debug
       std::cout << COLOR_RESET  << "] "
         << (level == log_level::logINFO ? " " : "");
     else if (level == logREINDENT)
-      std::cout << COLOR_RESET << std::string(prev_ind + indent, ' ');
+      std::cout << COLOR_RESET << std::string(ind + prev_ind + indent, ' ');
     else
       std::cout << COLOR_RESET << std::string(ind + indent, ' ');
     
     if (level == logINDENT)
-      prev_ind += indent; // + len of the string to be displayed;
+      prev_ind = indent; // + len of the string to be displayed;
 
     l.messageLevel = level;
     return std::cout;

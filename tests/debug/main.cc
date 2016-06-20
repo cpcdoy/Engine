@@ -8,6 +8,7 @@ int main(void)
 
   resource::obj_loader obj_loader;
   obj_loader.load_obj("tests/res/test.obj");
+  obj_loader.load_obj("lol.obj");
 
   return 0;
 }

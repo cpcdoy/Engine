@@ -29,6 +29,7 @@ namespace debug
     public:
       log();
       ~log();
+      log& operator<<(std::string& s);
       static std::ostream& get(log_level level = logINFO, int indent = 0);
 
     private:

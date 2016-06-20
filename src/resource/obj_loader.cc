@@ -91,6 +91,6 @@ namespace resource
     debug::log::get(debug::logINFO) << "Loaded OBJ file " << path << "" << std::endl;
     debug::log::get(debug::logINDENT) << "Stats:" << std::endl;
     debug::log::get(debug::logINDENT, 6) << vertex_indices.size() << " vertices" << std::endl;
-    debug::log::get(debug::logINDENT, 6) << vertex_indices.size() / 3 << " tris" << std::endl;
+    debug::log::get(debug::logREINDENT) << vertex_indices.size() / 3 << " tris" << std::endl;
   }
 }
