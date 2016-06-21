@@ -1,1 +1,1 @@
-add_library(resource OBJECT obj_loader.cc)
+add_library(resource OBJECT obj_loader.cc mesh.cc resource_manager.cc)
