@@ -20,6 +20,7 @@ namespace debug
       {
         log::get(log_level::logERROR) << "Cannot find symbol RENDERDOC_GetAPI in " << path
           << std::endl;
+        rdoc_api->Shutdown();
       }
       else
       {
@@ -69,7 +70,6 @@ namespace debug
   {
     if (handle)
     {
-      rdoc_api->Shutdown();
       dlclose(handle);
       log::get(log_level::logDEBUG) << "Shutting down the debug API"
         << std::endl;
