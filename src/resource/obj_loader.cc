@@ -3,8 +3,10 @@
 namespace resource
 {
   obj_loader::obj_loader()
-    : loader()
-  {}
+    : model_loader()
+  {
+    loader_id = "obj_loader";
+  }
 
   obj_loader::~obj_loader()
   {

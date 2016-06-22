@@ -8,12 +8,12 @@
 # include <memory>
 # include <glm/glm.hpp>
 
-# include "loader.hh"
+# include "model_loader.hh"
 # include "mesh.hh"
 
 namespace resource
 {
-  class obj_loader : public loader
+  class obj_loader : public model_loader
   {
     public:
       obj_loader();
