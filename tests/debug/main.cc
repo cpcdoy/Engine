@@ -1,5 +1,6 @@
 #include "../../src/debug/debug_manager.hh"
 #include "../../src/resource/resource_manager.hh"
+#include "../../src/ui/ui_manager.hh"
 
 int main(void)
 {
@@ -16,6 +17,10 @@ int main(void)
 
   rm.load("tests/res/test.obj");
   rm.load("lol.obj");
+
+  ui::ui_manager ui_manager;
+
+  ui_manager.init_ui();
 
   return 0;
 }

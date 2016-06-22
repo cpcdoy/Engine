@@ -23,14 +23,21 @@ namespace resource
   {
     debug::log::get(debug::logINFO) << "Loading resource " << path << std::endl;
 
-    size_t i;
-    for (i = 0; i < loaders.size(); i++)
-      if (loaders[i]->load(path.c_str()))
+    for (auto i = loaders.begin(); i != loaders.end(); i++)
+    {
+      debug::log::get(debug::logINDENT, 5) << "Trying loader \"" << (*i)->get_loader_id()
+                                           << "\"" << std::endl;
+
+      if ((*i)->load(path.c_str()))
       {
-        meshes.push_back(loaders[i]->generate_mesh());
+        meshes.push_back((*i)->generate_mesh());
         return meshes.back();
       }
+      debug::log::get(debug::logINDENT, 10) << "FAIL" << std::endl;
+    }
 
+    debug::log::get(debug::logERROR) << "Resource loading of " << path << " failed"
+                                    << std::endl;
     return nullptr;
   }
 }
