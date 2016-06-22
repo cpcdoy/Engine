@@ -5,7 +5,7 @@
 
 # include "../debug/log.hh"
 # include "entity.hh"
-# include "loader.hh"
+# include "model_loader.hh"
 # include "loaders.hh"
 
 namespace resource
@@ -26,7 +26,7 @@ namespace resource
       std::shared_ptr<mesh> load(std::string path);
 
     private:
-      std::vector<std::shared_ptr<loader>> loaders;
+      std::vector<std::shared_ptr<model_loader>> loaders;
       std::vector<std::shared_ptr<mesh>> meshes;
   };
 }
