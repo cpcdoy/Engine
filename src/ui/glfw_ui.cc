@@ -28,6 +28,12 @@ namespace ui
   bool glfw_ui::create_window(int h, int w, std::string title)
   {
     debug::log::get(debug::logINFO) << "Creating a GLFW window" << std::endl;
+    
+    int major, minor, revision;
+    glfwGetVersion(&major, &minor, &revision);
+
+    debug::log::get(debug::logINDENT) << "GLFW version " << major << " " << minor << " " << revision << std::endl;
+
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
