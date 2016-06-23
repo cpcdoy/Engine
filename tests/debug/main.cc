@@ -21,6 +21,10 @@ int main(void)
   ui::ui_manager ui_manager;
 
   ui_manager.init_ui();
+  ui_manager.create_window(200, 200, "test");
+
+  while (ui_manager.ui_satisfies_running_condition())
+    ui_manager.update_ui();
 
   return 0;
 }
