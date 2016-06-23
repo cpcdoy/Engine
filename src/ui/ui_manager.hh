@@ -15,8 +15,12 @@ namespace ui
       ~ui_manager();
 
       bool init_ui();
+      bool create_window(int h, int w, std::string title);
+      bool ui_satisfies_running_condition();
+      void update_ui();
 
     private:
       std::vector<std::shared_ptr<base_ui>> uis;
+      std::shared_ptr<base_ui> current_ui;
   };
 }
