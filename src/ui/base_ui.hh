@@ -33,6 +33,15 @@ namespace ui
         return base_ui_id;
       }
 
+      virtual bool satisfies_running_condition()
+      {
+        return false;
+      }
+
+      virtual void update_ui()
+      {
+      }
+
     protected:
       std::string base_ui_id = "virtual empty base ui";
   };
