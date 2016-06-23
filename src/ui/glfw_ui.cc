@@ -42,15 +42,28 @@ namespace ui
     }
 
     glfwMakeContextCurrent(window);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    
-    while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0)
+
+    glewExperimental = true;
+    if (glewInit() != GLEW_OK) 
     {
-      glfwSwapBuffers(window);
-      glfwPollEvents();
+      fprintf(stderr, "Failed to initialize GLEW\n");
+      return -1;
     }
 
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
     return true;
+  }
+
+  bool glfw_ui::satisfies_running_condition()
+  {
+    return glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0;
+  }
+
+  void glfw_ui::update_ui()
+  {
+    glfwSwapBuffers(window);
+    glfwPollEvents();
   }
 }
