@@ -11,6 +11,7 @@ namespace ui
   glfw_ui::~glfw_ui()
   {
     debug::log::get(debug::logINFO) << "Cleaning the GLFW context" << std::endl;
+    glfwDestroyWindow(window);
     glfwTerminate();
   }
   

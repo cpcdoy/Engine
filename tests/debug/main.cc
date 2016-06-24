@@ -4,9 +4,6 @@
 
 int main(void)
 {
-  debug::debug_manager dm;
-  dm.trigger_capture();
-
   /*resource::obj_loader obj_loader;
   obj_loader.load_obj("tests/res/test.obj");
   obj_loader.generate_mesh();

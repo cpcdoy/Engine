@@ -70,7 +70,7 @@ namespace debug
   {
     if (handle)
     {
-      dlclose(handle);
+      //dlclose(handle);
       log::get(log_level::logDEBUG) << "Shutting down the debug API"
         << std::endl;
     }
