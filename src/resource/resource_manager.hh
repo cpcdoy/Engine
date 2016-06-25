@@ -7,6 +7,7 @@
 # include "entity.hh"
 # include "model_loader.hh"
 # include "loaders.hh"
+# include "../base/manager.hh"
 
 namespace resource
 {
@@ -16,7 +17,7 @@ namespace resource
     ALL,
   };
 
-  class resource_manager
+  class resource_manager : public base::base_manager<model_loader>
   {
     public:
       resource_manager();
@@ -26,7 +27,6 @@ namespace resource
       std::shared_ptr<mesh> load(std::string path);
 
     private:
-      std::vector<std::shared_ptr<model_loader>> loaders;
       std::vector<std::shared_ptr<mesh>> meshes;
   };
 }
