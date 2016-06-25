@@ -2,6 +2,10 @@ language: cpp
 sudo: required
 dist: trusty
 
+before_install:
+	- sudo apt-get update -qq
+  - sude apt-get install libglm-dev libglfw-dev libglew2.13 libglew-dev libsoil-dev
+
 compiler:
 - gcc
 - clang
