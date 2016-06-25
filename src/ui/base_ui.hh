@@ -42,7 +42,14 @@ namespace ui
       {
       }
 
+      virtual void set_backend_context_version(int major, int minor)
+      {
+        major_backend_version = major;
+        minor_backend_version = minor;
+      }
+
     protected:
       std::string base_ui_id = "virtual empty base ui";
+      int major_backend_version, minor_backend_version;
   };
 }
