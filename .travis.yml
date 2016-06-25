@@ -4,7 +4,7 @@ dist: trusty
 
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install libglm-dev libglfw-dev libglew-dev libsoil-dev
+- sudo apt-get install -y libglm-dev libglfw-dev libglew-dev libsoil-dev
 
 compiler:
 - gcc
