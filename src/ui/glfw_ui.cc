@@ -6,6 +6,7 @@ namespace ui
     : base_ui()
   {
     base_ui_id = "glfw_ui";
+    major_backend_version = minor_backend_version = 3;
   }
 
   glfw_ui::~glfw_ui()
@@ -33,7 +34,8 @@ namespace ui
     int major, minor, revision;
     glfwGetVersion(&major, &minor, &revision);
 
-    debug::log::get(debug::logINDENT) << "GLFW version " << major << " " << minor << " " << revision << std::endl;
+    debug::log::get(debug::logINDENT) << "GLFW version " << major << "." << minor << "." << revision << std::endl;
+    debug::log::get(debug::logINDENT) << "OpenGL version " << major_backend_version << "." << minor_backend_version << std::endl;
 
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -49,13 +51,6 @@ namespace ui
     }
 
     glfwMakeContextCurrent(window);
-
-    glewExperimental = true;
-    if (glewInit() != GLEW_OK) 
-    {
-      fprintf(stderr, "Failed to initialize GLEW\n");
-      return -1;
-    }
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
