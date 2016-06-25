@@ -17,13 +17,13 @@ namespace resource
       void set_uvs(std::vector<glm::vec2> u);
       void set_normals(std::vector<glm::vec3> n);
 
-      void set_vao();
-
-      std::vector<glm::vec3> vertices;
-    private:
+    protected:
       int lod;
 
       std::vector<glm::vec2> uvs;
       std::vector<glm::vec3> normals;
+      std::vector<glm::vec3> vertices;
+
+      std::string mesh_backend_id = "gl";
   };
 }
