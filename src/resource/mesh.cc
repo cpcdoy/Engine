@@ -5,6 +5,7 @@ namespace resource
 
   mesh::mesh()
   {
+    lod = 0;
   }
 
   mesh::~mesh()
