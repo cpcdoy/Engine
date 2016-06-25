@@ -5,7 +5,8 @@ namespace resource
   resource_manager::resource_manager(resource_manager_flags f)
   {
     (void)f;
-    loaders.push_back(std::make_shared<obj_loader>());
+    managees.push_back(std::make_shared<model_loader>());
+    managees.push_back(std::make_shared<obj_loader>());
   }
 
   resource_manager::resource_manager()
@@ -15,7 +16,7 @@ namespace resource
 
   resource_manager::~resource_manager()
   {
-    loaders.clear();
+    managees.clear();
     meshes.clear();
   }
 
@@ -23,7 +24,7 @@ namespace resource
   {
     debug::log::get(debug::logINFO) << "Loading resource " << path << std::endl;
 
-    for (auto i = loaders.begin(); i != loaders.end(); i++)
+    for (auto i = managees.begin(); i != managees.end(); i++)
     {
       debug::log::get(debug::logINDENT, 5) << "Trying loader \"" << (*i)->get_loader_id()
                                            << "\"" << std::endl;
