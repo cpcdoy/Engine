@@ -1,27 +1,22 @@
-#include "../../src/debug/debug_manager.hh"
-#include "../../src/resource/resource_manager.hh"
-#include "../../src/ui/ui_manager.hh"
+#include "../../src/engine/engine.hh"
+#include <functional>
 
 int main(void)
 {
-  /*resource::obj_loader obj_loader;
-  obj_loader.load_obj("tests/res/test.obj");
-  obj_loader.generate_mesh();
+  engine::engine e;
 
-  obj_loader.load_obj("lol.obj");*/
+  //Optional
+  e.set_engine_render_context(render_backend::render_plugins::OpenGL, 3, 3);
+  //Optional
+  e.set_window_properties(800, 600, "test");
 
-  resource::resource_manager rm;
+  e.init();
 
-  rm.load("tests/res/test.obj");
-  rm.load("lol.obj");
+  e.load_mesh("tests/res/test.obj");
+  e.load_mesh("lol.obj");
 
-  ui::ui_manager ui_manager;
+  auto f = std::function<void()>([](){ int a = 1 + 2; });
 
-  ui_manager.init_ui();
-  ui_manager.create_window(200, 200, "test");
-
-  while (ui_manager.ui_satisfies_running_condition())
-    ui_manager.update_ui();
-
+  e.run(f);
   return 0;
 }
