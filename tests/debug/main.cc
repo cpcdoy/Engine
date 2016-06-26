@@ -13,11 +13,12 @@ int main(void)
   e.init();
 
   e.load_mesh("tests/res/test.obj");
-  e.load_mesh("tests/res/test.obj");
+  e.load_mesh("res/obj/floor.obj");
   e.load_mesh("lol.obj");
 
   auto f = std::function<void()>([](){ int a = 1 + 2; (void)a; });
 
   e.run(f);
+
   return 0;
 }

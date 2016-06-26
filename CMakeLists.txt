@@ -12,6 +12,7 @@ include_directories(src/ui)
 include_directories(src/base)
 include_directories(src/render_backend)
 include_directories(src/engine)
+include_directories(src/scene)
 
 add_subdirectory(src/debug)
 add_subdirectory(src/resource)
@@ -19,6 +20,7 @@ add_subdirectory(src/ui)
 add_subdirectory(src/base)
 add_subdirectory(src/render_backend)
 add_subdirectory(src/engine)
+add_subdirectory(src/scene)
 
 set(CMAKE_CTEST_COMMAND ctest -V)
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
@@ -31,12 +33,14 @@ add_executable(Engine_check EXCLUDE_FROM_ALL
   tests/debug/main.cc
   $<TARGET_OBJECTS:debug> $<TARGET_OBJECTS:resource>
   $<TARGET_OBJECTS:ui> $<TARGET_OBJECTS:base>
-  $<TARGET_OBJECTS:render_backend> $<TARGET_OBJECTS:engine_>)
+  $<TARGET_OBJECTS:render_backend> $<TARGET_OBJECTS:engine_>
+  $<TARGET_OBJECTS:scene>)
 
 add_library(Engine SHARED
   $<TARGET_OBJECTS:debug> $<TARGET_OBJECTS:resource>
   $<TARGET_OBJECTS:ui> $<TARGET_OBJECTS:base>
-  $<TARGET_OBJECTS:render_backend> $<TARGET_OBJECTS:engine_>)
+  $<TARGET_OBJECTS:render_backend> $<TARGET_OBJECTS:engine_>
+  $<TARGET_OBJECTS:scene>)
 
 add_test(Engine_check Engine_check)
 add_dependencies(check Engine_check)
