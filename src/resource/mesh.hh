@@ -17,6 +17,10 @@ namespace resource
       void set_uvs(std::vector<glm::vec2> u);
       void set_normals(std::vector<glm::vec3> n);
 
+      std::vector<glm::vec3> get_vertices();
+      std::vector<glm::vec2> get_uvs();
+      std::vector<glm::vec3> get_normals();
+
     protected:
       int lod;
 

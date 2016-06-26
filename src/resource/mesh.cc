@@ -26,4 +26,19 @@ namespace resource
   {
     normals = n;
   }
+
+  std::vector<glm::vec3> mesh::get_vertices()
+  {
+    return vertices;
+  }
+
+  std::vector<glm::vec2> mesh::get_uvs()
+  {
+    return uvs;
+  }
+
+  std::vector<glm::vec3> mesh::get_normals()
+  {
+    return normals;
+  }
 }
