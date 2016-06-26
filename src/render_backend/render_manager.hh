@@ -13,5 +13,10 @@ namespace render_backend
       ~render_manager();
 
       bool init_render_backend();
+
+      std::shared_ptr<resource::mesh>
+        generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh);
+
+      void render(std::shared_ptr<resource::mesh> mesh);
   };
 }

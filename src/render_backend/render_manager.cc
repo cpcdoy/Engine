@@ -31,4 +31,15 @@ namespace render_backend
                                      << std::endl;
     return false;
   }
+
+  std::shared_ptr<resource::mesh>
+    render_manager::generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh)
+    {
+      return current_managee->generate_compatible_mesh(mesh);
+    }
+
+  void render_manager::render(std::shared_ptr<resource::mesh> mesh)
+  {
+    current_managee->render(mesh);
+  }
 }
