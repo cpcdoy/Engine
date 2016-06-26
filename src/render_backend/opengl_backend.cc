@@ -3,6 +3,7 @@
 namespace render_backend
 {
   opengl_backend::opengl_backend()
+    : cam()
   {
     backend_id = "OpenGL Backend";
   }
@@ -21,6 +22,11 @@ namespace render_backend
       return false;
     }
 
+    programs.push_back(load_shaders("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
+
+    glGenVertexArrays(1, &base_vao);
+    glBindVertexArray(base_vao);
+
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     glEnable(GL_DEPTH_TEST);
@@ -37,17 +43,51 @@ namespace render_backend
   {
     std::shared_ptr<resource::gl_mesh> gl_mesh = std::make_shared<resource::gl_mesh>(mesh);
 
-    gl_mesh->set_vao(generate_vao());
+    gl_mesh->set_vao(generate_vao(gl_mesh));
 
     return gl_mesh;
   }
 
-  GLuint opengl_backend::generate_vao()
+  void opengl_backend::set_ui_manager(std::shared_ptr<ui::ui_manager> ui)
+  {
+    this->ui = ui;
+
+		cam.set_window_context(std::static_pointer_cast<ui::glfw_ui>(ui->get_ui())->get_window());
+
+  }
+
+  GLuint opengl_backend::generate_vao(std::shared_ptr<resource::gl_mesh> mesh)
   {
     debug::log::get(debug::logINFO) << "Generating a VAO" << std::endl;
-
+    
     GLuint vao;
+    GLuint vertices_vbo, uvs_vbo, normals_vbo;
+
     glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+    
+    //Vertices
+    glGenBuffers(1, &vertices_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
+    glBufferData(GL_ARRAY_BUFFER, mesh->get_vertices().size() * sizeof(glm::vec3), &mesh->get_vertices()[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (void*)0);
+
+    //UVs
+    glGenBuffers(1, &uvs_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, uvs_vbo);
+    glBufferData(GL_ARRAY_BUFFER, mesh->get_uvs().size() * sizeof(glm::vec3), &mesh->get_uvs()[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GL_FLOAT), (void*)0);
+
+    //Normals
+    glGenBuffers(1, &normals_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, normals_vbo);
+    glBufferData(GL_ARRAY_BUFFER, mesh->get_normals().size() * sizeof(glm::vec3), &mesh->get_normals()[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (void*)0);
+
+    glBindVertexArray(base_vao);
 
     debug::log::get(debug::logINDENT) << "VAO : " << vao << std::endl;
 
@@ -57,5 +97,26 @@ namespace render_backend
   void opengl_backend::render(std::shared_ptr<resource::mesh> mesh)
   {
     auto m = std::static_pointer_cast<resource::gl_mesh>(mesh);
+
+    glm::mat4 model = glm::mat4(1.0);
+
+    glUseProgram(programs.back());
+
+		glUniformMatrix4fv(glGetUniformLocation(programs.back(), "model"), 1, GL_FALSE, &model[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(programs.back(), "projection"), 1, GL_FALSE, &cam.get_projection_matrix()[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(programs.back(), "view"), 1, GL_FALSE, &cam.get_view_matrix()[0][0]);
+
+    glBindVertexArray(m->get_vao());
+		glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertices().size());
+
+    glBindVertexArray(base_vao);
+  }
+
+  void opengl_backend::update_renderer()
+  {
+    cam.update();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 }
