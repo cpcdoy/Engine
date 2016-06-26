@@ -4,8 +4,8 @@ namespace engine
 {
   engine::engine()
     : 
-    rm(std::make_shared<resource::resource_manager>()),
     rb(std::make_shared<render_backend::render_manager>()),
+    rm(std::make_shared<resource::resource_manager>(rb)),
     ui(std::make_shared<ui::ui_manager>()),
     dm(std::make_shared<debug::debug_manager>()),
       r(render_backend::render_plugins::OpenGL)
@@ -61,5 +61,7 @@ namespace engine
   void engine::load_mesh(std::string p)
   {
     rm->load(p);
+
+    rb->render(rm->get_meshes().back());
   }
 }

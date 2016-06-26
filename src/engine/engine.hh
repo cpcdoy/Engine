@@ -28,8 +28,8 @@ namespace engine
         void run(F f);
 
     private:
-      std::shared_ptr<resource::resource_manager> rm;
       std::shared_ptr<render_backend::render_manager> rb;
+      std::shared_ptr<resource::resource_manager> rm;
       std::shared_ptr<ui::ui_manager> ui;
       std::shared_ptr<debug::debug_manager> dm;
 
