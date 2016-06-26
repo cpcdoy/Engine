@@ -68,4 +68,9 @@ namespace ui
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
+
+  GLFWwindow* glfw_ui::get_window()
+  {
+    return window;
+  }
 }

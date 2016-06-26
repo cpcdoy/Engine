@@ -24,6 +24,8 @@ namespace ui
       virtual void update_ui() override;
       virtual bool satisfies_running_condition() override;
 
+      GLFWwindow* get_window();
+
     protected:
       GLFWwindow* window;
   };
