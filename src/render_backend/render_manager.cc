@@ -42,4 +42,14 @@ namespace render_backend
   {
     current_managee->render(mesh);
   }
+
+  void render_manager::set_ui_manager(std::shared_ptr<ui::ui_manager> sm)
+  {
+    current_managee->set_ui_manager(sm);
+  }
+
+  void render_manager::update_renderer()
+  {
+    current_managee->update_renderer();
+  }
 }
