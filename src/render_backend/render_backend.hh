@@ -3,8 +3,14 @@
 # include <memory>
 # include <string>
 
+# include "../ui/ui_manager.hh"
 # include "../resource/mesh.hh"
 # include "../debug/log.hh"
+
+namespace scene
+{
+  class scene_manager;
+}
 
 namespace render_backend
 {
@@ -39,7 +45,18 @@ namespace render_backend
         (void)mesh;
       }
 
+      virtual void set_ui_manager(std::shared_ptr<ui::ui_manager> ui)
+      {
+        this->ui = ui;
+      }
+
+      virtual void update_renderer()
+      {
+      }
+
     protected:
       std::string backend_id = "virtual empty render backend";
+
+      std::shared_ptr<ui::ui_manager> ui;
   };
 }
