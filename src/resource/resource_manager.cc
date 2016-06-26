@@ -34,8 +34,6 @@ namespace resource
       if ((*i)->load(path.c_str()))
       {
         meshes.push_back(rb->generate_compatible_mesh((*i)->generate_mesh()));
-        //auto m = std::static_pointer_cast<resource::gl_mesh>(meshes.back());
-        //std::cout << "vao " << m->get_vao();
         return meshes.back();
       }
       debug::log::get(debug::logINDENT, 10) << "FAIL" << std::endl;

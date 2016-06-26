@@ -8,6 +8,7 @@ namespace engine
     rm(std::make_shared<resource::resource_manager>(rb)),
     ui(std::make_shared<ui::ui_manager>()),
     dm(std::make_shared<debug::debug_manager>()),
+    sm(std::make_shared<scene::scene_manager>(rm)),
       r(render_backend::render_plugins::OpenGL)
   {
     major = minor = 3;
@@ -30,6 +31,7 @@ namespace engine
       debug::log::get(debug::logERROR) << "Explicitly given render backend does not exist" << std::endl;
       return false;
     }
+
     this->major = major;
     this->minor = minor;
 
@@ -49,19 +51,21 @@ namespace engine
 
   bool engine::init()
   {
+    sm->init_scene_graph();
     ui->init_ui();
     ui->set_backend_context_version(major, minor);
     ui->create_window(h, w, title);
 
     rb->init_render_backend();
+    rb->set_ui_manager(ui);
 
     return true;
   }
 
   void engine::load_mesh(std::string p)
   {
-    rm->load(p);
-
-    rb->render(rm->get_meshes().back());
+    if (rm->load(p))
+      sm->create_node(rm->get_meshes().back());
+    //rb->render(rm->get_meshes().back());
   }
 }
