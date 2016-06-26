@@ -1,7 +1,9 @@
 #pragma once
 
+# include <memory>
 # include <string>
 
+# include "../resource/mesh.hh"
 # include "../debug/log.hh"
 
 namespace render_backend
@@ -25,6 +27,16 @@ namespace render_backend
       virtual std::string get_backend_id()
       {
         return backend_id;
+      }
+
+      virtual std::shared_ptr<resource::mesh> generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh)
+      {
+        return mesh;
+      }
+
+      virtual void render(std::shared_ptr<resource::mesh> mesh)
+      {
+        (void)mesh;
       }
 
     protected:
