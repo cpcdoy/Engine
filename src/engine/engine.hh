@@ -4,6 +4,7 @@
 # include "../render_backend/render_manager.hh"
 # include "../ui/ui_manager.hh"
 # include "../debug/debug_manager.hh"
+# include "../scene/scene_manager.hh"
 
 # include "../render_backend/backend_plugins.hh"
 
@@ -32,6 +33,7 @@ namespace engine
       std::shared_ptr<resource::resource_manager> rm;
       std::shared_ptr<ui::ui_manager> ui;
       std::shared_ptr<debug::debug_manager> dm;
+      std::shared_ptr<scene::scene_manager> sm;
 
       render_backend::render_plugins r;
       int major, minor;
