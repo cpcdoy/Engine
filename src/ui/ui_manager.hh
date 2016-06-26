@@ -20,5 +20,7 @@ namespace ui
       bool ui_satisfies_running_condition();
       void update_ui();
       void set_backend_context_version(int major, int minor);
+
+      std::shared_ptr<base_ui> get_ui();
   };
 }

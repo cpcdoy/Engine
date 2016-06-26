@@ -52,4 +52,9 @@ namespace ui
   {
     current_managee->set_backend_context_version(major, minor);
   }
+
+  std::shared_ptr<base_ui> ui_manager::get_ui()
+  {
+    return current_managee;
+  }
 }
