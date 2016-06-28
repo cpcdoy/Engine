@@ -52,7 +52,7 @@ namespace resource
 
   void mesh::set_scale(glm::vec3 scale)
   {
-    glm::scale(model, scale);
+    model = glm::scale(model, scale);
   }
 
   glm::mat4 mesh::get_model()
