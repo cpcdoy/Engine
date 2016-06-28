@@ -1,4 +1,5 @@
 #include "mesh.hh"
+# include <iostream>
 
 namespace resource
 {
@@ -6,6 +7,8 @@ namespace resource
   mesh::mesh()
   {
     lod = 0;
+
+    model = glm::mat4(1.0);
   }
 
   mesh::~mesh()
@@ -40,5 +43,20 @@ namespace resource
   std::vector<glm::vec3> mesh::get_normals()
   {
     return normals;
+  }
+
+  void mesh::set_pos(glm::vec3 pos)
+  {
+    model = glm::translate(model, pos);
+  }
+
+  void mesh::set_scale(glm::vec3 scale)
+  {
+    glm::scale(model, scale);
+  }
+
+  glm::mat4 mesh::get_model()
+  {
+    return model;
   }
 }

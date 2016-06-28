@@ -8,6 +8,9 @@
 
 # include "../render_backend/backend_plugins.hh"
 
+typedef std::shared_ptr<resource::mesh> mesh;
+typedef std::shared_ptr<scene::camera> camera;
+
 namespace engine
 {
   class engine
@@ -21,7 +24,10 @@ namespace engine
           int major=3, int minor=3);
 
       void set_window_properties(int w, int h, std::string title);
-      void load_mesh(std::string p);
+
+      mesh load_mesh(std::string p);
+      std::shared_ptr<scene::camera> create_camera();
+      void set_current_camera(camera cam);
 
       bool init();
 

@@ -8,8 +8,6 @@
 
 # include "scene_manager.hh"
 
-# define mesh_id unsigned int
-
 namespace scene
 {
   class vector_graph : public scene_graph
@@ -21,6 +19,12 @@ namespace scene
 
       virtual bool init_scene_graph() override;
 
-      virtual mesh_id create_node(std::shared_ptr<resource::mesh> mesh) override;
+      virtual std::shared_ptr<resource::mesh> create_node(std::shared_ptr<resource::mesh> mesh) override;
+      virtual std::shared_ptr<scene::camera> create_camera() override;
+
+    private:
+      std::vector<std::shared_ptr<resource::mesh>> meshes;
+
+      std::vector<std::shared_ptr<scene::camera>> cams;
   };
 }

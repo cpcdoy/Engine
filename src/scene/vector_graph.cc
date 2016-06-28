@@ -20,7 +20,7 @@ namespace scene
     return true;
   }
 
-  mesh_id vector_graph::create_node(std::shared_ptr<resource::mesh> mesh)
+  std::shared_ptr<resource::mesh> vector_graph::create_node(std::shared_ptr<resource::mesh> mesh)
   {
     debug::log::get(debug::logINFO) << "Adding a mesh to the scene graph" << std::endl;
 
@@ -29,6 +29,16 @@ namespace scene
 
     debug::log::get(debug::logINDENT) << "Number of meshes: " << meshes.size() << std::endl;
 
-    return meshes.size() - 1;
+    return mesh;
+  }
+
+  std::shared_ptr<scene::camera> vector_graph::create_camera()
+  {
+    auto cam = std::make_shared<scene::camera>();
+    cam->set_window_context(ui);
+
+    cams.push_back(cam);
+
+    return cams.back();
   }
 }

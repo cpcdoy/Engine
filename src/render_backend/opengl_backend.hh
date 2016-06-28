@@ -1,6 +1,10 @@
 #pragma once
 
-# include <GL/glew.h>
+# ifndef GLEW_HEADER
+#  define GLEW_HEADER
+#  include <GL/glew.h>
+#  include <GLFW/glfw3.h>
+# endif
 # include <memory>
 # include <fstream>
 
@@ -32,7 +36,5 @@ namespace render_backend
       std::vector<GLuint> programs;
 
       GLuint base_vao;
-
-      scene::camera cam;
   };
 }

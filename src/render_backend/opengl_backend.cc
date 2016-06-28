@@ -3,7 +3,6 @@
 namespace render_backend
 {
   opengl_backend::opengl_backend()
-    : cam()
   {
     backend_id = "OpenGL Backend";
   }
@@ -31,8 +30,8 @@ namespace render_backend
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    glEnable(GL_CULL_FACE);
 
+    glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
     return true;
@@ -51,9 +50,6 @@ namespace render_backend
   void opengl_backend::set_ui_manager(std::shared_ptr<ui::ui_manager> ui)
   {
     this->ui = ui;
-
-		cam.set_window_context(std::static_pointer_cast<ui::glfw_ui>(ui->get_ui())->get_window());
-
   }
 
   GLuint opengl_backend::generate_vao(std::shared_ptr<resource::gl_mesh> mesh)
@@ -98,13 +94,11 @@ namespace render_backend
   {
     auto m = std::static_pointer_cast<resource::gl_mesh>(mesh);
 
-    glm::mat4 model = glm::mat4(1.0);
-
     glUseProgram(programs.back());
 
-		glUniformMatrix4fv(glGetUniformLocation(programs.back(), "model"), 1, GL_FALSE, &model[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(programs.back(), "projection"), 1, GL_FALSE, &cam.get_projection_matrix()[0][0]);
-    glUniformMatrix4fv(glGetUniformLocation(programs.back(), "view"), 1, GL_FALSE, &cam.get_view_matrix()[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(programs.back(), "model"), 1, GL_FALSE, &m->get_model()[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(programs.back(), "projection"), 1, GL_FALSE, &cam->get_projection_matrix()[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(programs.back(), "view"), 1, GL_FALSE, &cam->get_view_matrix()[0][0]);
 
     glBindVertexArray(m->get_vao());
 		glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertices().size());
@@ -114,7 +108,7 @@ namespace render_backend
 
   void opengl_backend::update_renderer()
   {
-    cam.update();
+    cam->update();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -43,9 +43,14 @@ namespace render_backend
     current_managee->render(mesh);
   }
 
-  void render_manager::set_ui_manager(std::shared_ptr<ui::ui_manager> sm)
+  void render_manager::set_ui_manager(std::shared_ptr<ui::ui_manager> ui)
   {
-    current_managee->set_ui_manager(sm);
+    current_managee->set_ui_manager(ui);
+  }
+
+  void render_manager::set_camera(std::shared_ptr<scene::camera> cam)
+  {
+    current_managee->set_camera(cam);
   }
 
   void render_manager::update_renderer()

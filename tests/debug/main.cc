@@ -12,11 +12,18 @@ int main(void)
 
   e.init();
 
-  e.load_mesh("tests/res/test.obj");
+  mesh m = e.load_mesh("tests/res/test.obj");
+  m->set_pos(glm::vec3(0, 1, 0));
   e.load_mesh("res/obj/floor.obj");
   e.load_mesh("lol.obj");
 
-  auto f = std::function<void()>([](){ int a = 1 + 2; (void)a; });
+  camera cam = e.create_camera();
+  e.set_current_camera(cam);
+
+  cam->set_camera_position(glm::vec3(3, 3, 3));
+
+  double a = 0;
+  auto f = std::function<void()>([&](){ a-=0.0001; m->set_pos(glm::vec3(a, 0, 0)); });
 
   e.run(f);
 

@@ -3,12 +3,9 @@
 # include <vector>
 # include <memory>
 
-# include "../debug/log.hh"
-# include "entity.hh"
-# include "model_loader.hh"
+# include "../render_backend/render_manager.hh"
 # include "loaders.hh"
 # include "../base/manager.hh"
-# include "../render_backend/render_manager.hh"
 
 namespace resource
 {

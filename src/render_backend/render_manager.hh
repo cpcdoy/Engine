@@ -24,7 +24,8 @@ namespace render_backend
 
       void render(std::shared_ptr<resource::mesh> mesh);
 
-      void set_ui_manager(std::shared_ptr<ui::ui_manager> sm);
+      void set_ui_manager(std::shared_ptr<ui::ui_manager> ui);
+      void set_camera(std::shared_ptr<scene::camera> cam);
       void update_renderer();
   };
 }

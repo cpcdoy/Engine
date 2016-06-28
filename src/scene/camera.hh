@@ -1,9 +1,17 @@
 #pragma once
 
-# include <GLFW/glfw3.h>
+# ifndef GLEW_HEADER
+#  define GLEW_HEADER
+#  include <GL/glew.h>
+#  include <GLFW/glfw3.h>
+# endif
+
+# include <memory>
 # include <glm/glm.hpp>
 # include <glm/gtx/transform.hpp>
 # include <glm/gtc/matrix_transform.hpp>
+
+# include "../ui/ui_manager.hh"
 
 namespace scene
 {
@@ -19,7 +27,7 @@ namespace scene
       glm::vec3 get_camera_position();
       void set_camera_position(glm::vec3);
 
-      void set_window_context(GLFWwindow* window);
+      void set_window_context(std::shared_ptr<ui::ui_manager> ui);
 
     private:
       GLFWwindow* window;

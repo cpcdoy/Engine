@@ -8,7 +8,7 @@ namespace engine
     rm(std::make_shared<resource::resource_manager>(rb)),
     ui(std::make_shared<ui::ui_manager>()),
     dm(std::make_shared<debug::debug_manager>()),
-    sm(std::make_shared<scene::scene_manager>(rm)),
+    sm(std::make_shared<scene::scene_manager>(rm, ui)),
       r(render_backend::render_plugins::OpenGL)
   {
     major = minor = 3;
@@ -51,10 +51,11 @@ namespace engine
 
   bool engine::init()
   {
-    sm->init_scene_graph();
     ui->init_ui();
     ui->set_backend_context_version(major, minor);
     ui->create_window(h, w, title);
+
+    sm->init_scene_graph();
 
     rb->init_render_backend();
     rb->set_ui_manager(ui);
@@ -62,10 +63,22 @@ namespace engine
     return true;
   }
 
-  void engine::load_mesh(std::string p)
+  mesh engine::load_mesh(std::string p)
   {
     if (rm->load(p))
-      sm->create_node(rm->get_meshes().back());
-    //rb->render(rm->get_meshes().back());
+      return sm->create_node(rm->get_meshes().back());
+
+    return nullptr;
+  }
+
+  std::shared_ptr<scene::camera> engine::create_camera()
+  {
+    return sm->create_camera();
+  }
+
+  void engine::set_current_camera(camera cam)
+  {
+    sm->set_current_camera(cam);
+    rb->set_camera(cam);
   }
 }

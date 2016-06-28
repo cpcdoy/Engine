@@ -4,8 +4,8 @@
 # ifndef GLEW_HEADER
 #  define GLEW_HEADER
 #  include <GL/glew.h>
+#  include <GLFW/glfw3.h>
 # endif
-# include <GLFW/glfw3.h>
 # include <memory>
 
 # include "base_ui.hh"

@@ -3,14 +3,10 @@
 # include <memory>
 # include <string>
 
-# include "../ui/ui_manager.hh"
 # include "../resource/mesh.hh"
 # include "../debug/log.hh"
-
-namespace scene
-{
-  class scene_manager;
-}
+# include "../ui/ui_manager.hh"
+# include "../scene/camera.hh"
 
 namespace render_backend
 {
@@ -50,6 +46,11 @@ namespace render_backend
         this->ui = ui;
       }
 
+      virtual void set_camera(std::shared_ptr<scene::camera> cam)
+      {
+        this->cam = cam;
+      }
+
       virtual void update_renderer()
       {
       }
@@ -58,5 +59,6 @@ namespace render_backend
       std::string backend_id = "virtual empty render backend";
 
       std::shared_ptr<ui::ui_manager> ui;
+      std::shared_ptr<scene::camera> cam;
   };
 }
