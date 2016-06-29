@@ -36,7 +36,7 @@ namespace resource
 
   std::shared_ptr<mesh> obj_loader::generate_mesh()
   {
-    debug::log::get(debug::logINDENT) << "Generating mesh" << std::endl;
+    debug::log::get(debug::logINDENT, 5) << "Generating mesh" << std::endl;
 
     std::shared_ptr<mesh> m = std::make_shared<mesh>();
 
@@ -144,8 +144,8 @@ namespace resource
     fclose(file);
 
     debug::log::get(debug::logINFO) << "Loaded OBJ file " << path << "" << std::endl;
-    debug::log::get(debug::logINDENT) << "Stats:" << std::endl;
-    debug::log::get(debug::logINDENT, 6) << out_vertices.size() << " vertices" << std::endl;
+    debug::log::get(debug::logINDENT, 5) << "Stats:" << std::endl;
+    debug::log::get(debug::logINDENT, 6+5) << out_vertices.size() << " vertices" << std::endl;
     debug::log::get(debug::logREINDENT) << out_vertices.size() / 3 << " tris" << std::endl;
 
     return true;

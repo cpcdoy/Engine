@@ -38,5 +38,7 @@ namespace render_backend
       std::vector<GLuint> programs;
 
       GLuint base_vao;
+
+      std::vector<const unsigned char*> gl_caps;
   };
 }

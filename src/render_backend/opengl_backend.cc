@@ -18,6 +18,19 @@ namespace render_backend
     if (extensions)
       debug::log::get(debug::logINFO) << "GL_EXTENSIONS : " << extensions << std::endl;
 
+    gl_caps.push_back(glGetString(GL_VENDOR));
+    debug::log::get(debug::logINFO) << "OpenGL vendor: " << std::endl;
+    debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
+    gl_caps.push_back(glGetString(GL_RENDERER));
+    debug::log::get(debug::logINFO) << "OpenGL renderer: " << std::endl;
+    debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
+    gl_caps.push_back(glGetString(GL_VERSION));
+    debug::log::get(debug::logINFO) << "OpenGL version: " << std::endl;
+    debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
+    gl_caps.push_back(glGetString(GL_SHADING_LANGUAGE_VERSION));
+    debug::log::get(debug::logINFO) << "OpenGL GLSL version: " << std::endl;
+    debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
+
     GLint num_extensions = 0;
     glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
 
@@ -25,7 +38,10 @@ namespace render_backend
 																		<< std::endl;
 
     for (GLint i = 0; i < num_extensions; ++i)
-      debug::log::get(debug::logINDENT, 5) << glGetStringi(GL_EXTENSIONS, i) << std::endl;
+    {
+      gl_caps.push_back(glGetStringi(GL_EXTENSIONS, i));
+      debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
+    }
 
     return true;
   }
@@ -82,7 +98,7 @@ namespace render_backend
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
-    
+
     //Vertices
     glGenBuffers(1, &vertices_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
@@ -106,7 +122,7 @@ namespace render_backend
 
     glBindVertexArray(base_vao);
 
-    debug::log::get(debug::logINDENT) << "VAO : " << vao << std::endl;
+    debug::log::get(debug::logINDENT, 5) << "VAO : " << vao << std::endl;
 
     return vao;
   }

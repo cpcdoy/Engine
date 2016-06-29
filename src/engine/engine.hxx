@@ -20,6 +20,6 @@ namespace engine
 
         ui->update_ui();
       }
-      debug::log::get(debug::logINDENT) << "Finished" << std::endl;
+      debug::log::get(debug::logINDENT, 5) << "Finished" << std::endl;
     }
 }

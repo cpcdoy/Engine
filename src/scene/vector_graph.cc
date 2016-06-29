@@ -27,7 +27,7 @@ namespace scene
     meshes.push_back(mesh);
     render_queue.push_back(mesh);
 
-    debug::log::get(debug::logINDENT) << "Number of meshes: " << meshes.size() << std::endl;
+    debug::log::get(debug::logINDENT, 5) << "Number of meshes: " << meshes.size() << std::endl;
 
     return mesh;
   }
