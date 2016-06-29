@@ -11,6 +11,25 @@ namespace render_backend
   {
   }
 
+  bool opengl_backend::check_gl_extensions()
+  {
+    const char* extensions = (const char*)glGetString(GL_EXTENSIONS);
+
+    if (extensions)
+      debug::log::get(debug::logINFO) << "GL_EXTENSIONS : " << extensions << std::endl;
+
+    GLint num_extensions = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
+
+    debug::log::get(debug::logINFO) << "Supported extensions (" << num_extensions << ") :"
+																		<< std::endl;
+
+    for (GLint i = 0; i < num_extensions; ++i)
+      debug::log::get(debug::logINDENT, 5) << glGetStringi(GL_EXTENSIONS, i) << std::endl;
+
+    return true;
+  }
+
   bool opengl_backend::init_backend()
   {
     glewExperimental = true;
@@ -20,6 +39,8 @@ namespace render_backend
       debug::log::get(debug::logINDENT) << "You need to call the ui_manager, initialize it and create a window before" << std::endl;
       return false;
     }
+
+		check_gl_extensions();
 
     programs.push_back(load_shaders("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
 

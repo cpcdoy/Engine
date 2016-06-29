@@ -32,6 +32,8 @@ namespace render_backend
       virtual void update_renderer() override;
       virtual void set_ui_manager(std::shared_ptr<ui::ui_manager> ui) override;
 
+      bool check_gl_extensions();
+
     private:
       std::vector<GLuint> programs;
 
