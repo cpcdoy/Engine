@@ -5,7 +5,7 @@ namespace debug
 {
   debug_manager::debug_manager(std::string path)
   {
-    log::get(log_level::logINFO) << "Loading the debug manager"
+    log::get(log_level::logDEBUG) << "Loading the debug manager"
                                  << std::endl;
     handle = dlopen(path.c_str(), RTLD_LAZY);
 

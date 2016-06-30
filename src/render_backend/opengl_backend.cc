@@ -11,41 +11,6 @@ namespace render_backend
   {
   }
 
-  bool opengl_backend::check_gl_extensions()
-  {
-    const char* extensions = (const char*)glGetString(GL_EXTENSIONS);
-
-    if (extensions)
-      debug::log::get(debug::logINFO) << "GL_EXTENSIONS : " << extensions << std::endl;
-
-    gl_caps.push_back(glGetString(GL_VENDOR));
-    debug::log::get(debug::logINFO) << "OpenGL vendor: " << std::endl;
-    debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
-    gl_caps.push_back(glGetString(GL_RENDERER));
-    debug::log::get(debug::logINFO) << "OpenGL renderer: " << std::endl;
-    debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
-    gl_caps.push_back(glGetString(GL_VERSION));
-    debug::log::get(debug::logINFO) << "OpenGL version: " << std::endl;
-    debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
-    gl_caps.push_back(glGetString(GL_SHADING_LANGUAGE_VERSION));
-    debug::log::get(debug::logINFO) << "OpenGL GLSL version: " << std::endl;
-    debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
-
-    GLint num_extensions = 0;
-    glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
-
-    debug::log::get(debug::logINFO) << "Supported extensions (" << num_extensions << ") :"
-																		<< std::endl;
-
-    for (GLint i = 0; i < num_extensions; ++i)
-    {
-      gl_caps.push_back(glGetStringi(GL_EXTENSIONS, i));
-      debug::log::get(debug::logINDENT, 5) << gl_caps.back() << std::endl;
-    }
-
-    return true;
-  }
-
   bool opengl_backend::init_backend()
   {
     glewExperimental = true;
@@ -56,7 +21,8 @@ namespace render_backend
       return false;
     }
 
-		check_gl_extensions();
+		if (!check_gl_extensions())
+      return false;
 
     programs.push_back(load_shaders("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
 

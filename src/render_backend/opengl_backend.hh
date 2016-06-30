@@ -7,6 +7,7 @@
 # endif
 # include <memory>
 # include <fstream>
+# include <algorithm>
 
 # include "render_backend.hh"
 # include "../resource/mesh.hh"
@@ -33,12 +34,13 @@ namespace render_backend
       virtual void set_ui_manager(std::shared_ptr<ui::ui_manager> ui) override;
 
       bool check_gl_extensions();
+      std::vector<std::string>  get_gl_extensions();
 
     private:
       std::vector<GLuint> programs;
 
       GLuint base_vao;
 
-      std::vector<const unsigned char*> gl_caps;
+      std::vector<std::string> gl_caps;
   };
 }

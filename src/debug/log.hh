@@ -13,13 +13,9 @@ namespace debug
   enum log_level
   {
     logERROR,
-    logWARNING,
     logINFO,
     logDEBUG,
-    logDEBUG1,
-    logDEBUG2,
-    logDEBUG3,
-    logDEBUG4,
+    logWARN,
     logINDENT,
     logREINDENT,
   };

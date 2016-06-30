@@ -27,7 +27,7 @@ int main(void)
   cam->set_camera_position(glm::vec3(3, 3, 3));
 
   double a = 0;
-  auto f = std::function<void()>([&](){ a-=0.0001; m->set_pos(glm::vec3(a, 0, 0)); m2->set_pos(glm::vec3(a, 0, 0)); m3->set_pos(glm::vec3(a, 0, 0)); });
+  auto f = std::function<void()>([&](){ a-=0.0001; m->set_pos(glm::vec3(a + 0.005, 0, 0)); m2->set_pos(glm::vec3(a - 0.005, 0, 0)); m3->set_pos(glm::vec3(a, 0, 0)); });
 
   e.run(f);
 
