@@ -4,19 +4,17 @@
 
 namespace engine
 {
-  template<typename F>
-    void engine::run(F f)
+  template<typename... Functions>
+    void engine::run(Functions... fs)
     {
       debug::log::get(debug::logINFO) << "Running the engine's main loop" << std::endl;
       while (ui->ui_satisfies_running_condition())
       {
-        f();
+        for (const auto& f : {fs...})
+          f();
 
         rb->update_renderer();
-
-        auto v = sm->get_render_queue();
-        for (auto i = v.begin(); i != v.end(); i++)
-          rb->render((*i));
+        rb->render();
 
         ui->update_ui();
       }

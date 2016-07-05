@@ -38,9 +38,14 @@ namespace render_backend
       return current_managee->generate_compatible_mesh(mesh);
     }
 
-  void render_manager::render(std::shared_ptr<resource::mesh> mesh)
+  void render_manager::batch(std::shared_ptr<scene::scene_manager> sm)
   {
-    current_managee->render(mesh);
+    current_managee->batch(sm);
+  }
+
+  void render_manager::render()
+  {
+    current_managee->render();
   }
 
   void render_manager::set_ui_manager(std::shared_ptr<ui::ui_manager> ui)

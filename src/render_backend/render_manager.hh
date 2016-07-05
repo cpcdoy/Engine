@@ -1,6 +1,5 @@
 #pragma once
 
-# include "render_backend.hh"
 # include "backend_plugins.hh"
 # include "../base/manager.hh"
 
@@ -9,8 +8,15 @@ namespace scene
   class scene_manager;
 }
 
+namespace resource
+{
+  class resource_manager;
+  class mesh;
+}
+
 namespace render_backend
 {
+  class render_backend;
   class render_manager : public base::base_manager<render_backend>
   {
     public:
@@ -22,7 +28,8 @@ namespace render_backend
       std::shared_ptr<resource::mesh>
         generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh);
 
-      void render(std::shared_ptr<resource::mesh> mesh);
+      void render();
+      void batch(std::shared_ptr<scene::scene_manager> sm);
 
       void set_ui_manager(std::shared_ptr<ui::ui_manager> ui);
       void set_camera(std::shared_ptr<scene::camera> cam);

@@ -1,12 +1,11 @@
 #version 330 core
 
-layout (location = 0) in vec3 position;
-layout (location = 1) in vec2 texCoords;
+layout (location = 0) in vec3 pos;
+layout (location = 1) in vec2 tex_coords_;
 layout (location = 2) in vec3 normal;
 
-out vec3 FragPos;
-out vec2 TexCoords;
-out vec3 Normal;
+out vec3 frag_pos;
+out vec2 tex_coords;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -17,13 +16,8 @@ void main()
   mat4 model1;
 	model1 = model;
 
-	vec3 pos = position;
-
-  vec4 viewPos = view * model * vec4(pos, 1.0f);
-  FragPos = viewPos.xyz;
-  gl_Position = projection * viewPos;
-  TexCoords = texCoords;
-
-  mat3 normalMatrix = transpose(inverse(mat3(view * model)));
-  Normal = normalMatrix * normal;
+  vec4 view_pos = view * model * vec4(pos, 1.0f);
+  frag_pos = view_pos.xyz;
+  gl_Position = projection * view_pos;
+  tex_coords = tex_coords_;
 }

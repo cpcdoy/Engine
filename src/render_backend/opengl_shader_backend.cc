@@ -4,7 +4,7 @@ namespace render_backend
 {
   GLuint opengl_backend::load_shaders(const char* vertex_file_path, const char* fragment_file_path)
   {
-    debug::log::get(debug::logINFO) <<"Compiling shaders"<< std::endl;
+    debug::log::get(debug::logINFO) << "Compiling shaders" << std::endl;
 
     GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);

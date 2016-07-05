@@ -31,8 +31,8 @@ namespace engine
 
       bool init();
 
-      template<typename F>
-        void run(F f);
+      template<typename... Functions>
+        void run(Functions... fs);
 
     private:
       std::shared_ptr<render_backend::render_manager> rb;

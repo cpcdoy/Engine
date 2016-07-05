@@ -3,10 +3,8 @@
 # include <memory>
 # include <string>
 
-# include "../resource/mesh.hh"
-# include "../debug/log.hh"
-# include "../ui/ui_manager.hh"
-# include "../scene/camera.hh"
+# include "../resource/resource_manager.hh"
+# include "../scene/scene_manager.hh"
 
 namespace render_backend
 {
@@ -36,9 +34,13 @@ namespace render_backend
         return mesh;
       }
 
-      virtual void render(std::shared_ptr<resource::mesh> mesh)
+      virtual void batch(std::shared_ptr<scene::scene_manager> sm)
       {
-        (void)mesh;
+        (void)sm;
+      }
+
+      virtual void render()
+      {
       }
 
       virtual void set_ui_manager(std::shared_ptr<ui::ui_manager> ui)

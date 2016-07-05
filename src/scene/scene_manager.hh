@@ -4,8 +4,12 @@
 # include <memory>
 
 # include "../debug/log.hh"
-# include "../resource/resource_manager.hh"
 # include "scene_graphs.hh"
+
+namespace resource
+{
+  class resource_manager;
+}
 
 namespace scene
 {

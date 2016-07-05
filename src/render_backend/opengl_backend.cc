@@ -9,6 +9,8 @@ namespace render_backend
 
   opengl_backend::~opengl_backend()
   {
+    debug::log::get(debug::logINFO) << "Shutting down the OpenGL render backend" << std::endl;
+    glDeleteVertexArrays(vaos.size(), (const GLuint*)&vaos);
   }
 
   bool opengl_backend::init_backend()
@@ -58,7 +60,7 @@ namespace render_backend
   GLuint opengl_backend::generate_vao(std::shared_ptr<resource::gl_mesh> mesh)
   {
     debug::log::get(debug::logINFO) << "Generating a VAO" << std::endl;
-    
+
     GLuint vao;
     GLuint vertices_vbo, uvs_vbo, normals_vbo;
 
@@ -88,25 +90,34 @@ namespace render_backend
 
     glBindVertexArray(base_vao);
 
+    vaos.push_back(vao);
+
     debug::log::get(debug::logINDENT, 5) << "VAO : " << vao << std::endl;
 
     return vao;
   }
 
-  void opengl_backend::render(std::shared_ptr<resource::mesh> mesh)
+  void opengl_backend::batch(std::shared_ptr<scene::scene_manager> sm)
   {
-    auto m = std::static_pointer_cast<resource::gl_mesh>(mesh);
+    for (auto m : sm->get_render_queue())
+      meshes.push_back(std::static_pointer_cast<resource::gl_mesh>(m));
+  }
 
-    glUseProgram(programs.back());
+  void opengl_backend::render()
+  {
+    for (auto m : meshes)
+    {
+      glUseProgram(programs.back());
 
-		glUniformMatrix4fv(glGetUniformLocation(programs.back(), "model"), 1, GL_FALSE, &m->get_model()[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(programs.back(), "projection"), 1, GL_FALSE, &cam->get_projection_matrix()[0][0]);
-    glUniformMatrix4fv(glGetUniformLocation(programs.back(), "view"), 1, GL_FALSE, &cam->get_view_matrix()[0][0]);
+      glUniformMatrix4fv(glGetUniformLocation(programs.back(), "model"), 1, GL_FALSE, &m->get_model()[0][0]);
+      glUniformMatrix4fv(glGetUniformLocation(programs.back(), "projection"), 1, GL_FALSE, &cam->get_projection_matrix()[0][0]);
+      glUniformMatrix4fv(glGetUniformLocation(programs.back(), "view"), 1, GL_FALSE, &cam->get_view_matrix()[0][0]);
 
-    glBindVertexArray(m->get_vao());
-		glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertices().size());
+      glBindVertexArray(m->get_vao());
+      glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());
 
-    glBindVertexArray(base_vao);
+      glBindVertexArray(base_vao);
+    }
   }
 
   void opengl_backend::update_renderer()

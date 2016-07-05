@@ -1,9 +1,8 @@
 #version 330 core
 out vec4 gPositionDepth;
 
-in vec2 TexCoords;
-in vec3 FragPos;
-in vec3 Normal;
+in vec2 tex_coords;
+in vec3 frag_pos;
 
 const float NEAR = -1.0f;
 const float FAR = 1000.0f;
@@ -16,11 +15,6 @@ float LinearizeDepth(float depth)
 
 void main()
 {
-    /*gPositionDepth.xyz = FragPos;
-    gPositionDepth.a = LinearizeDepth(gl_FragCoord.z);
-    gNormal = normalize(Normal);
-    gAlbedo = vec3(0, 1, 0);*/
-
-    gPositionDepth.xyz = vec3(0.0, 0.0, 0.0);
+  gPositionDepth.xyz = vec3(0.0, 0.0, 0.0);
 }
 

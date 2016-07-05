@@ -3,7 +3,13 @@
 # include <vector>
 # include <memory>
 
+namespace render_backend
+{
+  class render_manager;
+}
+
 # include "../render_backend/render_manager.hh"
+# include "mesh.hh"
 # include "loaders.hh"
 # include "../base/manager.hh"
 
