@@ -26,7 +26,7 @@ namespace render_backend
 		if (!check_gl_extensions())
       return false;
 
-    programs.push_back(load_shaders("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
+    pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
 
     glGenVertexArrays(1, &base_vao);
     glBindVertexArray(base_vao);
@@ -100,24 +100,13 @@ namespace render_backend
   void opengl_backend::batch(std::shared_ptr<scene::scene_manager> sm)
   {
     for (auto m : sm->get_render_queue())
-      meshes.push_back(std::static_pointer_cast<resource::gl_mesh>(m));
+      render_queue.push_back(std::static_pointer_cast<resource::gl_mesh>(m));
   }
 
   void opengl_backend::render()
   {
-    for (auto m : meshes)
-    {
-      glUseProgram(programs.back());
-
-      glUniformMatrix4fv(glGetUniformLocation(programs.back(), "model"), 1, GL_FALSE, &m->get_model()[0][0]);
-      glUniformMatrix4fv(glGetUniformLocation(programs.back(), "projection"), 1, GL_FALSE, &cam->get_projection_matrix()[0][0]);
-      glUniformMatrix4fv(glGetUniformLocation(programs.back(), "view"), 1, GL_FALSE, &cam->get_view_matrix()[0][0]);
-
-      glBindVertexArray(m->get_vao());
-      glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());
-
-      glBindVertexArray(base_vao);
-    }
+    for (auto pass : pipeline)
+      pass->process_pass(render_queue, cam);
   }
 
   void opengl_backend::update_renderer()

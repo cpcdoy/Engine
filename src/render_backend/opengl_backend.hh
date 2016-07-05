@@ -13,6 +13,9 @@
 # include "render_backend.hh"
 # include "../resource/mesh.hh"
 # include "../resource/gl_mesh.hh"
+# include "opengl_backend_utils.hh"
+# include "opengl_shader_pass.hh"
+# include "opengl_shader_pass_no_lighting.hh"
 
 namespace render_backend
 {
@@ -35,7 +38,6 @@ namespace render_backend
 
       GLuint generate_vao(std::shared_ptr<resource::gl_mesh> mesh);
 
-      GLuint load_shaders(const char* vertex_file_path, const char* fragment_file_path);
       virtual void update_renderer() override;
       virtual void set_ui_manager(std::shared_ptr<ui::ui_manager> ui) override;
 
@@ -50,6 +52,7 @@ namespace render_backend
 
       std::vector<std::string> gl_caps;
 
-      std::vector<std::shared_ptr<resource::gl_mesh>> meshes;
+      std::vector<std::shared_ptr<resource::gl_mesh>> render_queue;
+      std::vector<std::shared_ptr<opengl_shader_pass>> pipeline;
   };
 }
