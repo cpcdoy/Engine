@@ -26,7 +26,7 @@ namespace render_backend
 		if (!check_gl_extensions())
       return false;
 
-    pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
+    pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/no_lighting.vs", "res/shaders/no_lighting.fs"));
 
     glGenVertexArrays(1, &base_vao);
     glBindVertexArray(base_vao);
