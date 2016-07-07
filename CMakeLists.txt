@@ -49,7 +49,8 @@ target_link_libraries(Engine_check ${CMAKE_DL_LIBS} GL GLEW glfw SOIL)
 
 add_custom_target(deep_clean
   COMMAND find . -iwholename '*cmake*' -not -name CMakeLists.txt -delete
-  COMMAND rm -rf Testing Engine_check libengine.so doc/
+  COMMAND find . -iwholename '*Makefile*' -delete
+  COMMAND rm -rf Testing Engine_check libEngine.so doc/
 )
 
 add_custom_target(doc
