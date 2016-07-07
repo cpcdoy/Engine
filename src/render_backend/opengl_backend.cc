@@ -26,7 +26,8 @@ namespace render_backend
 		if (!check_gl_extensions())
       return false;
 
-    pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/no_lighting.vs", "res/shaders/no_lighting.fs"));
+    //pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/no_lighting.vs", "res/shaders/no_lighting.fs"));
+    pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
 
     glGenVertexArrays(1, &base_vao);
     glBindVertexArray(base_vao);
@@ -101,6 +102,8 @@ namespace render_backend
   {
     for (auto m : sm->get_render_queue())
       render_queue.push_back(std::static_pointer_cast<resource::gl_mesh>(m));
+
+    debug::log::get(debug::logINDENT, 5) << "Batched " << sm->get_render_queue().size() << " meshes" << std::endl;
   }
 
   void opengl_backend::render()
@@ -113,7 +116,6 @@ namespace render_backend
   {
     cam->update();
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 }

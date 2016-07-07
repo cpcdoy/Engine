@@ -58,7 +58,7 @@ namespace resource
     FILE* file = fopen(path, "r");
     if (file == NULL)
     {
-      debug::log::get(debug::logERROR) << "Cannot open the file : " << path << std::endl;
+      debug::log::get(debug::logERROR) << "Cannot open the file (most likely not found): " << path << std::endl;
       return false;
     }
 

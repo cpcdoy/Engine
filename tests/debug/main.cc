@@ -20,6 +20,7 @@ int main(void)
   m3->set_pos(glm::vec3(0, 1, 4));
   e.load_mesh("res/obj/floor.obj");
   e.load_mesh("lol.obj");
+  e.load_mesh("res/obj/test2.obj");
 
   camera cam = e.create_camera();
   e.set_current_camera(cam);

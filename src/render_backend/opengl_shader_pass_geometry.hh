@@ -11,5 +11,9 @@ namespace render_backend
     public:
       opengl_shader_pass_geometry(std::string vs, std::string fs);
       virtual void process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam) override;
+
+    private:
+      GLuint g_buffer;
+      GLuint g_position_depth, g_normal, g_albedo;
   };
 }
