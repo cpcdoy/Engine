@@ -8,7 +8,7 @@ namespace engine
     void engine::run(Functions... fs)
     {
       debug::log::get(debug::logINFO) << "Running the engine's main loop" << std::endl;
-      
+
       rb->batch(sm);
       while (ui->ui_satisfies_running_condition())
       {

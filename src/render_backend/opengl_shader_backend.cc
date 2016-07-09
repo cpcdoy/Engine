@@ -50,7 +50,7 @@ namespace render_backend
     {
       std::vector<char> vertex_shader_error_msg(info_log_length+1);
       glGetShaderInfoLog(vertex_shader_id, info_log_length, NULL, &vertex_shader_error_msg[0]);
-      debug::log::get(debug::logERROR) << vertex_shader_error_msg[0] << std::endl;
+      debug::log::get(debug::logERROR) << &vertex_shader_error_msg[0] << std::endl;
     }
 
     debug::log::get(debug::logREINDENT) << "Fragment shader: " << vertex_file_path << std::endl;
@@ -64,7 +64,7 @@ namespace render_backend
     {
       std::vector<char> fragment_shader_error_msg(info_log_length+1);
       glGetShaderInfoLog(fragment_shader_id, info_log_length, NULL, &fragment_shader_error_msg[0]);
-      debug::log::get(debug::logERROR) << fragment_shader_error_msg[0] << info_log_length << std::endl;
+      debug::log::get(debug::logERROR) << &fragment_shader_error_msg[0] << info_log_length << std::endl;
     }
 
     debug::log::get(debug::logREINDENT) << "Linking program" << std::endl;
@@ -79,7 +79,7 @@ namespace render_backend
     {
       std::vector<char> program_error_message(info_log_length+1);
       glGetProgramInfoLog(program_id, info_log_length, NULL, &program_error_message[0]);
-      debug::log::get(debug::logERROR) << program_error_message[0] << std::endl;
+      debug::log::get(debug::logERROR) << &program_error_message[0] << std::endl;
     }
 
     glDeleteShader(vertex_shader_id);

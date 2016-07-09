@@ -20,7 +20,9 @@ int main(void)
   m3->set_pos(glm::vec3(0, 1, 4));
   e.load_mesh("res/obj/floor.obj");
   e.load_mesh("lol.obj");
-  e.load_mesh("res/obj/test2.obj");
+  mesh m4 = e.load_mesh("res/obj/test2.obj");
+  m4->set_pos(glm::vec3(1, 0.5, 0));
+  m4->set_scale(glm::vec3(0.4));
 
   camera cam = e.create_camera();
   e.set_current_camera(cam);
@@ -31,9 +33,6 @@ int main(void)
   auto f = std::function<void()>([&]()
       {
         a -= 0.0001;
-        m->set_pos(glm::vec3(a + 0.005, 0, 0));
-        m2->set_pos(glm::vec3(a - 0.005, 0, 0));
-        m3->set_pos(glm::vec3(a, 0, 0));
       });
 
   e.run(f);

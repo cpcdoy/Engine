@@ -12,6 +12,7 @@
 # include "opengl_backend_utils.hh"
 # include "../resource/gl_mesh.hh"
 # include "../scene/camera.hh"
+# include "opengl_pipeline_state.hh"
 
 namespace render_backend
 {
@@ -35,5 +36,6 @@ namespace render_backend
       std::vector<GLint> uniforms;
 
       GLuint program;
+      GLuint rbo_depth;
   };
 }

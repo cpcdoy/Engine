@@ -16,6 +16,8 @@
 # include "opengl_backend_utils.hh"
 # include "opengl_shader_pass.hh"
 # include "opengl_shader_pass_no_lighting.hh"
+# include "opengl_shader_pass_geometry.hh"
+# include "opengl_shader_pass_ssao.hh"
 
 namespace render_backend
 {

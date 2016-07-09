@@ -27,19 +27,15 @@ namespace render_backend
       return false;
 
     //pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/no_lighting.vs", "res/shaders/no_lighting.fs"));
-    pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
+    pipeline.push_back(std::make_shared<opengl_shader_pass_geometry>("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
+    pipeline.push_back(std::make_shared<opengl_shader_pass_ssao>("res/shaders/SSAO.vs", "res/shaders/SSAO.fs"));
 
     glGenVertexArrays(1, &base_vao);
     glBindVertexArray(base_vao);
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-
+    glClearDepth(1.0);
+    
     return true;
   }
 
@@ -115,6 +111,13 @@ namespace render_backend
   void opengl_backend::update_renderer()
   {
     cam->update();
+
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
