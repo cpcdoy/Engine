@@ -14,10 +14,8 @@
 # include "../resource/mesh.hh"
 # include "../resource/gl_mesh.hh"
 # include "opengl_backend_utils.hh"
-# include "opengl_shader_pass.hh"
-# include "opengl_shader_pass_no_lighting.hh"
-# include "opengl_shader_pass_geometry.hh"
-# include "opengl_shader_pass_ssao.hh"
+
+# include "opengl_passes.hh"
 
 namespace render_backend
 {

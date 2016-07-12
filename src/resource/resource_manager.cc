@@ -5,7 +5,6 @@ namespace resource
   resource_manager::resource_manager(resource_manager_flags f, std::shared_ptr<render_backend::render_manager> rb)
   {
     (void)f;
-    managees.push_back(std::make_shared<model_loader>());
     managees.push_back(std::make_shared<obj_loader>());
 
     this->rb = rb;
