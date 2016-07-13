@@ -32,7 +32,7 @@ namespace render_backend
     opengl_pipeline_state::instance().add_state("depth_texture", depth_texture);
   }
 
-  void opengl_shader_pass_shadow_map::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam)
+  void opengl_shader_pass_shadow_map::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera>)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, detph_fbo);
     glViewport(0, 0, shadow_map_res, shadow_map_res);
