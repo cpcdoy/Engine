@@ -32,3 +32,7 @@ or
 `cmake ..`
 
 `make` or `make check`
+
+## Appendix
+
+Here's an [article](https://hackercorp.eu/ssao.html) about one method used in this engine
