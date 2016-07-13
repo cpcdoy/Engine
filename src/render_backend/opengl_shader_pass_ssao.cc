@@ -104,7 +104,7 @@ namespace render_backend
 
   void opengl_shader_pass_ssao::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>&, std::shared_ptr<scene::camera> cam)
   {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, ssao_fbo);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(program);

@@ -53,7 +53,7 @@ namespace render_backend
       debug::log::get(debug::logERROR) << &vertex_shader_error_msg[0] << std::endl;
     }
 
-    debug::log::get(debug::logREINDENT) << "Fragment shader: " << vertex_file_path << std::endl;
+    debug::log::get(debug::logREINDENT) << "Fragment shader: " << fragment_file_path << std::endl;
     char const * FragmentSourcePointer = fragment_shader_code.c_str();
     glShaderSource(fragment_shader_id, 1, &FragmentSourcePointer , NULL);
     glCompileShader(fragment_shader_id);

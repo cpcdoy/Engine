@@ -25,17 +25,24 @@ namespace render_backend
         return s;
       }
       
-      void add_state(std::string s, GLuint v)
+      void add_state(std::string s, long v)
       {
         states.insert(std::make_pair(s, v));
       }
 
-      GLuint get_state_of(std::string s)
+      long get_state_of(std::string s)
       {
-        return states.at(s);
+        try
+        {
+          return states.at(s);
+        }
+        catch (std::out_of_range& e)
+        {
+          return 0;
+        }
       }
 
     private:
-      std::map<std::string, GLuint> states;
+      std::map<std::string, long> states;
   };
 }
