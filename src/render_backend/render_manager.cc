@@ -11,7 +11,7 @@ namespace render_backend
   {
   }
 
-  bool render_manager::init_render_backend()
+  bool render_manager::init_render_backend(int w, int h)
   {
     debug::log::get(debug::logINFO) << "Loading render backend" << std::endl;
 
@@ -19,7 +19,7 @@ namespace render_backend
     {
       debug::log::get(debug::logINDENT, 5) << "Trying render backend \"" << (*i)->get_backend_id()
                                            << "\"" << std::endl;
-      if ((*i)->init_backend())
+      if ((*i)->init_backend(w, h))
       {
         current_managee = *i;
         return true;
@@ -61,5 +61,10 @@ namespace render_backend
   void render_manager::update_renderer()
   {
     current_managee->update_renderer();
+  }
+
+  void render_manager::add_state(std::string s, long r)
+  {
+    current_managee->add_state(s, r);
   }
 }

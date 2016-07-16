@@ -19,7 +19,7 @@ namespace render_backend
       {
       }
 
-      virtual bool init_backend()
+      virtual bool init_backend(int, int)
       {
         return false;
       }
@@ -54,6 +54,10 @@ namespace render_backend
       }
 
       virtual void update_renderer()
+      {
+      }
+
+      virtual void add_state(std::string, long)
       {
       }
 

@@ -24,7 +24,7 @@ namespace render_backend
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-      debug::log::get(debug::log_level::logERROR) << "Shadow map buffer incomplete!" << std::endl;
+      debug::log::get(debug::log_level::logERROR) << "Shadow map buffer incomplete" << std::endl;
 
     uniforms.push_back(glGetUniformLocation(program, "model"));
     uniforms.push_back(glGetUniformLocation(program, "VP"));
@@ -61,6 +61,6 @@ namespace render_backend
       glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());
     }
 
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, w, h);
   }
 }

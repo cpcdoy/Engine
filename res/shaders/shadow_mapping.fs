@@ -1,4 +1,5 @@
 #version 330 core
+
 out vec4 frag_color;
 
 in VS_OUT {
@@ -10,7 +11,10 @@ in VS_OUT {
 
 uniform sampler2D shadow_map;
 uniform sampler2D ao_map;
+
 //uniform sampler2D diffuseMap;
+
+uniform vec2 screen_res;
 
 uniform vec3 light_pos;
 uniform vec3 view_pos;
@@ -66,7 +70,7 @@ void main()
     vec3 to_light_norm = viewDirUnNorm / to_light_dist;
     float light_occlusion = 1.0 - clamp(dot(vec4(-viewDirUnNorm, 1.0), vec4(texture2D(ao_map, gl_FragCoord.xy / vec2(1280, 720)).r)), 0.0, 1.0);
    */
-  vec3 ambient = (AO ? 0.5 * texture2D(ao_map, gl_FragCoord.xy / vec2(800, 600)).r : 0.3) * color;
+  vec3 ambient = (AO ? 0.5 * texture2D(ao_map, gl_FragCoord.xy / screen_res).r : 0.3) * color;
   vec3 reflectDir = reflect(-lightDir, normal);
   float spec = 0.0;
   vec3 halfwayDir = normalize(lightDir + viewDir);  

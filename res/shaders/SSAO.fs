@@ -13,12 +13,11 @@ uniform sampler2D g_position_depth;
 uniform sampler2D g_normal;
 uniform sampler2D tex_noise;
 
-float radius = 1.0;
+const float radius = 1.0;
 
 #define KERNEL_SIZE 32
 uniform vec3 samples[KERNEL_SIZE];
-
-const vec2 noise_scale = vec2(1280 /4.0f, 720.0f / 4.0f); 
+uniform vec2 screen_res;
 
 uniform mat4 projection;
 
@@ -26,6 +25,8 @@ uniform mat4 projection;
 
 void main()
 {
+  vec2 noise_scale = screen_res / vec2(4.0f);
+
   vec3 fragPos = texture2D(g_position_depth, tex_coords).xyz;
   vec3 normal = texture2D(g_normal, tex_coords).rgb;
   vec3 random_vec = texture2D(tex_noise, tex_coords * noise_scale).xyz;

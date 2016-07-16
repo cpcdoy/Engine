@@ -22,6 +22,9 @@ namespace render_backend
       opengl_shader_pass(std::string vs, std::string fs)
       {
         program = load_shaders(vs.c_str(), fs.c_str());
+
+        w = opengl_pipeline_state::instance().get_state_of("width");
+        h = opengl_pipeline_state::instance().get_state_of("height");
       }
 
       virtual ~opengl_shader_pass()
@@ -37,5 +40,7 @@ namespace render_backend
 
       GLuint program;
       GLuint rbo_depth;
+
+      int w, h;
   };
 }

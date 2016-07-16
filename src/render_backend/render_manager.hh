@@ -23,7 +23,7 @@ namespace render_backend
       render_manager();
       ~render_manager();
 
-      bool init_render_backend();
+      bool init_render_backend(int w, int h);
 
       std::shared_ptr<resource::mesh>
         generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh);
@@ -34,5 +34,6 @@ namespace render_backend
       void set_ui_manager(std::shared_ptr<ui::ui_manager> ui);
       void set_camera(std::shared_ptr<scene::camera> cam);
       void update_renderer();
+      void add_state(std::string s, long r);
   };
 }

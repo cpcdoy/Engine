@@ -8,7 +8,7 @@ int main(void)
   //Optional
   e.set_engine_render_context(render_backend::render_plugins::OpenGL, 4, 3);
   //Optional
-  e.set_window_properties(800, 600, "test");
+  e.set_window_properties(1280, 720, "test");
 
   e.init();
 

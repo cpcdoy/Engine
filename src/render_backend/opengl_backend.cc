@@ -13,7 +13,7 @@ namespace render_backend
     glDeleteVertexArrays(vaos.size(), (const GLuint*)&vaos);
   }
 
-  bool opengl_backend::init_backend()
+  bool opengl_backend::init_backend(int w, int h)
   {
     glewExperimental = true;
     if (glewInit() != GLEW_OK) 
@@ -25,6 +25,9 @@ namespace render_backend
 
 		if (!check_gl_extensions())
       return false;
+
+    add_state("width", w);
+    add_state("height", h);
 
     //pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/no_lighting.vs", "res/shaders/no_lighting.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_shadow_map>("res/shaders/shadow_map.vs", "res/shaders/shadow_map.fs"));
@@ -122,5 +125,10 @@ namespace render_backend
     cam->update();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
+
+  void opengl_backend::add_state(std::string s, long r)
+  {
+    opengl_pipeline_state::instance().add_state(s, r);
   }
 }

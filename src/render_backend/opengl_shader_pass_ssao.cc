@@ -27,11 +27,11 @@ namespace render_backend
 
     glGenRenderbuffers(1, &rbo_depth);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo_depth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 800, 600);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, w, h);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo_depth);
     // - Finally check if framebuffer is complete
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-      std::cout << "GBuffer Framebuffer not complete!" << std::endl;
+      debug::log::get(debug::log_level::logERROR) << "Depth Framebuffer not complete" << std::endl;
 
     //Generate noise texture
     glGenTextures(1, &noise_texture);
@@ -49,12 +49,12 @@ namespace render_backend
     // - SSAO color buffer
     glGenTextures(1, &ssao_texture);
     glBindTexture(GL_TEXTURE_2D, ssao_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 800, 600, 0, GL_RED, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, w, h, 0, GL_RED, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssao_texture, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-      std::cout << "SSAO Framebuffer not complete!" << std::endl;
+      debug::log::get(debug::log_level::logERROR) << "SSAO Framebuffer not complete" << std::endl;
 
     static const GLfloat quad_vertex_buffer[] =
     {
@@ -100,6 +100,9 @@ namespace render_backend
     glUniform1i(glGetUniformLocation(program, "g_position_depth"), 0);
     glUniform1i(glGetUniformLocation(program, "g_normal"), 1);
     glUniform1i(glGetUniformLocation(program, "tex_noise"), 2);
+
+    uniforms.push_back(glGetUniformLocation(program, "screen_res"));
+    glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
 
   void opengl_shader_pass_ssao::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>&, std::shared_ptr<scene::camera> cam)

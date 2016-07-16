@@ -17,6 +17,8 @@
 
 # include "opengl_passes.hh"
 
+# include "opengl_pipeline_state.hh"
+
 namespace render_backend
 {
   class render_backend;
@@ -30,7 +32,7 @@ namespace render_backend
       opengl_backend();
       ~opengl_backend();
 
-      virtual bool init_backend() override;
+      virtual bool init_backend(int w, int h) override;
 
       virtual std::shared_ptr<resource::mesh> generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh) override;
       virtual void batch(std::shared_ptr<scene::scene_manager> sm) override;
@@ -43,6 +45,8 @@ namespace render_backend
 
       bool check_gl_extensions();
       std::vector<std::string> get_gl_extensions();
+
+      virtual void add_state(std::string s, long r) override;
 
     private:
       std::vector<GLuint> programs;

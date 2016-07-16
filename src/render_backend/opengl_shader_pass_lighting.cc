@@ -14,10 +14,14 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "ao_map"));
     uniforms.push_back(glGetUniformLocation(program, "model"));
 
+    uniforms.push_back(glGetUniformLocation(program, "screen_res"));
+
     glUseProgram(program);
 
     glUniform1i(uniforms[5], 0);
     glUniform1i(uniforms[6], 1);
+
+    glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
 
   void opengl_shader_pass_lighting::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam)
