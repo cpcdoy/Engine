@@ -34,9 +34,12 @@ namespace render_backend
         return mesh;
       }
 
-      virtual void batch(std::shared_ptr<scene::scene_manager> sm)
+      virtual void set_compatible_texture(std::shared_ptr<resource::mesh>&, unsigned char*, int, int)
       {
-        (void)sm;
+      }
+
+      virtual void batch(std::shared_ptr<scene::scene_manager>)
+      {
       }
 
       virtual void render()

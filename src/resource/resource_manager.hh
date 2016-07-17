@@ -28,12 +28,15 @@ namespace resource
       resource_manager(resource_manager_flags f, std::shared_ptr<render_backend::render_manager> rb);
       ~resource_manager();
 
-      std::shared_ptr<mesh> load(std::string path);
+      std::shared_ptr<mesh> load_mesh(std::string path);
+      void load_texture(std::string path, std::shared_ptr<mesh>& mesh);
 
       std::vector<std::shared_ptr<mesh>> get_meshes();
 
     private:
       std::vector<std::shared_ptr<mesh>> meshes;
       std::shared_ptr<render_backend::render_manager> rb;
+
+      std::vector<std::shared_ptr<texture_loader>> tex_loaders;
   };
 }

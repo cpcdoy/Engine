@@ -28,6 +28,9 @@ namespace render_backend
       std::shared_ptr<resource::mesh>
         generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh);
 
+      void
+        set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int w, int h);
+
       void render();
       void batch(std::shared_ptr<scene::scene_manager> sm);
 

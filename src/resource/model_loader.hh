@@ -35,6 +35,6 @@ namespace resource
       }
 
     protected:
-      std::string loader_id = "virtual empty loader";
+      std::string loader_id = "virtual empty mesh loader";
   };
 }

@@ -12,14 +12,15 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "light_space_matrix"));
     uniforms.push_back(glGetUniformLocation(program, "shadow_map"));
     uniforms.push_back(glGetUniformLocation(program, "ao_map"));
+    uniforms.push_back(glGetUniformLocation(program, "diffuse_map"));
     uniforms.push_back(glGetUniformLocation(program, "model"));
-
     uniforms.push_back(glGetUniformLocation(program, "screen_res"));
 
     glUseProgram(program);
 
     glUniform1i(uniforms[5], 0);
     glUniform1i(uniforms[6], 1);
+    glUniform1i(uniforms[7], 2);
 
     glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
@@ -56,10 +57,13 @@ namespace render_backend
     glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("depth_texture"));
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("ssao_texture"));
+    glActiveTexture(GL_TEXTURE2);
 
     for (auto m : render_queue)
     {
-      glUniformMatrix4fv(uniforms[7], 1, GL_FALSE, &m->get_model()[0][0]);
+      glUniformMatrix4fv(uniforms[8], 1, GL_FALSE, &m->get_model()[0][0]);
+
+      glBindTexture(GL_TEXTURE_2D, m->get_texture());
 
       glBindVertexArray(m->get_vao());
       glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());

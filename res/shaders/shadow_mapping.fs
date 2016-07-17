@@ -12,7 +12,7 @@ in VS_OUT {
 uniform sampler2D shadow_map;
 uniform sampler2D ao_map;
 
-//uniform sampler2D diffuseMap;
+uniform sampler2D diffuse_map;
 
 uniform vec2 screen_res;
 
@@ -42,7 +42,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     {
       float pcfDepth = texture2D(shadow_map, projCoords.xy + vec2(x, y) * texelSize).r; 
       shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
-    }    
+    }
   }
   shadow /= 9.0;
 
@@ -54,7 +54,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {           
-  vec3 color = vec3(0.7, 0.7, 0.7); //texture(diffuseMap, fs_in.tex_coords).rgb;
+  vec3 color = texture(diffuse_map, fs_in.tex_coords).rgb;
   vec3 normal = normalize(fs_in.normal);
   vec3 lightColor = vec3(0.3);
 

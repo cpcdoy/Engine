@@ -38,6 +38,12 @@ namespace render_backend
       return current_managee->generate_compatible_mesh(mesh);
     }
 
+  void
+    render_manager::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int w, int h)
+    {
+      current_managee->set_compatible_texture(mesh, tex, w, h);
+    }
+
   void render_manager::batch(std::shared_ptr<scene::scene_manager> sm)
   {
     current_managee->batch(sm);

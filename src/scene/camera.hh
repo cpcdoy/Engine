@@ -21,7 +21,7 @@ namespace scene
       camera();
       ~camera();
 
-      void update();
+      void update(int w, int h);
       glm::mat4 get_view_matrix();
       glm::mat4 get_projection_matrix();
       glm::vec3 get_camera_position();

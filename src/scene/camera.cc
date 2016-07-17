@@ -36,7 +36,7 @@ namespace scene
     this->window = w;
   }
 
-  void camera::update()
+  void camera::update(int w, int h)
   {
     static double lastTime = glfwGetTime();
 
@@ -46,10 +46,12 @@ namespace scene
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
 
-    glfwSetCursorPos(window, 1024/2, 768/2);
+    int w_ = w / 2;
+    int h_ = h / 2;
+    glfwSetCursorPos(window, w_, h_);
 
-    horizontal_angle += mouseSpeed * float(1024/2 - xpos );
-    vertical_angle   += mouseSpeed * float( 768/2 - ypos );
+    horizontal_angle += mouseSpeed * float(w_ - xpos);
+    vertical_angle += mouseSpeed * float(h_ - ypos);
 
     glm::vec3 direction(cos(vertical_angle) * sin(horizontal_angle), sin(vertical_angle),
                         cos(vertical_angle) * cos(horizontal_angle));
@@ -70,7 +72,7 @@ namespace scene
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
       pos.y += deltaTime * speed;
 
-    proj = glm::perspective(fov, 4.0f / 3.0f, 0.1f, 100.0f);
+    proj = glm::perspective(fov, (((float)w) / (float)(h)), 0.1f, 100.0f);
     view = glm::lookAt(pos, pos+direction, up);
 
     lastTime = currentTime;

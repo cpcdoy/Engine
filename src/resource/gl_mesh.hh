@@ -19,8 +19,13 @@ namespace resource
       void set_vao(GLuint vao);
       GLuint get_vao();
 
+      void set_texture(GLuint tex);
+      GLuint get_texture();
+
     private:
       GLuint vao;
+
+      GLuint tex;
 
       GLuint vertices_vbo;
       GLuint uv_vbo;

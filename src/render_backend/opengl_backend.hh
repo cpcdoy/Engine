@@ -35,6 +35,8 @@ namespace render_backend
       virtual bool init_backend(int w, int h) override;
 
       virtual std::shared_ptr<resource::mesh> generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh) override;
+      virtual void set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int width, int height) override;
+
       virtual void batch(std::shared_ptr<scene::scene_manager> sm) override;
       virtual void render() override;
 

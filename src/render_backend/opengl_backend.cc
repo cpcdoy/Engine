@@ -61,6 +61,25 @@ namespace render_backend
     return gl_mesh;
   }
 
+  void opengl_backend::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int width, int height)
+  {
+    debug::log::get(debug::logINFO) << "Generating a texture" << std::endl;
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
+
+    auto gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
+    gl_mesh->set_texture(texture);
+
+    debug::log::get(debug::logINDENT, 5) << "tex : " << texture << std::endl;
+  }
+
   void opengl_backend::set_ui_manager(std::shared_ptr<ui::ui_manager> ui)
   {
     this->ui = ui;
@@ -122,7 +141,8 @@ namespace render_backend
 
   void opengl_backend::update_renderer()
   {
-    cam->update();
+    cam->update(opengl_pipeline_state::instance().get_state_of("width"),
+                opengl_pipeline_state::instance().get_state_of("height"));
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }

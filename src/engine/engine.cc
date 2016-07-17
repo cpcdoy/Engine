@@ -65,10 +65,15 @@ namespace engine
 
   mesh engine::load_mesh(std::string p)
   {
-    if (rm->load(p))
+    if (rm->load_mesh(p))
       return sm->create_node(rm->get_meshes().back());
 
     return nullptr;
+  }
+
+  void engine::load_texture(std::string p, mesh m)
+  {
+    rm->load_texture(p, m);
   }
 
   std::shared_ptr<scene::camera> engine::create_camera()
