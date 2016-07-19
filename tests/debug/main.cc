@@ -13,6 +13,7 @@ int main(void)
   e.init();
 
   mesh m3 = e.load_mesh("res/obj/sponza.obj");
+  e.load_texture("res/tex/K2.jpg", m3);
 
   mesh m4 = e.load_mesh("res/obj/california.obj");
   e.load_texture("res/tex/K.jpg", m4);
