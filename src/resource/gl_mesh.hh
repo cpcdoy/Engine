@@ -22,10 +22,14 @@ namespace resource
       void set_texture(GLuint tex);
       GLuint get_texture();
 
+      void set_normal_texture(GLuint tex);
+      GLuint get_normal_texture();
+
     private:
       GLuint vao;
 
-      GLuint tex;
+      GLuint albedo_tex;
+      GLuint normal_tex;
 
       GLuint vertices_vbo;
       GLuint uv_vbo;

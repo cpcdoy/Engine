@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(Engine CXX)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++11 -pedantic -fPIC -g")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++11 -pedantic -fPIC -O3")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -Werror -O3")

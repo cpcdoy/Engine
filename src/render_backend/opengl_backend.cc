@@ -33,7 +33,7 @@ namespace render_backend
     pipeline.push_back(std::make_shared<opengl_shader_pass_shadow_map>("res/shaders/shadow_map.vs", "res/shaders/shadow_map.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_geometry>("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_ssao>("res/shaders/SSAO.vs", "res/shaders/SSAO.fs"));
-    pipeline.push_back(std::make_shared<opengl_shader_pass_lighting>("res/shaders/shadow_mapping.vs", "res/shaders/shadow_mapping.fs"));
+    pipeline.push_back(std::make_shared<opengl_shader_pass_lighting>("res/shaders/lighting.vs", "res/shaders/lighting.fs"));
 
     glGenVertexArrays(1, &base_vao);
     glBindVertexArray(base_vao);

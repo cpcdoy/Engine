@@ -19,6 +19,13 @@ namespace resource
 
   struct mesh_resource
   {
+    mesh_resource();
+    mesh_resource(int dist, int level)
+    {
+      this->dist = dist;
+      this->level = level;
+    }
+
     int dist;
     int level = 0;
 
@@ -46,7 +53,7 @@ namespace resource
       void set_pos(glm::vec3 pos);
       void set_scale(glm::vec3 scale);
 
-      void set_current_lod(glm::vec3 cam_pos);
+      void compute_current_lod(glm::vec3 cam_pos);
       int get_current_log();
 
       glm::mat4 get_model();

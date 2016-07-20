@@ -10,7 +10,7 @@ namespace resource
 
   soil_loader::~soil_loader()
   {
-    debug::log::get(debug::log_level::logINFO) << "Cleaning the " << loader_id << " resources" << std::endl;
+    debug::log::get(debug::log_level::logINFO) << "Cleaning the " << loader_id << "'s resources" << std::endl;
     std::for_each(texs.begin(), texs.end(), &SOIL_free_image_data);
   }
 

@@ -91,31 +91,31 @@ namespace resource
       else if (strcmp(lineHeader, "f") == 0)
       {
         std::string vertex1, vertex2, vertex3;
-        unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+        unsigned int vertex_index[3], uv_index[3], normal_index[3];
         int curr_pos = ftell(file);
-        int matches = fscanf(file, "%u/%u/%u %u/%u/%u %u/%u/%u\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+        int matches = fscanf(file, "%u/%u/%u %u/%u/%u %u/%u/%u\n", &vertex_index[0], &uv_index[0], &normal_index[0], &vertex_index[1], &uv_index[1], &normal_index[1], &vertex_index[2], &uv_index[2], &normal_index[2]);
 
         if (matches != 9)
         {
-          uvIndex[0] = 0;
-          uvIndex[1] = 0;
-          uvIndex[2] = 0;
+          uv_index[0] = 0;
+          uv_index[1] = 0;
+          uv_index[2] = 0;
           fseek(file, curr_pos, SEEK_SET);
-          matches = fscanf(file, "%u//%u %u//%u %u//%u\n", &vertexIndex[0], &normalIndex[0], &vertexIndex[1], &normalIndex[1], &vertexIndex[2], &normalIndex[2]);
+          matches = fscanf(file, "%u//%u %u//%u %u//%u\n", &vertex_index[0], &normal_index[0], &vertex_index[1], &normal_index[1], &vertex_index[2], &normal_index[2]);
           if (matches != 6)
             debug::log::get(debug::logERROR) << "File can't be read, try triangularizing the faces"
                                                    << std::endl;
           return false;
         }
-        vertex_indices.push_back(vertexIndex[0]);
-        vertex_indices.push_back(vertexIndex[1]);
-        vertex_indices.push_back(vertexIndex[2]);
-        uv_indices.push_back(uvIndex[0]);
-        uv_indices.push_back(uvIndex[1]);
-        uv_indices.push_back(uvIndex[2]);
-        normal_indices.push_back(normalIndex[0]);
-        normal_indices.push_back(normalIndex[1]);
-        normal_indices.push_back(normalIndex[2]);
+        vertex_indices.push_back(vertex_index[0]);
+        vertex_indices.push_back(vertex_index[1]);
+        vertex_indices.push_back(vertex_index[2]);
+        uv_indices.push_back(uv_index[0]);
+        uv_indices.push_back(uv_index[1]);
+        uv_indices.push_back(uv_index[2]);
+        normal_indices.push_back(normal_index[0]);
+        normal_indices.push_back(normal_index[1]);
+        normal_indices.push_back(normal_index[2]);
       }
       else
       {
@@ -126,13 +126,13 @@ namespace resource
 
     for (unsigned int i = 0; i < vertex_indices.size(); i++)
     {
-      unsigned int vertexIndex = vertex_indices[i];
-      unsigned int uvIndex = uv_indices[i];
-      unsigned int normalIndex = normal_indices[i];
+      unsigned int vertex_index = vertex_indices[i];
+      unsigned int uv_index = uv_indices[i];
+      unsigned int normal_index = normal_indices[i];
 
-      glm::vec3 vertex = temp_vertices[vertexIndex - 1];
-      glm::vec2 uv = temp_uvs[uvIndex - 1];
-      glm::vec3 normal = temp_normals[normalIndex - 1];
+      glm::vec3 vertex = temp_vertices[vertex_index - 1];
+      glm::vec2 uv = temp_uvs[uv_index - 1];
+      glm::vec3 normal = temp_normals[normal_index - 1];
 
       out_vertices.push_back(vertex);
       out_uvs.push_back(uv);

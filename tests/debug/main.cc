@@ -16,8 +16,12 @@ int main(void)
   e.load_texture("res/tex/K2.jpg", m3);
 
   mesh m4 = e.load_mesh("res/obj/california.obj");
-  e.load_texture("res/tex/K.jpg", m4);
+  e.load_texture("res/tex/K2.jpg", m4);
   m4->set_pos(glm::vec3(0, 0.15, 0));
+
+  mesh m2 = e.load_mesh("res/obj/sphere.obj");
+  e.load_texture("res/tex/K2.jpg", m2);
+  m2->set_pos(glm::vec3(0, 5, 0));
 
   camera cam = e.create_camera();
   e.set_current_camera(cam);

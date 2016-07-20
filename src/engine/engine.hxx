@@ -19,6 +19,10 @@ namespace engine
         rb->render();
 
         ui->update_ui();
+
+        auto cam_pos = sm->get_current_camera()->get_camera_position();
+        for (auto m : sm->get_render_queue())
+          m->compute_current_lod(cam_pos);
       }
       debug::log::get(debug::logINDENT, 5) << "Finished" << std::endl;
     }

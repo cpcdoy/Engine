@@ -20,7 +20,7 @@ namespace engine
       ~engine();
 
       bool set_engine_render_context(
-          render_backend::render_plugins r=render_backend::render_plugins::OpenGL,
+          render_backend::render_plugins r = render_backend::render_plugins::OpenGL,
           int major=3, int minor=3);
 
       void set_window_properties(int w, int h, std::string title);

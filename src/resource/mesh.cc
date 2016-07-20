@@ -1,4 +1,5 @@
 #include "mesh.hh"
+# include <iostream>
 
 namespace resource
 {
@@ -6,7 +7,9 @@ namespace resource
   mesh::mesh()
   {
     lod = 0;
-    lods.push_back(mesh_resource());
+    mesh_resource m_r(1000, 0);
+
+    lods.push_back(m_r);
 
     model = glm::mat4(1.0);
   }
@@ -55,7 +58,7 @@ namespace resource
     model = glm::scale(model, scale);
   }
 
-  void mesh::set_current_lod(glm::vec3 cam_pos)
+  void mesh::compute_current_lod(glm::vec3 cam_pos)
   {
     glm::vec3 mesh_pos = cam_pos - glm::vec3(model[3]);
     float cam_dist = glm::dot(mesh_pos, mesh_pos);
