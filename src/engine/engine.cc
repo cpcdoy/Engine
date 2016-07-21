@@ -86,4 +86,9 @@ namespace engine
     sm->set_current_camera(cam);
     rb->set_camera(cam);
   }
+
+  void engine::set_clear_color(float r, float g, float b)
+  {
+    rb->set_clear_color(r, g, b);
+  }
 }

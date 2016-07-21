@@ -47,7 +47,7 @@ namespace resource
     return nullptr;
   }
 
-  void resource_manager::load_texture(std::string path, std::shared_ptr<mesh>& mesh)
+  void resource_manager::load_texture(std::string path, std::shared_ptr<mesh>& mesh, texture_kind k)
   {
     debug::log::get(debug::logINFO) << "Loading texture resource " << path << std::endl;
 
@@ -58,7 +58,7 @@ namespace resource
 
       if ((*i)->load(path.c_str()))
       {
-        rb->set_compatible_texture(mesh, (*i)->get_generated_texture(), (*i)->get_width(), (*i)->get_height());
+        rb->set_compatible_texture(mesh, (*i)->get_generated_texture(), (*i)->get_width(), (*i)->get_height(), k);
         return;
       }
       debug::log::get(debug::logINDENT, 10) << "FAIL" << std::endl;

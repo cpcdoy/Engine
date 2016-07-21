@@ -29,6 +29,7 @@ namespace engine
       void load_texture(std::string p, mesh m);
       std::shared_ptr<scene::camera> create_camera();
       void set_current_camera(camera cam);
+      void set_clear_color(float r, float g, float b);
 
       bool init();
 

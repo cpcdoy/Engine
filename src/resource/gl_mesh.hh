@@ -9,6 +9,18 @@
 
 namespace resource
 {
+  struct gl_material
+  {
+      GLuint albedo_tex = 0;
+      GLuint normal_tex = 0;
+      GLuint metalness_tex = 0;
+      GLuint roughness_tex = 0;
+
+      bool has_tex = false;
+
+      glm::vec4 base_color;
+  };
+
   class gl_mesh : public mesh
   {
     public:
@@ -25,11 +37,16 @@ namespace resource
       void set_normal_texture(GLuint tex);
       GLuint get_normal_texture();
 
+      void set_roughness_texture(GLuint tex);
+      GLuint get_roughness_texture();
+
+      void set_metalness_texture(GLuint tex);
+      GLuint get_metalness_texture();
+
     private:
       GLuint vao;
 
-      GLuint albedo_tex;
-      GLuint normal_tex;
+      gl_material material;
 
       GLuint vertices_vbo;
       GLuint uv_vbo;

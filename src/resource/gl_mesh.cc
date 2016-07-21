@@ -31,21 +31,41 @@ namespace resource
 
   void gl_mesh::set_texture(GLuint tex)
   {
-    this->albedo_tex = tex;
+    material.albedo_tex = tex;
   }
 
   GLuint gl_mesh::get_texture()
   {
-    return albedo_tex;
+    return material.albedo_tex;
   }
 
   void gl_mesh::set_normal_texture(GLuint tex)
   {
-    this->albedo_tex = tex;
+    material.normal_tex = tex;
   }
 
   GLuint gl_mesh::get_normal_texture()
   {
-    return albedo_tex;
+    return material.normal_tex;
+  }
+
+  void gl_mesh::set_roughness_texture(GLuint tex)
+  {
+    material.roughness_tex = tex;
+  }
+
+  GLuint gl_mesh::get_roughness_texture()
+  {
+    return material.roughness_tex;
+  }
+
+  void gl_mesh::set_metalness_texture(GLuint tex)
+  {
+    material.metalness_tex = tex;
+  }
+
+  GLuint gl_mesh::get_metalness_texture()
+  {
+    return material.metalness_tex;
   }
 }

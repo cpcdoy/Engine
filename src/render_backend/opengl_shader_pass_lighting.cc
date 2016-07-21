@@ -13,6 +13,8 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "shadow_map"));
     uniforms.push_back(glGetUniformLocation(program, "ao_map"));
     uniforms.push_back(glGetUniformLocation(program, "diffuse_map"));
+    uniforms.push_back(glGetUniformLocation(program, "metalness_map"));
+    uniforms.push_back(glGetUniformLocation(program, "roughness_map"));
     uniforms.push_back(glGetUniformLocation(program, "model"));
     uniforms.push_back(glGetUniformLocation(program, "screen_res"));
 
@@ -57,13 +59,21 @@ namespace render_backend
     glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("depth_texture"));
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("ssao_texture"));
-    glActiveTexture(GL_TEXTURE2);
 
     for (auto m : render_queue)
     {
       glUniformMatrix4fv(uniforms[8], 1, GL_FALSE, &m->get_model()[0][0]);
+      glUniformMatrix4fv(uniforms[9], 1, GL_FALSE, &m->get_model()[0][0]);
+      glUniformMatrix4fv(uniforms[10], 1, GL_FALSE, &m->get_model()[0][0]);
 
+      glActiveTexture(GL_TEXTURE2);
       glBindTexture(GL_TEXTURE_2D, m->get_texture());
+
+      glActiveTexture(GL_TEXTURE3);
+      glBindTexture(GL_TEXTURE_2D, m->get_metalness_texture());
+
+      glActiveTexture(GL_TEXTURE4);
+      glBindTexture(GL_TEXTURE_2D, m->get_roughness_texture());
 
       glBindVertexArray(m->get_vao());
       glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());

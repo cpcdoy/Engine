@@ -39,9 +39,9 @@ namespace render_backend
     }
 
   void
-    render_manager::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int w, int h)
+    render_manager::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int w, int h, texture_kind k)
     {
-      current_managee->set_compatible_texture(mesh, tex, w, h);
+      current_managee->set_compatible_texture(mesh, tex, w, h, k);
     }
 
   void render_manager::batch(std::shared_ptr<scene::scene_manager> sm)
@@ -72,5 +72,10 @@ namespace render_backend
   void render_manager::add_state(std::string s, long r)
   {
     current_managee->add_state(s, r);
+  }
+
+  void render_manager::set_clear_color(float r, float g, float b)
+  {
+    current_managee->set_clear_color(r, g, b);
   }
 }

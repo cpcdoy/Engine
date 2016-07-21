@@ -35,7 +35,7 @@ namespace render_backend
       virtual bool init_backend(int w, int h) override;
 
       virtual std::shared_ptr<resource::mesh> generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh) override;
-      virtual void set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int width, int height) override;
+      virtual void set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int width, int height, texture_kind k) override;
 
       virtual void batch(std::shared_ptr<scene::scene_manager> sm) override;
       virtual void render() override;
@@ -49,6 +49,8 @@ namespace render_backend
       std::vector<std::string> get_gl_extensions();
 
       virtual void add_state(std::string s, long r) override;
+
+      virtual void set_clear_color(float r, float g, float b) override;
 
     private:
       std::vector<GLuint> programs;

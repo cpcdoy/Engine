@@ -8,6 +8,7 @@ namespace render_backend
   class render_manager;
 }
 
+# include "texture_kind.hh"
 # include "../render_backend/render_manager.hh"
 # include "mesh.hh"
 # include "loaders.hh"
@@ -29,7 +30,7 @@ namespace resource
       ~resource_manager();
 
       std::shared_ptr<mesh> load_mesh(std::string path);
-      void load_texture(std::string path, std::shared_ptr<mesh>& mesh);
+      void load_texture(std::string path, std::shared_ptr<mesh>& mesh, texture_kind k = texture_kind::ALBEDO);
 
       std::vector<std::shared_ptr<mesh>> get_meshes();
 

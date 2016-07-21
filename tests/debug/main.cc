@@ -21,7 +21,7 @@ int main(void)
 
   mesh m2 = e.load_mesh("res/obj/sphere.obj");
   e.load_texture("res/tex/K2.jpg", m2);
-  m2->set_pos(glm::vec3(0, 5, 0));
+  m2->set_pos(glm::vec3(-0.1, 5, 0));
 
   camera cam = e.create_camera();
   e.set_current_camera(cam);

@@ -5,6 +5,8 @@ namespace render_backend
   opengl_backend::opengl_backend()
   {
     backend_id = "OpenGL Backend";
+
+    //add_state<glm::vec3>("clear_color", glm::vec3(1.0, 1.0, 1.0));
   }
 
   opengl_backend::~opengl_backend()
@@ -28,6 +30,9 @@ namespace render_backend
 
     add_state("width", w);
     add_state("height", h);
+    add_state("shadow_map_res", 1024);
+
+    opengl_pipeline_state::instance().get_state_of("width");
 
     //pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/no_lighting.vs", "res/shaders/no_lighting.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_shadow_map>("res/shaders/shadow_map.vs", "res/shaders/shadow_map.fs"));
@@ -38,7 +43,8 @@ namespace render_backend
     glGenVertexArrays(1, &base_vao);
     glBindVertexArray(base_vao);
 
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    auto sky = glm::vec3(0.0, 0.2, 0.4);
+    glClearColor(sky.x, sky.y, sky.z, 1.0f);
     glClearDepth(1.0);
 
     glDepthMask(GL_TRUE);
@@ -47,21 +53,27 @@ namespace render_backend
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+
+    glEnable(GL_FRAMEBUFFER_SRGB);
     
     return true;
+  }
+
+  void opengl_backend::set_clear_color(float r, float g, float b)
+  {
+    //add_state<glm::vec3>("clear_color", glm::vec3(r, g, b));
   }
 
   std::shared_ptr<resource::mesh>
   opengl_backend::generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh)
   {
     std::shared_ptr<resource::gl_mesh> gl_mesh = std::make_shared<resource::gl_mesh>(mesh);
-
     gl_mesh->set_vao(generate_vao(gl_mesh));
 
     return gl_mesh;
   }
 
-  void opengl_backend::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int width, int height)
+  void opengl_backend::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int width, int height, texture_kind k)
   {
     debug::log::get(debug::logINFO) << "Generating a texture" << std::endl;
 
@@ -72,10 +84,21 @@ namespace render_backend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
+
+    if (k > texture_kind::NORMAL)
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_FLOAT, tex);
+    else
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
 
     auto gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
-    gl_mesh->set_texture(texture);
+    if (k == texture_kind::ALBEDO)
+      gl_mesh->set_texture(texture);
+    else if (k == texture_kind::NORMAL)
+      gl_mesh->set_normal_texture(texture);
+    else if (k == texture_kind::METALNESS)
+      gl_mesh->set_metalness_texture(texture);
+    else if (k == texture_kind::ROUGHNESS)
+      gl_mesh->set_roughness_texture(texture);
 
     debug::log::get(debug::logINDENT, 5) << "tex : " << texture << std::endl;
   }

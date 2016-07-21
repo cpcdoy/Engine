@@ -34,7 +34,7 @@ namespace render_backend
         return mesh;
       }
 
-      virtual void set_compatible_texture(std::shared_ptr<resource::mesh>&, unsigned char*, int, int)
+      virtual void set_compatible_texture(std::shared_ptr<resource::mesh>&, unsigned char*, int, int, texture_kind)
       {
       }
 
@@ -61,6 +61,10 @@ namespace render_backend
       }
 
       virtual void add_state(std::string, long)
+      {
+      }
+
+      virtual void set_clear_color(float, float, float)
       {
       }
 

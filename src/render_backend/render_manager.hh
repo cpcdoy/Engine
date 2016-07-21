@@ -29,7 +29,7 @@ namespace render_backend
         generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh);
 
       void
-        set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int w, int h);
+        set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int w, int h, texture_kind k);
 
       void render();
       void batch(std::shared_ptr<scene::scene_manager> sm);
@@ -38,5 +38,7 @@ namespace render_backend
       void set_camera(std::shared_ptr<scene::camera> cam);
       void update_renderer();
       void add_state(std::string s, long r);
+
+      void set_clear_color(float r, float g, float b);
   };
 }

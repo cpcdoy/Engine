@@ -13,21 +13,24 @@ uniform sampler2D shadow_map;
 uniform sampler2D ao_map;
 
 uniform sampler2D diffuse_map;
+uniform sampler2D metalness_map;
+uniform sampler2D roughness_map;
 
 uniform vec2 screen_res;
 
 uniform vec3 light_pos;
 uniform vec3 view_pos;
 
-vec4 base_color = vec4(1.0);
+vec4 base_color = vec4(1.0, 1.0, 1.0, 1.0);
 
 bool AO = true;
 
 #define PI 3.1415926535897932
 #define ONE_OVER_PI 0.318309
 
-float metalness = 1.0;
-float roughness = 0.48;
+float metalness = texture(metalness_map, fs_in.tex_coords).r;//1.0;
+float roughness = texture(roughness_map, fs_in.tex_coords).r;//0.68;
+float has_texture = 1.0;
 
 float ggx_chi(float h_dot_n)
 {
@@ -88,7 +91,7 @@ float schlick_geometry(float n_dot_l, float n_dot_v, float roughness)
 vec4 brdf_lambert(vec2 uv)
 {
   vec4 albedo = texture(diffuse_map, uv);
-  vec4 color = mix(base_color, albedo, 1.0);
+  vec4 color = mix(base_color, albedo, has_texture);
 
   color.rgb = mix(color.rgb, vec3(0.0), metalness);
   color.rgb *= ONE_OVER_PI;
@@ -146,9 +149,9 @@ vec3 gamma(vec3 v)
 
 void main()
 {           
-  vec3 color = gamma(texture(diffuse_map, fs_in.tex_coords).rgb);
+  vec3 color = texture(diffuse_map, fs_in.tex_coords).rgb;
   vec3 normal = normalize(fs_in.normal);
-  vec3 lightColor = vec3(0.3);
+  vec3 lightColor = vec3(0.0, 0.2, 0.4);
   
   vec3 lightDir = light_pos - fs_in.frag_pos;
   vec3 l = normalize(lightDir);
@@ -171,7 +174,7 @@ void main()
   vec3 ambient = (AO ? 0.2 * texture2D(ao_map, gl_FragCoord.xy / screen_res).r : 0.3) * color;
 
   float shadow = ShadowCalculation(fs_in.frag_pos_light_space);
-  vec3 lighting = ambient + (fd.rgb * fd.a + fs) * ndotl * (1.0 - shadow); //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;
+  vec3 lighting = (ambient + (fd.rgb * fd.a + fs) * ndotl * (1.0 - shadow)) * lightColor; //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;
 
   frag_color = vec4(lighting, fd.a);
 }
