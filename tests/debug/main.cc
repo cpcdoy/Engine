@@ -20,8 +20,16 @@ int main(void)
   m4->set_pos(glm::vec3(0, 0.15, 0));
 
   mesh m2 = e.load_mesh("res/obj/sphere.obj");
-  e.load_texture("res/tex/K2.jpg", m2);
-  m2->set_pos(glm::vec3(-0.1, 5, 0));
+  e.load_texture("res/tex/wood_albedo.jpg", m2);
+  e.load_texture("res/tex/metalness.jpg", m2, texture_kind::METALNESS);
+  e.load_texture("res/tex/wood_roughness.jpg", m2, texture_kind::ROUGHNESS);
+  m2->set_pos(glm::vec3(-0.1, 5, -1));
+
+  mesh m1 = e.load_mesh("res/obj/sphere.obj");
+  e.load_texture("res/tex/brick_albedo.jpg", m1);
+  e.load_texture("res/tex/metalness.jpg", m1, texture_kind::METALNESS);
+  e.load_texture("res/tex/brick_roughness.jpg", m1, texture_kind::ROUGHNESS);
+  m1->set_pos(glm::vec3(-0.1, 5, 1.3));
 
   camera cam = e.create_camera();
   e.set_current_camera(cam);

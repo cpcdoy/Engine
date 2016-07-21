@@ -23,6 +23,8 @@ namespace render_backend
     glUniform1i(uniforms[5], 0);
     glUniform1i(uniforms[6], 1);
     glUniform1i(uniforms[7], 2);
+    glUniform1i(uniforms[8], 3);
+    glUniform1i(uniforms[9], 4);
 
     glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
@@ -62,8 +64,6 @@ namespace render_backend
 
     for (auto m : render_queue)
     {
-      glUniformMatrix4fv(uniforms[8], 1, GL_FALSE, &m->get_model()[0][0]);
-      glUniformMatrix4fv(uniforms[9], 1, GL_FALSE, &m->get_model()[0][0]);
       glUniformMatrix4fv(uniforms[10], 1, GL_FALSE, &m->get_model()[0][0]);
 
       glActiveTexture(GL_TEXTURE2);

@@ -71,9 +71,9 @@ namespace engine
     return nullptr;
   }
 
-  void engine::load_texture(std::string p, mesh m)
+  void engine::load_texture(std::string p, mesh m, texture_kind k)
   {
-    rm->load_texture(p, m);
+    rm->load_texture(p, m, k);
   }
 
   std::shared_ptr<scene::camera> engine::create_camera()

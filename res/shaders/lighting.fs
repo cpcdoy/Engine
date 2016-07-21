@@ -28,8 +28,8 @@ bool AO = true;
 #define PI 3.1415926535897932
 #define ONE_OVER_PI 0.318309
 
-float metalness = texture(metalness_map, fs_in.tex_coords).r;//1.0;
-float roughness = texture(roughness_map, fs_in.tex_coords).r;//0.68;
+float metalness = 0.0;//clamp(texture(metalness_map, fs_in.tex_coords).r, 0.02, 0.99);//1.0;
+float roughness = 1.0 - max(texture(roughness_map, fs_in.tex_coords).r, 0.001);//0.68;
 float has_texture = 1.0;
 
 float ggx_chi(float h_dot_n)
@@ -151,7 +151,7 @@ void main()
 {           
   vec3 color = texture(diffuse_map, fs_in.tex_coords).rgb;
   vec3 normal = normalize(fs_in.normal);
-  vec3 lightColor = vec3(0.0, 0.2, 0.4);
+  vec3 lightColor = vec3(1.0, 1.0, 1.0);
   
   vec3 lightDir = light_pos - fs_in.frag_pos;
   vec3 l = normalize(lightDir);
