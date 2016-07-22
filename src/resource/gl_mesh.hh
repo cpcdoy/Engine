@@ -15,6 +15,7 @@ namespace resource
       GLuint normal_tex = 0;
       GLuint metalness_tex = 0;
       GLuint roughness_tex = 0;
+      GLuint ao_tex = 0;
 
       bool has_tex = false;
 
@@ -42,6 +43,9 @@ namespace resource
 
       void set_metalness_texture(GLuint tex);
       GLuint get_metalness_texture();
+
+      void set_ao_texture(GLuint tex);
+      GLuint get_ao_texture();
 
     private:
       GLuint vao;

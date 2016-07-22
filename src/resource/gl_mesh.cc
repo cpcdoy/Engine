@@ -68,4 +68,14 @@ namespace resource
   {
     return material.metalness_tex;
   }
+
+  void gl_mesh::set_ao_texture(GLuint tex)
+  {
+    material.ao_tex = tex;
+  }
+
+  GLuint gl_mesh::get_ao_texture()
+  {
+    return material.ao_tex;
+  }
 }

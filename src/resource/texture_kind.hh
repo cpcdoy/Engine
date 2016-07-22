@@ -6,5 +6,6 @@ enum texture_kind
   NORMAL,
   METALNESS,
   ROUGHNESS,
+  AO,
   ALL,
 };

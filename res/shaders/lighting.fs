@@ -15,13 +15,12 @@ uniform sampler2D ao_map;
 uniform sampler2D diffuse_map;
 uniform sampler2D metalness_map;
 uniform sampler2D roughness_map;
+uniform sampler2D baked_ao_map;
 
 uniform vec2 screen_res;
 
 uniform vec3 light_pos;
 uniform vec3 view_pos;
-
-vec4 base_color = vec4(1.0, 1.0, 1.0, 1.0);
 
 bool AO = true;
 
@@ -31,6 +30,8 @@ bool AO = true;
 float metalness = clamp(texture(metalness_map, fs_in.tex_coords).r, 0.02, 0.99);//1.0;
 float roughness = 1.0 - max(texture(roughness_map, fs_in.tex_coords).r, 0.001);//0.68;
 float has_texture = 1.0;
+
+vec4 base_color = vec4(1.0);
 
 float ggx_chi(float h_dot_n)
 {
@@ -149,9 +150,12 @@ vec3 gamma(vec3 v)
 
 void main()
 {           
-  vec3 color = texture(diffuse_map, fs_in.tex_coords).rgb;
+  float baked_ao = texture(baked_ao_map, fs_in.tex_coords).r;
+  vec3 color = texture(diffuse_map, fs_in.tex_coords).rgb * vec3(baked_ao);
+  base_color = vec4(color, 1.0);
+
   vec3 normal = normalize(fs_in.normal);
-  vec3 lightColor = vec3(1.0, 1.0, 1.0);
+  vec3 lightColor = vec3(0.0, 0.2, 0.4);
   
   vec3 lightDir = light_pos - fs_in.frag_pos;
   vec3 l = normalize(lightDir);
@@ -171,7 +175,7 @@ void main()
 	vec4 fd = brdf_lambert(fs_in.tex_coords);
 	vec3 fs = brdf_cook_torrance(ldoth, ndoth, ndotv, ndotl, roughness);
 
-  vec3 ambient = (AO ? 0.2 * texture2D(ao_map, gl_FragCoord.xy / screen_res).r : 0.3) * color;
+  vec3 ambient = 0.2 * texture2D(ao_map, gl_FragCoord.xy / screen_res).r * color;
 
   float shadow = ShadowCalculation(fs_in.frag_pos_light_space);
   vec3 lighting = (ambient + (fd.rgb * fd.a + fs) * ndotl * (1.0 - shadow)) * lightColor; //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;

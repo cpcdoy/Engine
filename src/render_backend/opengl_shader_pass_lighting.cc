@@ -15,6 +15,7 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "diffuse_map"));
     uniforms.push_back(glGetUniformLocation(program, "metalness_map"));
     uniforms.push_back(glGetUniformLocation(program, "roughness_map"));
+    uniforms.push_back(glGetUniformLocation(program, "baked_ao_map"));
     uniforms.push_back(glGetUniformLocation(program, "model"));
     uniforms.push_back(glGetUniformLocation(program, "screen_res"));
 
@@ -25,6 +26,7 @@ namespace render_backend
     glUniform1i(uniforms[7], 2);
     glUniform1i(uniforms[8], 3);
     glUniform1i(uniforms[9], 4);
+    glUniform1i(uniforms[10], 5);
 
     glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
@@ -64,7 +66,7 @@ namespace render_backend
 
     for (auto m : render_queue)
     {
-      glUniformMatrix4fv(uniforms[10], 1, GL_FALSE, &m->get_model()[0][0]);
+      glUniformMatrix4fv(uniforms[11], 1, GL_FALSE, &m->get_model()[0][0]);
 
       glActiveTexture(GL_TEXTURE2);
       glBindTexture(GL_TEXTURE_2D, m->get_texture());
@@ -74,6 +76,9 @@ namespace render_backend
 
       glActiveTexture(GL_TEXTURE4);
       glBindTexture(GL_TEXTURE_2D, m->get_roughness_texture());
+
+      glActiveTexture(GL_TEXTURE5);
+      glBindTexture(GL_TEXTURE_2D, m->get_ao_texture());
 
       glBindVertexArray(m->get_vao());
       glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());

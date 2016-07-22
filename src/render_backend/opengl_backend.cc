@@ -85,7 +85,7 @@ namespace render_backend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
 
     auto gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
     if (k == texture_kind::ALBEDO)
@@ -96,6 +96,8 @@ namespace render_backend
       gl_mesh->set_metalness_texture(texture);
     else if (k == texture_kind::ROUGHNESS)
       gl_mesh->set_roughness_texture(texture);
+    else if (k == texture_kind::AO)
+      gl_mesh->set_ao_texture(texture);
 
     debug::log::get(debug::logINDENT, 5) << "tex : " << texture << std::endl;
   }
