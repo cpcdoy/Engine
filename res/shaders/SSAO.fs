@@ -20,8 +20,17 @@ uniform vec3 samples[KERNEL_SIZE];
 uniform vec2 screen_res;
 
 uniform mat4 projection;
+uniform mat4 inv_proj;
 
 #define PI 3.14159
+
+vec4 reconstruct_pos_from_depth(vec2 uv, float z)
+{
+  vec4 pos = vec4(uv, z, 1.0) * 2.0 - 1.0;
+  vec4 unproj_pos = inv_proj * pos;
+
+  return pos / pos.w;
+}
 
 void main()
 {

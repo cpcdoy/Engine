@@ -91,6 +91,7 @@ namespace render_backend
 
     uniforms.push_back(glGetUniformLocation(program, "projection"));
     uniforms.push_back(glGetUniformLocation(program, "samples"));
+    uniforms.push_back(glGetUniformLocation(program, "inv_proj"));
 
 		for (GLuint i = 0; i < 32; ++i)
 			glUniform3fv(glGetUniformLocation(program, ("samples[" + std::to_string(i) + "]").c_str()), 1, &ssao_kernel[i][0]);
@@ -120,6 +121,7 @@ namespace render_backend
 		glBindTexture(GL_TEXTURE_2D, noise_texture);
 
     glUniformMatrix4fv(uniforms[0], 1, GL_FALSE, &cam->get_projection_matrix()[0][0]);
+    //glUniformMatrix4fv(uniforms[2], 1, GL_FALSE, &glm::inverse(cam->get_projection_matrix())[0][0]);
 
     glBindVertexArray(quad_vao);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

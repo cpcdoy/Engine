@@ -158,8 +158,22 @@ namespace render_backend
 
   void opengl_backend::render()
   {
+		static double elapsedTIme = 0;
+    static int nb_frames = 0;
+    nb_frames++;
+
+		double currentTime = glfwGetTime();
     for (auto pass : pipeline)
       pass->process_pass(render_queue, cam);
+
+		if (currentTime - elapsedTIme >= 1.0)
+		{
+      double ms = 1000.0 / double(nb_frames);
+      std::cout << ms << " ms --> "
+                << nb_frames << " fps" << std::endl;
+			nb_frames = 0;
+			elapsedTIme += 1.0;
+		}
   }
 
   void opengl_backend::update_renderer()
