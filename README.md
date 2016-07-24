@@ -1,13 +1,19 @@
 # Engine
 Rendering Engine
 
+## Table of content
+1. [Build](#Build)
+
+2. [Architecture](#Archi)
+
+3. [Example usage](#Example)
+
+4. [Appendix](#Appendix)
+
 A rendering engine that works based on plug-ins that can be easily added to the code.
 
-## Architecture
-Here is the current architecture:
 
-`TODO`
-
+<a name="Build"/>
 ## Build
 ### In-source build
 
@@ -33,6 +39,19 @@ or
 
 `make` or `make check`
 
+<a name="Archi"/>
+## Architecture
+Here is the current architecture:
+
+`TODO`
+
+
+<a name="Example"/>
+## Example usage
+
+[Here](https://github.com/cpcdoy/Engine/blob/dev/tests/debug/main.cc), you can take a look at an example.
+
+<a name="Appendix"/>
 ## Appendix
 
 Here's an [article](https://hackercorp.eu/ssao.html) about one method used in this engine
