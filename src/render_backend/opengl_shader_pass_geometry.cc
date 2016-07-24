@@ -28,17 +28,17 @@ namespace render_backend
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
        debug::log::get(debug::log_level::logERROR) << "Normal buffer incomplete" << std::endl;
     // Albedo buffer
-    glGenTextures(1, &g_albedo);
+    /*glGenTextures(1, &g_albedo);
     glBindTexture(GL_TEXTURE_2D, g_albedo);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, g_albedo, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-       debug::log::get(debug::log_level::logERROR) << "Albedo buffer incomplete" << std::endl;
+       debug::log::get(debug::log_level::logERROR) << "Albedo buffer incomplete" << std::endl;*/
 
-    GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
-    glDrawBuffers(3, attachments);
+    GLuint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};//, GL_COLOR_ATTACHMENT2};
+    glDrawBuffers(2, attachments);
 
     uniforms.push_back(glGetUniformLocation(program, "model"));
     uniforms.push_back(glGetUniformLocation(program, "projection"));
@@ -46,7 +46,7 @@ namespace render_backend
 
     opengl_pipeline_state::instance().add_state("g_buffer", g_buffer);
     opengl_pipeline_state::instance().add_state("g_normal", g_normal);
-    opengl_pipeline_state::instance().add_state("g_albedo", g_albedo);
+    //opengl_pipeline_state::instance().add_state("g_albedo", g_albedo);
     opengl_pipeline_state::instance().add_state("g_position_depth", g_position_depth);
   }
 

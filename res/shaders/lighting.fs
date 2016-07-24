@@ -1,4 +1,4 @@
-#version 330 core
+#version 430 core
 
 out vec4 frag_color;
 
@@ -9,13 +9,12 @@ in VS_OUT {
   vec4 frag_pos_light_space;
 } fs_in;
 
-uniform sampler2D shadow_map;
-uniform sampler2D ao_map;
-
-uniform sampler2D diffuse_map;
-uniform sampler2D metalness_map;
-uniform sampler2D roughness_map;
-uniform sampler2D baked_ao_map;
+layout(binding = 0) uniform sampler2D shadow_map;
+layout(binding = 1) uniform sampler2D ao_map;
+layout(binding = 2) uniform sampler2D diffuse_map;
+layout(binding = 3) uniform sampler2D metalness_map;
+layout(binding = 4) uniform sampler2D roughness_map;
+layout(binding = 5) uniform sampler2D baked_ao_map;
 
 uniform vec2 screen_res;
 

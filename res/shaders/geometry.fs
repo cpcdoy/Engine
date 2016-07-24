@@ -1,7 +1,6 @@
 #version 330 core
 layout (location = 0) out vec4 g_position_depth;
 layout (location = 1) out vec3 g_normal;
-layout (location = 2) out vec3 g_albedo;
 
 in vec2 tex_coords;
 in vec3 frag_pos;
@@ -20,5 +19,4 @@ void main()
   g_position_depth.xyz = frag_pos;
   g_position_depth.a = linearize_depth(gl_FragCoord.z);
   g_normal = normalize(normal);
-  g_albedo = vec3(0, 1, 0);
 }
