@@ -11,6 +11,14 @@ namespace render_backend
     if (!opengl_opt_ctx)
       opengl_opt_ctx = glslopt_initialize(kGlslTargetOpenGL);
 
+    const char *version_and_opt = "#version 330\n"
+      "#pragma optionNV(fastmath on)\n"
+      "#pragma optionNV(fastprecision on)\n"
+      "#pragma optionNV(ifcvt none)\n"
+      "#pragma optionNV(inline all)\n"
+      "#pragma optionNV(strict on)\n"
+      "#pragma optionNV(unroll all)\n";
+
     glslopt_shader *vertex_shader_opt;
     glslopt_shader *fragment_shader_opt;
     bool vertex_opt_ok;
@@ -47,7 +55,7 @@ namespace render_backend
         debug::log::get(debug::logINDENT, 5 + 6) << glslopt_get_log(vertex_shader_opt) << std::endl;
       }
 
-      vertex_shader_code = util::replace_all(vertex_shader_code, "#version 140", "#version 330 core");
+      vertex_shader_code = util::replace_all(vertex_shader_code, "#version 140", version_and_opt);
     }
     else
     {
@@ -85,7 +93,7 @@ namespace render_backend
         debug::log::get(debug::logINDENT, 5 + 6) << glslopt_get_log(fragment_shader_opt) << std::endl;
       }
 
-      fragment_shader_code = util::replace_all(fragment_shader_code, "#version 140", "#version 330 core");
+      fragment_shader_code = util::replace_all(fragment_shader_code, "#version 140", version_and_opt);
     }
     else
     {

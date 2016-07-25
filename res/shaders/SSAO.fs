@@ -1,10 +1,4 @@
 #version 140
-#pragma optionNV(fastmath on)
-#pragma optionNV(fastprecision on)
-#pragma optionNV(ifcvt none)
-#pragma optionNV(inline all)
-#pragma optionNV(strict on)
-#pragma optionNV(unroll all)
 
 out vec4 frag_color;
 in vec2 tex_coords;
