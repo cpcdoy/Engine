@@ -1,12 +1,22 @@
 #include "opengl_backend.hh"
+#include "../utils/utils.hh"
+
+#include "../../3rd_party/glsl-optimizer/src/glsl/glsl_optimizer.h"
 
 namespace render_backend
 {
   GLuint load_shaders(const char* vertex_file_path, const char* fragment_file_path)
   {
-    bool opengl_shader_backend_compilation_error = false;
-    debug::log::get(debug::logINFO) << "Compiling shaders" << std::endl;
+    static glslopt_ctx *opengl_opt_ctx = nullptr;
+    if (!opengl_opt_ctx)
+      opengl_opt_ctx = glslopt_initialize(kGlslTargetOpenGL);
 
+    glslopt_shader *vertex_shader_opt;
+    glslopt_shader *fragment_shader_opt;
+    bool vertex_opt_ok;
+    bool fragment_opt_ok;
+
+    bool opengl_shader_backend_compilation_error = false;
     GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -18,11 +28,31 @@ namespace render_backend
       while(getline(vertex_shader_stream, Line))
         vertex_shader_code += "\n" + Line;
       vertex_shader_stream.close();
+
+      debug::log::get(debug::logINFO) << "Optimizing vertex shader : " << vertex_file_path << std::endl;
+      vertex_shader_opt = glslopt_optimize(opengl_opt_ctx, kGlslOptShaderVertex, vertex_shader_code.c_str(), 0);
+
+      vertex_opt_ok = glslopt_get_status(vertex_shader_opt);
+      if (vertex_opt_ok)
+      {
+        int stat_alu, stat_tex, stat_flow;
+        glslopt_shader_get_stats(vertex_shader_opt, &stat_alu, &stat_tex, &stat_flow);
+        debug::log::get(debug::logINDENT, 5 + 6) << "Stats: " << std::endl;
+        debug::log::get(debug::logINDENT, 5 + 12) << stat_alu << " ALU, " << stat_tex << " tex, " << stat_flow << " flow" << std::endl;
+        vertex_shader_code = glslopt_get_output(vertex_shader_opt);
+      }
+      else
+      {
+        debug::log::get(debug::logERROR) << "Could not optimize vertex shader:" << std::endl;
+        debug::log::get(debug::logINDENT, 5 + 6) << glslopt_get_log(vertex_shader_opt) << std::endl;
+      }
+
+      vertex_shader_code = util::replace_all(vertex_shader_code, "#version 140", "#version 330");
     }
     else
     {
       debug::log::get(debug::logERROR) << "Impossible to open " << vertex_file_path << std::endl;
-      debug::log::get(debug::logINDENT) << "Are you in the correct directory ?" << std::endl;
+      debug::log::get(debug::logINDENT, 5) << "Are you in the correct directory ?" << std::endl;
       opengl_shader_backend_compilation_error = true;
 
       return 0;
@@ -36,15 +66,37 @@ namespace render_backend
       while(getline(fragment_shader_stream, Line))
         fragment_shader_code += "\n" + Line;
       fragment_shader_stream.close();
+
+      debug::log::get(debug::logINFO) << "Optimizing fragment shader : " << fragment_file_path << std::endl;
+      fragment_shader_opt = glslopt_optimize(opengl_opt_ctx, kGlslOptShaderFragment, fragment_shader_code.c_str(), 0);
+
+      fragment_opt_ok = glslopt_get_status(fragment_shader_opt);
+      if (fragment_opt_ok)
+      {
+        int stat_alu, stat_tex, stat_flow;
+        glslopt_shader_get_stats(fragment_shader_opt, &stat_alu, &stat_tex, &stat_flow);
+        debug::log::get(debug::logINDENT, 5 + 6) << "Stats: " << std::endl;
+        debug::log::get(debug::logINDENT, 5 + 12) << stat_alu << " ALU, " << stat_tex << " tex, " << stat_flow << " flow" << std::endl;
+        fragment_shader_code = glslopt_get_output(fragment_shader_opt);
+      }
+      else
+      {
+        debug::log::get(debug::logERROR) << "Could not optimize fragment shader:" << std::endl;
+        debug::log::get(debug::logINDENT, 5 + 6) << glslopt_get_log(fragment_shader_opt) << std::endl;
+      }
+
+      fragment_shader_code = util::replace_all(fragment_shader_code, "#version 140", "#version 330");
     }
     else
     {
       debug::log::get(debug::logERROR) << "Impossible to open " << fragment_file_path << std::endl;
-      debug::log::get(debug::logINDENT) << "Are you in the correct directory ?" << std::endl;
+      debug::log::get(debug::logINDENT, 5) << "Are you in the correct directory ?" << std::endl;
       opengl_shader_backend_compilation_error = true;
 
       return 0;
     }
+
+    debug::log::get(debug::logINFO) << "Compiling shaders" << std::endl;
 
     GLint Result = GL_FALSE;
     int info_log_length;
@@ -79,7 +131,7 @@ namespace render_backend
       opengl_shader_backend_compilation_error = true;
     }
 
-    debug::log::get(debug::logREINDENT) << "Linking program" << std::endl;
+    debug::log::get(debug::logREINDENT, 5) << "Linking program" << std::endl;
     GLuint program_id = glCreateProgram();
     glAttachShader(program_id, vertex_shader_id);
     glAttachShader(program_id, fragment_shader_id);

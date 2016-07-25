@@ -1,6 +1,6 @@
-#version 330 core
-layout (location = 0) out vec4 g_position_depth;
-layout (location = 1) out vec3 g_normal;
+#version 140
+out vec4 g_position_depth;
+out vec3 g_normal;
 
 in vec2 tex_coords;
 in vec3 frag_pos;

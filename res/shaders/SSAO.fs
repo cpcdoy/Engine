@@ -1,4 +1,4 @@
-#version 330 core
+#version 140
 #pragma optionNV(fastmath on)
 #pragma optionNV(fastprecision on)
 #pragma optionNV(ifcvt none)

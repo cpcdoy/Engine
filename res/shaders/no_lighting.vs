@@ -1,6 +1,6 @@
-#version 330 core
+#version 140
 
-layout (location = 0) in vec3 pos;
+in vec3 pos;
 
 uniform mat4 model;
 uniform mat4 view;

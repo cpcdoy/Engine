@@ -1,6 +1,6 @@
-#version 330 core
+#version 140
 
-layout(location=0) in vec3 position_;
+in vec3 position_;
 //layout(location=2) in vec3 normal;
 
 uniform mat4 VP;

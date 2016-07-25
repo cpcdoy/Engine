@@ -1,7 +1,7 @@
-#version 330 core
-layout (location = 0) in vec3 position;
-layout (location = 1) in vec2 tex_coords_;
-layout (location = 2) in vec3 normal_;
+#version 140
+in vec3 position;
+in vec2 tex_coords_;
+in vec3 normal_;
 
 out vec3 frag_pos;
 out vec2 tex_coords;
