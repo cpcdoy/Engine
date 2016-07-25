@@ -47,7 +47,7 @@ namespace render_backend
         debug::log::get(debug::logINDENT, 5 + 6) << glslopt_get_log(vertex_shader_opt) << std::endl;
       }
 
-      vertex_shader_code = util::replace_all(vertex_shader_code, "#version 140", "#version 330");
+      vertex_shader_code = util::replace_all(vertex_shader_code, "#version 140", "#version 330 core");
     }
     else
     {
@@ -85,7 +85,7 @@ namespace render_backend
         debug::log::get(debug::logINDENT, 5 + 6) << glslopt_get_log(fragment_shader_opt) << std::endl;
       }
 
-      fragment_shader_code = util::replace_all(fragment_shader_code, "#version 140", "#version 330");
+      fragment_shader_code = util::replace_all(fragment_shader_code, "#version 140", "#version 330 core");
     }
     else
     {
