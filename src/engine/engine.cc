@@ -71,7 +71,12 @@ namespace engine
     return nullptr;
   }
 
-  void engine::load_texture(std::string p, mesh m, texture_kind k)
+  void engine::add_mesh_lod(std::string path, mesh& mesh, int dist, int lod)
+  {
+    rm->add_mesh_lod(path, mesh, dist, lod);
+  }
+
+  void engine::load_texture(std::string p, mesh& m, texture_kind k)
   {
     rm->load_texture(p, m, k);
   }

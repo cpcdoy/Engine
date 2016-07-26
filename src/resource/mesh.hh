@@ -1,9 +1,12 @@
 #pragma once
 
 # include <vector>
+# include <memory>
+
 # include <glm/glm.hpp>
 # include <glm/gtx/transform.hpp>
 
+# include "../debug/log.hh"
 # include "entity.hh"
 
 namespace resource
@@ -46,6 +49,10 @@ namespace resource
       void set_uvs(std::vector<glm::vec2> u);
       void set_normals(std::vector<glm::vec3> n);
 
+      void set_vertices(std::vector<glm::vec3> v, int lod);
+      void set_uvs(std::vector<glm::vec2> u, int lod);
+      void set_normals(std::vector<glm::vec3> n, int lod);
+
       std::vector<glm::vec3> get_vertices();
       std::vector<glm::vec2> get_uvs();
       std::vector<glm::vec3> get_normals();
@@ -54,9 +61,13 @@ namespace resource
       void set_scale(glm::vec3 scale);
 
       void compute_current_lod(glm::vec3 cam_pos);
-      int get_current_log();
+      int get_current_lod();
+
+      virtual void add_lod(int dist, int lod, std::shared_ptr<mesh>& mesh);
 
       glm::mat4 get_model();
+
+      void set_lod_distance(int lod, int dist);
 
     protected:
       int lod;

@@ -25,7 +25,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 {
   vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
   projCoords = projCoords * 0.5 + 0.5;
-  float closestDepth = texture2D(shadow_map, projCoords.xy).r; 
+  float closestDepth = texture(shadow_map, projCoords.xy).r; 
   float currentDepth = projCoords.z;
 
   vec3 normal = normalize(fs_in.normal);
@@ -40,7 +40,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
   {
     for(int y = -1; y <= 1; ++y)
     {
-      float pcfDepth = texture2D(shadow_map, projCoords.xy + vec2(x, y) * texelSize).r; 
+      float pcfDepth = texture(shadow_map, projCoords.xy + vec2(x, y) * texelSize).r; 
       shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
     }    
   }
@@ -73,9 +73,9 @@ void main()
   //SSDO trick
   /*float to_light_dist = length(viewDirUnNorm);
     vec3 to_light_norm = viewDirUnNorm / to_light_dist;
-    float light_occlusion = 1.0 - clamp(dot(vec4(-viewDirUnNorm, 1.0), vec4(texture2D(ao_map, gl_FragCoord.xy / vec2(1280, 720)).r)), 0.0, 1.0);
+    float light_occlusion = 1.0 - clamp(dot(vec4(-viewDirUnNorm, 1.0), vec4(texture(ao_map, gl_FragCoord.xy / vec2(1280, 720)).r)), 0.0, 1.0);
    */
-  vec3 ambient = (AO ? 0.5 * texture2D(ao_map, gl_FragCoord.xy / screen_res).r : 0.3) * color;
+  vec3 ambient = (AO ? 0.5 * texture(ao_map, gl_FragCoord.xy / screen_res).r : 0.3) * color;
   vec3 reflectDir = reflect(-lightDir, normal);
   float spec = 0.0;
   vec3 halfwayDir = normalize(lightDir + viewDir);  
@@ -88,6 +88,6 @@ void main()
   //Depth map
   /*vec3 projCoords = fs_in.frag_pos_light_space.xyz / fs_in.frag_pos_light_space.w;
     projCoords = projCoords * 0.5 + 0.5;
-    float closestDepth = texture2D(shadow_map, projCoords.xy).r; */
+    float closestDepth = texture(shadow_map, projCoords.xy).r; */
   frag_color = vec4(lighting, 1.0f);
 }

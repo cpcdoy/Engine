@@ -114,7 +114,7 @@ float compute_shadows(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
   if(projCoords.z > 1.0)
     return 0.0;
 
-  float closestDepth = texture2D(shadow_map, projCoords.xy).r; 
+  float closestDepth = texture(shadow_map, projCoords.xy).r; 
   float currentDepth = projCoords.z;
 
   float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.005);
@@ -126,7 +126,7 @@ float compute_shadows(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
   for(int x = -1; x <= 1; ++x)
     for(int y = -1; y <= 1; ++y)
     {
-      float pcfDepth = texture2D(shadow_map, projCoords.xy + vec2(x, y) * texelSize).r; 
+      float pcfDepth = texture(shadow_map, projCoords.xy + vec2(x, y) * texelSize).r; 
       shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
     }
   shadow /= 9.0;
@@ -161,7 +161,7 @@ void main()
 	vec4 fd = brdf_lambert();
 	vec3 fs = brdf_cook_torrance(l_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
 
-  vec3 ambient = 0.2 * texture2D(ao_map, gl_FragCoord.xy / screen_res).r * color;
+  vec3 ambient = 0.2 * texture(ao_map, gl_FragCoord.xy / screen_res).r * color;
 
   float shadow = compute_shadows(fs_in.frag_pos_light_space, normal, l);
   vec3 lighting = (ambient + (fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow)) * light_color; //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;

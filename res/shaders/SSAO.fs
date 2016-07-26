@@ -30,9 +30,9 @@ void main()
 {
   vec2 noise_scale = screen_res / vec2(4.0f);
 
-  vec3 fragPos = texture2D(g_position_depth, tex_coords).xyz;
-  vec3 normal = texture2D(g_normal, tex_coords).rgb;
-  vec3 random_vec = texture2D(tex_noise, tex_coords * noise_scale).xyz;
+  vec3 fragPos = texture(g_position_depth, tex_coords).xyz;
+  vec3 normal = texture(g_normal, tex_coords).rgb;
+  vec3 random_vec = texture(tex_noise, tex_coords * noise_scale).xyz;
 
   vec3 tangent = normalize(random_vec - normal * dot(random_vec, normal));
   vec3 bitangent = cross(normal, tangent);
@@ -55,7 +55,7 @@ void main()
       return;
       }*/
 
-    float sample_depth = texture2D(g_position_depth, offset.xy).z;
+    float sample_depth = texture(g_position_depth, offset.xy).z;
 
     float range_check = smoothstep(0.0, 1.0, radius / abs(fragPos.z -
           sample_depth));

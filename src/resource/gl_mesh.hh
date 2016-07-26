@@ -3,7 +3,11 @@
 # include <vector>
 # include <memory>
 # include <glm/glm.hpp>
-# include <GLFW/glfw3.h>
+# ifndef GLEW_HEADER
+#  define GLEW_HEADER
+#  include <GL/glew.h>
+#  include <GLFW/glfw3.h>
+# endif
 
 # include "mesh.hh"
 
@@ -47,8 +51,10 @@ namespace resource
       void set_ao_texture(GLuint tex);
       GLuint get_ao_texture();
 
+      virtual void add_lod(int dist, int lod, std::shared_ptr<mesh>& mesh) override;
+
     private:
-      GLuint vao;
+      std::vector<GLuint> vaos;
 
       gl_material material;
 

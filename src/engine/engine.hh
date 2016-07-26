@@ -26,7 +26,8 @@ namespace engine
       void set_window_properties(int w, int h, std::string title);
 
       mesh load_mesh(std::string p);
-      void load_texture(std::string p, mesh m, texture_kind k = texture_kind::ALBEDO);
+      void add_mesh_lod(std::string path, mesh& mesh, int dist, int lod);
+      void load_texture(std::string p, mesh& m, texture_kind k = texture_kind::ALBEDO);
       std::shared_ptr<scene::camera> create_camera();
       void set_current_camera(camera cam);
       void set_clear_color(float r, float g, float b);

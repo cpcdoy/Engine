@@ -18,8 +18,11 @@ namespace render_backend
     const char* extensions = (const char*)glGetString(GL_EXTENSIONS);
 
     int max_vaos;
-    glGetIntegerv (GL_MAX_VERTEX_ATTRIBS, &max_vaos);
+    int max_layers;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &max_vaos);
+    glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers);
     debug::log::get(debug::logINFO) << "Max VAOs number : " << max_vaos << std::endl;
+    debug::log::get(debug::logINFO) << "Max texture2D layers : " << max_layers << std::endl;
 
     if (extensions)
       debug::log::get(debug::logINFO) << "GL_EXTENSIONS : " << extensions << std::endl;

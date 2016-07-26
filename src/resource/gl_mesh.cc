@@ -21,12 +21,12 @@ namespace resource
 
   void gl_mesh::set_vao(GLuint vao)
   {
-    this->vao = vao;
+    this->vaos.push_back(vao);
   }
 
   GLuint gl_mesh::get_vao()
   {
-    return vao;
+    return vaos[lod];
   }
 
   void gl_mesh::set_texture(GLuint tex)
@@ -77,5 +77,18 @@ namespace resource
   GLuint gl_mesh::get_ao_texture()
   {
     return material.ao_tex;
+  }
+
+  void gl_mesh::add_lod(int dist, int lod, std::shared_ptr<mesh>& mesh)
+  {
+    mesh_resource m_r(dist, lod);
+    lods.push_back(m_r);
+
+    set_vertices(mesh->get_vertices(), lod);
+    set_uvs(mesh->get_uvs(), lod);
+    set_normals(mesh->get_normals(), lod);
+
+    std::shared_ptr<resource::gl_mesh> gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
+    set_vao(gl_mesh->get_vao());
   }
 }

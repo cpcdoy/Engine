@@ -30,6 +30,7 @@ namespace resource
       ~resource_manager();
 
       std::shared_ptr<mesh> load_mesh(std::string path);
+      void add_mesh_lod(std::string path, std::shared_ptr<mesh>& mesh, int dist, int lod);
       void load_texture(std::string path, std::shared_ptr<mesh>& mesh, texture_kind k = texture_kind::ALBEDO);
 
       std::vector<std::shared_ptr<mesh>> get_meshes();

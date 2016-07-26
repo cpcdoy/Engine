@@ -1,8 +1,5 @@
-#version 140
-
-out vec4 color;
+#version 330
 
 void main()
 {
-  color  = vec4(0.0);
 }

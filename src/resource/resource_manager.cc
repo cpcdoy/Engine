@@ -47,6 +47,29 @@ namespace resource
     return nullptr;
   }
 
+  void resource_manager::add_mesh_lod(std::string path, std::shared_ptr<mesh>& mesh, int dist, int lod)
+  {
+    debug::log::get(debug::logINFO) << "Loading model lod " << lod << " " << path << std::endl;
+
+    for (auto i = managees.begin(); i != managees.end(); i++)
+    {
+      debug::log::get(debug::logINDENT, 5) << "Trying loader \"" << (*i)->get_loader_id()
+                                           << "\"" << std::endl;
+
+      if ((*i)->load(path.c_str()))
+      {
+        auto lod_mesh = rb->generate_compatible_mesh((*i)->generate_mesh());
+        mesh->add_lod(dist, lod, lod_mesh);
+
+        return;
+      }
+      debug::log::get(debug::logINDENT, 10) << "FAIL" << std::endl;
+    }
+
+    debug::log::get(debug::logERROR) << "Loading model lod of " << path << " failed"
+                                    << std::endl;
+  }
+
   void resource_manager::load_texture(std::string path, std::shared_ptr<mesh>& mesh, texture_kind k)
   {
     debug::log::get(debug::logINFO) << "Loading texture resource " << path << std::endl;

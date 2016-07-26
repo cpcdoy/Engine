@@ -7,7 +7,7 @@ namespace resource
   mesh::mesh()
   {
     lod = 0;
-    mesh_resource m_r(1000, 0);
+    mesh_resource m_r(20, 0);
 
     lods.push_back(m_r);
 
@@ -29,6 +29,22 @@ namespace resource
   }
 
   void mesh::set_normals(std::vector<glm::vec3> n)
+  {
+    lods[lod].normals = n;
+  }
+
+  void mesh::set_vertices(std::vector<glm::vec3> v, int lod)
+
+  {
+    lods[lod].vertices = v;
+  }
+
+  void mesh::set_uvs(std::vector<glm::vec2> u, int lod)
+  {
+    lods[lod].uvs = u;
+  }
+
+  void mesh::set_normals(std::vector<glm::vec3> n, int lod)
   {
     lods[lod].normals = n;
   }
@@ -65,13 +81,25 @@ namespace resource
 
     auto i = lods.begin();
     for (; i != lods.end(); i++)
-      if (cam_dist < (*i).dist)
+      if (cam_dist <= (*i).dist)
         break;
 
-    this->lod = i->level;
+    if (i == lods.end())
+      this->lod = lods.back().level;
+    else
+      this->lod = (*i).level;
   }
 
-  int mesh::get_current_log()
+  void mesh::add_lod(int, int, std::shared_ptr<mesh>&)
+  {
+  }
+
+  void mesh::set_lod_distance(int lod, int dist)
+  {
+    lods[lod].dist = dist;
+  }
+
+  int mesh::get_current_lod()
   {
     return lod;
   }

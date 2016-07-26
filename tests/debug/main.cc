@@ -21,7 +21,15 @@ int main(void)
   e.load_texture("res/tex/default_AO.jpg", m4, texture_kind::AO);
   m4->set_pos(glm::vec3(0, 0.15, 0));
 
+  mesh m6 = e.load_mesh("res/obj/nanosuit.obj");
+  e.load_texture("res/tex/K2.jpg", m6);
+  e.load_texture("res/tex/default_AO.jpg", m6, texture_kind::AO);
+  m6->set_pos(glm::vec3(2, 0.15, 0));
+  m6->set_scale(glm::vec3(0.7));
+
   mesh m2 = e.load_mesh("res/obj/sphere.obj");
+  m2->set_lod_distance(0, 100);
+  e.add_mesh_lod("res/obj/sphere_lod_1.obj", m2, 200, 1);
   e.load_texture("res/tex/wood_albedo.jpg", m2);
   e.load_texture("res/tex/wood_metalness.jpg", m2, texture_kind::METALNESS);
   e.load_texture("res/tex/wood_roughness.jpg", m2, texture_kind::ROUGHNESS);
@@ -29,6 +37,8 @@ int main(void)
   m2->set_pos(glm::vec3(-0.1, 5, -1));
 
   mesh m1 = e.load_mesh("res/obj/sphere.obj");
+  m1->set_lod_distance(0, 100);
+  e.add_mesh_lod("res/obj/sphere_lod_1.obj", m1, 200, 1);
   e.load_texture("res/tex/T_Tile_White_D.jpg", m1);
   e.load_texture("res/tex/T_Tile_White_M.jpg", m1, texture_kind::METALNESS);
   e.load_texture("res/tex/T_Tile_White_R.jpg", m1, texture_kind::ROUGHNESS);
@@ -36,6 +46,8 @@ int main(void)
   m1->set_pos(glm::vec3(-0.1, 5, 1.3));
 
   mesh m5 = e.load_mesh("res/obj/sphere.obj");
+  m5->set_lod_distance(0, 100);
+  e.add_mesh_lod("res/obj/sphere_lod_1.obj", m5, 200, 1);
   e.load_texture("res/tex/T_Brick_Yellow_D.jpg", m5);
   e.load_texture("res/tex/T_Brick_Yellow_M.jpg", m5, texture_kind::METALNESS);
   e.load_texture("res/tex/T_Brick_Yellow_R.jpg", m5, texture_kind::ROUGHNESS);
