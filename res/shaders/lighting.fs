@@ -1,4 +1,5 @@
 #version 430 core
+#define BRDF_FD_OREN_NAYAR
 
 out vec4 frag_color;
 
@@ -84,6 +85,7 @@ float schlick_geometry(float n_dot_l, float n_dot_v, float roughness)
 }
 
 //BRDFs
+#ifdef BRDF_FD_LAMBERT
 vec4 brdf_lambert()
 {
   vec4 color = base_color;
@@ -93,6 +95,27 @@ vec4 brdf_lambert()
 
   return color;
 }
+#elif defined(BRDF_FD_OREN_NAYAR)
+vec4 brd_oren_nayar(float n_dot_v, float n_dot_l, vec3 light_dir, vec3 view_dir, vec3 n)
+{
+  float angle_v_n = acos(n_dot_v);
+  float angle_l_n = acos(n_dot_l);
+
+  float alpha = max(angle_v_n, angle_l_n);
+  float beta = min(angle_v_n, angle_l_n);
+  float gamma = dot(view_dir - n * n_dot_v, light_dir - n * n_dot_l);
+
+  float roughness_2 = roughness * roughness;
+
+  float A = 1.0 - 0.5 * (roughness_2 / (roughness_2 + 0.57));
+  float B = 0.45 * (roughness_2 / (roughness_2 + 0.09));
+  float C = sin(alpha) * tan(beta);
+
+  float L1 = max(0.0, n_dot_l) * (A + B * max(0.0, gamma) * C);
+
+  return vec4(base_color.rgb * vec3(L1), 1.0);
+}
+#endif
 
 vec3 brdf_cook_torrance(float l_dot_h, float n_dot_h, float n_dot_v, float n_dot_l, float alpha)
 {
@@ -158,7 +181,11 @@ void main()
 	float n_dot_h = clamp(dot(n, h), 0.0, 1.0);
   float l_dot_h = clamp(dot(l, h), 0.0, 1.0);
 
+#ifdef BRDF_FD_LAMBERT
 	vec4 fd = brdf_lambert();
+#elif defined(BRDF_FD_OREN_NAYAR)
+  vec4 fd = brd_oren_nayar(n_dot_v, n_dot_l, lightDir, v, n);
+#endif
 	vec3 fs = brdf_cook_torrance(l_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
 
   vec3 ambient = 0.2 * texture(ao_map, gl_FragCoord.xy / screen_res).r * color;
