@@ -1,5 +1,6 @@
 #version 430 core
 #define BRDF_FD_OREN_NAYAR
+//#define BRDF_FD_LAMBERT
 
 out vec4 frag_color;
 
@@ -35,13 +36,14 @@ float ggx_chi(float h_dot_n)
   return h_dot_n > 0.0 ? 1.0 : 0.0;
 }
 
-// Night-time GGX
+// GGX
 // D
 // alpha : roughness
 // n : normal
 // h : half vector
 float ggx_distribution(float alpha, float n_dot_h)
 {
+  alpha *= alpha; //Disney's reparametrization of alpha
   float alpha_2 = alpha * alpha;
   float n_dot_h_2 = n_dot_h * n_dot_h;
   float d = (n_dot_h_2 * (alpha_2 + ((1 - n_dot_h_2) / n_dot_h)));
@@ -68,20 +70,21 @@ float ggx_distribution(float alpha, float n_dot_h)
 
 vec3 fresnel_schlick(float cos_t, vec3 f0)
 {
-  return f0 + (1 - f0) * pow((1.0 - cos_t), 5.0);
+  return f0 + (1 - f0) * pow(2, (-5.55473 * cos_t - 6.98316) * cos_t);
+  //return f0 + (1 - f0) * pow((1.0 - cos_t), 5.0);
 }
 
 float schlick_geometry(float n_dot_l, float n_dot_v, float roughness)
 {
-	// = G_Schlick / (4 * n_dot_v * n_dot_l)
-	float a = roughness + 1.0;
+	float a = roughness + 1.0; //Disney: reducde "hotness"
 	float k = a * a * 0.125;
   float one_minus_k = 1 - k;
 
 	float vis_schlick_v = n_dot_v * one_minus_k + k;
 	float vis_schlick_l = n_dot_l * one_minus_k + k;
-
-	return 0.25 / (vis_schlick_v * vis_schlick_l);
+  
+  //UE4
+	return (n_dot_v / vis_schlick_v) * (n_dot_l / vis_schlick_l);
 }
 
 //BRDFs
@@ -117,10 +120,10 @@ vec4 brd_oren_nayar(float n_dot_v, float n_dot_l, vec3 light_dir, vec3 view_dir,
 }
 #endif
 
-vec3 brdf_cook_torrance(float l_dot_h, float n_dot_h, float n_dot_v, float n_dot_l, float alpha)
+vec3 brdf_cook_torrance(float v_dot_h, float n_dot_h, float n_dot_v, float n_dot_l, float alpha)
 {
   vec3 f0 = mix(vec3(0.04), base_color.rgb, metalness);
-  vec3 f = fresnel_schlick(l_dot_h, f0);
+  vec3 f = fresnel_schlick(v_dot_h, f0);
 
   float g = schlick_geometry(n_dot_l, n_dot_v, alpha);
   float d = ggx_distribution(alpha, n_dot_h);
@@ -164,7 +167,7 @@ void main()
   base_color = vec4(color, 1.0);
 
   vec3 normal = normalize(fs_in.normal);
-  vec3 light_color = vec3(1.0);
+  vec3 light_color = vec3(0.6);
   
   vec3 lightDir = light_pos - fs_in.frag_pos;
   vec3 l = normalize(lightDir);
@@ -179,14 +182,14 @@ void main()
 	float n_dot_v = clamp(dot(n, v), 0.0, 1.0);
 	float n_dot_l = clamp(dot(n, l), 0.0, 1.0);
 	float n_dot_h = clamp(dot(n, h), 0.0, 1.0);
-  float l_dot_h = clamp(dot(l, h), 0.0, 1.0);
+  float v_dot_h = clamp(dot(v, h), 0.0, 1.0);
 
 #ifdef BRDF_FD_LAMBERT
 	vec4 fd = brdf_lambert();
 #elif defined(BRDF_FD_OREN_NAYAR)
   vec4 fd = brd_oren_nayar(n_dot_v, n_dot_l, lightDir, v, n);
 #endif
-	vec3 fs = brdf_cook_torrance(l_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
+	vec3 fs = brdf_cook_torrance(v_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
 
   vec3 ambient = 0.2 * texture(ao_map, gl_FragCoord.xy / screen_res).r * color;
 
