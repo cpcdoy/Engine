@@ -17,6 +17,7 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "roughness_map"));
     uniforms.push_back(glGetUniformLocation(program, "baked_ao_map"));
     uniforms.push_back(glGetUniformLocation(program, "model"));
+    uniforms.push_back(glGetUniformLocation(program, "trans_inv_model"));
     uniforms.push_back(glGetUniformLocation(program, "screen_res"));
 
     glUseProgram(program);
@@ -67,6 +68,7 @@ namespace render_backend
     for (auto m : render_queue)
     {
       glUniformMatrix4fv(uniforms[11], 1, GL_FALSE, &m->get_model()[0][0]);
+      glUniformMatrix3fv(uniforms[12], 1, GL_FALSE, &glm::transpose(glm::inverse(glm::mat3(m->get_model())))[0][0]);
 
       glActiveTexture(GL_TEXTURE2);
       glBindTexture(GL_TEXTURE_2D, m->get_texture());

@@ -70,6 +70,7 @@ float ggx_distribution(float alpha, float n_dot_h)
 
 vec3 fresnel_schlick(float cos_t, vec3 f0)
 {
+  //UE4's Spherical Gaussian approximation
   return f0 + (1 - f0) * pow(2, (-5.55473 * cos_t - 6.98316) * cos_t);
   //return f0 + (1 - f0) * pow((1.0 - cos_t), 5.0);
 }

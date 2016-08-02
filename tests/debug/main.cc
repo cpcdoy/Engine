@@ -19,9 +19,6 @@ int main(void)
   e.load_texture("res/tex/T_Brick_Yellow_R.jpg", m3, texture_kind::ROUGHNESS);
   e.load_texture("res/tex/T_Brick_Yellow_AO.jpg", m3, texture_kind::AO);
 
-  e.load_texture("res/tex/T_Brick_Yellow_R.jpg", m3, texture_kind::ROUGHNESS);
-  e.load_texture("res/tex/default_AO.jpg", m3, texture_kind::AO);
-
   mesh m4 = e.load_mesh("res/obj/california.obj");
   e.load_texture("res/tex/K2.jpg", m4);
   e.load_texture("res/tex/default_AO.jpg", m4, texture_kind::AO);

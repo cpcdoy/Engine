@@ -18,6 +18,7 @@ bool instanciate = false;
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
+uniform mat3 trans_inv_model;
 uniform mat4 light_space_matrix;
 
 void main()
@@ -34,7 +35,7 @@ void main()
 
   gl_Position = projection * view * model * vec4(position, 1.0f);
   vs_out.frag_pos = vec3(model * vec4(position, 1.0));
-  vs_out.normal = transpose(inverse(mat3(model))) * normal_;
+  vs_out.normal = trans_inv_model * normal_;
   vs_out.tex_coords = tex_coords_;
   vs_out.frag_pos_light_space = light_space_matrix * vec4(vs_out.frag_pos, 1.0);
 }
