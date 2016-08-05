@@ -5,12 +5,15 @@
 #  include <GL/glew.h>
 #  include <GLFW/glfw3.h>
 # endif
+# include <memory>
 # include <map>
 
-# include "opengl_pipeline_state.hh"
+//# include "texture_streamer.hh"
 
 namespace render_backend
 {
+  class texture_streamer;
+
   class opengl_pipeline_state
   {
     public:
@@ -23,6 +26,16 @@ namespace render_backend
       {
         static opengl_pipeline_state s;
         return s;
+      }
+
+      void set_texture_streamer(std::shared_ptr<texture_streamer>& t)
+      {
+        tex_streamer = t;
+      }
+
+      std::shared_ptr<texture_streamer>& get_tex_streamer()
+      {
+        return tex_streamer;
       }
       
       void add_state(std::string s, long v)
@@ -44,5 +57,7 @@ namespace render_backend
 
     private:
       std::map<std::string, long> states;
+
+      std::shared_ptr<texture_streamer> tex_streamer;
   };
 }

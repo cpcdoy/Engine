@@ -11,6 +11,8 @@
 
 # include "mesh.hh"
 
+# include "streamed_texture.hh"
+
 namespace resource
 {
   struct gl_material
@@ -20,6 +22,12 @@ namespace resource
       GLuint metalness_tex = 0;
       GLuint roughness_tex = 0;
       GLuint ao_tex = 0;
+
+      std::shared_ptr<streamed_texture> albedo_streamed_tex;
+      std::shared_ptr<streamed_texture> normal_streamed_tex;
+      std::shared_ptr<streamed_texture> metalness_streamed_tex;
+      std::shared_ptr<streamed_texture> roughness_streamed_tex;
+      std::shared_ptr<streamed_texture> ao_streamed_tex;
 
       bool has_tex = false;
 
@@ -50,6 +58,22 @@ namespace resource
 
       void set_ao_texture(GLuint tex);
       GLuint get_ao_texture();
+
+      //Streamed texs
+      void set_streamed_texture(std::shared_ptr<streamed_texture> tex);
+      std::shared_ptr<streamed_texture>& get_streamed_texture();
+
+      void set_streamed_normal_texture(std::shared_ptr<streamed_texture> tex);
+      std::shared_ptr<streamed_texture>& get_streamed_normal_texture();
+
+      void set_streamed_roughness_texture(std::shared_ptr<streamed_texture> tex);
+      std::shared_ptr<streamed_texture>& get_streamed_roughness_texture();
+
+      void set_streamed_metalness_texture(std::shared_ptr<streamed_texture> tex);
+      std::shared_ptr<streamed_texture>& get_streamed_metalness_texture();
+
+      void set_streamed_ao_texture(std::shared_ptr<streamed_texture> tex);
+      std::shared_ptr<streamed_texture>& get_streamed_ao_texture();
 
       virtual void add_lod(int dist, int lod, std::shared_ptr<mesh>& mesh) override;
 

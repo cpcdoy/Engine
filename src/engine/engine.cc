@@ -58,7 +58,7 @@ namespace engine
     sm->init_scene_graph();
 
     rb->init_render_backend(w, h);
-    rb->set_ui_manager(ui);
+    rb->set_managers(ui, rm);
 
     return true;
   }

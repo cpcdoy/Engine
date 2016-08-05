@@ -36,7 +36,8 @@ namespace resource
 
   GLuint gl_mesh::get_texture()
   {
-    return material.albedo_tex;
+    auto t = material.albedo_streamed_tex;
+    return t ? t->query_texture() : 0;
   }
 
   void gl_mesh::set_normal_texture(GLuint tex)
@@ -46,7 +47,8 @@ namespace resource
 
   GLuint gl_mesh::get_normal_texture()
   {
-    return material.normal_tex;
+    auto t = material.normal_streamed_tex;
+    return t ? t->query_texture() : 0;
   }
 
   void gl_mesh::set_roughness_texture(GLuint tex)
@@ -56,7 +58,8 @@ namespace resource
 
   GLuint gl_mesh::get_roughness_texture()
   {
-    return material.roughness_tex;
+    auto t = material.roughness_streamed_tex;
+    return t ? t->query_texture() : 0;
   }
 
   void gl_mesh::set_metalness_texture(GLuint tex)
@@ -66,7 +69,8 @@ namespace resource
 
   GLuint gl_mesh::get_metalness_texture()
   {
-    return material.metalness_tex;
+    auto t = material.metalness_streamed_tex;
+    return t ? t->query_texture() : 0;
   }
 
   void gl_mesh::set_ao_texture(GLuint tex)
@@ -76,7 +80,58 @@ namespace resource
 
   GLuint gl_mesh::get_ao_texture()
   {
-    return material.ao_tex;
+    auto t = material.ao_streamed_tex;
+    return t ? t->query_texture() : 0;
+  }
+
+  void gl_mesh::set_streamed_texture(std::shared_ptr<streamed_texture> tex)
+  {
+    material.albedo_streamed_tex = tex;
+  }
+
+  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_texture()
+  {
+    return material.albedo_streamed_tex;
+  }
+
+  void gl_mesh::set_streamed_normal_texture(std::shared_ptr<streamed_texture> tex)
+  {
+    material.normal_streamed_tex = tex;
+  }
+
+  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_normal_texture()
+  {
+    return material.normal_streamed_tex;
+  }
+
+  void gl_mesh::set_streamed_roughness_texture(std::shared_ptr<streamed_texture> tex)
+  {
+    material.roughness_streamed_tex = tex;;
+  }
+
+  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_roughness_texture()
+  {
+    return material.roughness_streamed_tex;
+  }
+
+  void gl_mesh::set_streamed_metalness_texture(std::shared_ptr<streamed_texture> tex)
+  {
+    material.metalness_streamed_tex = tex;
+  }
+
+  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_metalness_texture()
+  {
+    return material.metalness_streamed_tex;
+  }
+
+  void gl_mesh::set_streamed_ao_texture(std::shared_ptr<streamed_texture> tex)
+  {
+    material.ao_streamed_tex = tex;
+  }
+
+  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_ao_texture()
+  {
+    return material.ao_streamed_tex;
   }
 
   void gl_mesh::add_lod(int dist, int lod, std::shared_ptr<mesh>& mesh)

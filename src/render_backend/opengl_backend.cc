@@ -73,11 +73,28 @@ namespace render_backend
     return gl_mesh;
   }
 
+  void opengl_backend::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, std::string path, texture_kind k)
+  {
+    auto gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
+    auto tex = tex_streamer->query_streamed_texture(path);
+
+    if (k == texture_kind::ALBEDO)
+      gl_mesh->set_streamed_texture(tex);
+    else if (k == texture_kind::NORMAL)
+      gl_mesh->set_streamed_normal_texture(tex);
+    else if (k == texture_kind::METALNESS)
+      gl_mesh->set_streamed_metalness_texture(tex);
+    else if (k == texture_kind::ROUGHNESS)
+      gl_mesh->set_streamed_roughness_texture(tex);
+    else if (k == texture_kind::AO)
+      gl_mesh->set_streamed_ao_texture(tex);
+  }
+
   void opengl_backend::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int width, int height, texture_kind k)
   {
-    debug::log::get(debug::logINFO) << "Generating a texture" << std::endl;
+    debug::log::get(debug::logINFO) << "Generating a texture streaming job (" << width << "*" << height << ")" << std::endl;
 
-    GLuint texture;
+    /*GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -86,10 +103,10 @@ namespace render_backend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    glGenerateMipmap(GL_TEXTURE_2D);*/
 
     auto gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
-    if (k == texture_kind::ALBEDO)
+    /*if (k == texture_kind::ALBEDO)
       gl_mesh->set_texture(texture);
     else if (k == texture_kind::NORMAL)
       gl_mesh->set_normal_texture(texture);
@@ -98,14 +115,9 @@ namespace render_backend
     else if (k == texture_kind::ROUGHNESS)
       gl_mesh->set_roughness_texture(texture);
     else if (k == texture_kind::AO)
-      gl_mesh->set_ao_texture(texture);
+      gl_mesh->set_ao_texture(texture);*/
 
-    debug::log::get(debug::logINDENT, 5) << "tex : " << texture << std::endl;
-  }
-
-  void opengl_backend::set_ui_manager(std::shared_ptr<ui::ui_manager> ui)
-  {
-    this->ui = ui;
+    //debug::log::get(debug::logINDENT, 5) << "tex : " << texture << std::endl;
   }
 
   GLuint opengl_backend::generate_vao(std::shared_ptr<resource::gl_mesh> mesh)
@@ -148,12 +160,36 @@ namespace render_backend
     return vao;
   }
 
-  void opengl_backend::batch(std::shared_ptr<scene::scene_manager> sm)
+  void opengl_backend::set_managers(std::shared_ptr<ui::ui_manager> ui, std::shared_ptr<resource::resource_manager> rm)
+  {
+    this->ui = ui;
+    this->rm = rm;
+
+    GLFWwindow* main_window = std::static_pointer_cast<ui::glfw_ui>(ui->get_ui())->get_window();
+
+    debug::log::get(debug::logINFO) << "Spawning data streaming thread" << std::endl;
+    tex_streamer = std::make_shared<texture_streamer>();
+    tex_streamer->init_shared_context(main_window);
+
+    opengl_pipeline_state::instance().set_texture_streamer(tex_streamer);
+  }
+
+  void opengl_backend::init_render_backend(std::shared_ptr<scene::scene_manager> sm)
   {
     for (auto m : sm->get_render_queue())
       render_queue.push_back(std::static_pointer_cast<resource::gl_mesh>(m));
 
     debug::log::get(debug::logINDENT, 5) << "Batched " << sm->get_render_queue().size() << " meshes" << std::endl;
+
+    init_data_streamer();
+  }
+
+  void opengl_backend::init_data_streamer()
+  {
+    tex_streamer->stream();
+
+    GLFWwindow* main_window = std::static_pointer_cast<ui::glfw_ui>(ui->get_ui())->get_window();
+    glfwMakeContextCurrent(main_window);
   }
 
   void opengl_backend::render()

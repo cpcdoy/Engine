@@ -1,5 +1,10 @@
 #pragma once
 
+# ifndef GLEW_HEADER
+#  define GLEW_HEADER
+#  include <GL/glew.h>
+#  include <GLFW/glfw3.h>
+# endif
 # include <vector>
 # include <memory>
 
@@ -32,6 +37,7 @@ namespace resource
       std::shared_ptr<mesh> load_mesh(std::string path);
       void add_mesh_lod(std::string path, std::shared_ptr<mesh>& mesh, int dist, int lod);
       void load_texture(std::string path, std::shared_ptr<mesh>& mesh, texture_kind k = texture_kind::ALBEDO);
+      unsigned char* load_texture(std::string path);
 
       std::vector<std::shared_ptr<mesh>> get_meshes();
 

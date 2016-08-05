@@ -13,7 +13,6 @@ int main(void)
   e.init();
 
   mesh m3 = e.load_mesh("res/obj/sponza.obj");
-  e.load_texture("res/tex/K2.jpg", m3);
   e.load_texture("res/tex/T_Brick_Yellow_D.jpg", m3);
   e.load_texture("res/tex/T_Brick_Yellow_M.jpg", m3, texture_kind::METALNESS);
   e.load_texture("res/tex/T_Brick_Yellow_R.jpg", m3, texture_kind::ROUGHNESS);

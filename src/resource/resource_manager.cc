@@ -72,6 +72,12 @@ namespace resource
 
   void resource_manager::load_texture(std::string path, std::shared_ptr<mesh>& mesh, texture_kind k)
   {
+    debug::log::get(debug::logINFO) << "Queuing the texture \"" << path << "\"" << " to be streamed" << std::endl;
+    rb->set_compatible_texture(mesh, path, k);
+  }
+
+  unsigned char* resource_manager::load_texture(std::string path)
+  {
     debug::log::get(debug::logINFO) << "Loading texture resource " << path << std::endl;
 
     for (auto i = tex_loaders.begin(); i != tex_loaders.end(); i++)
@@ -80,15 +86,14 @@ namespace resource
                                            << "\"" << std::endl;
 
       if ((*i)->load(path.c_str()))
-      {
-        rb->set_compatible_texture(mesh, (*i)->get_generated_texture(), (*i)->get_width(), (*i)->get_height(), k);
-        return;
-      }
+        return (*i)->get_generated_texture();
       debug::log::get(debug::logINDENT, 10) << "FAIL" << std::endl;
     }
 
     debug::log::get(debug::logERROR) << "Resource loading of " << path << " failed"
                                     << std::endl;
+
+    return nullptr;
   }
 
   std::vector<std::shared_ptr<mesh>> resource_manager::get_meshes()

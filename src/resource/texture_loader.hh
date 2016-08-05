@@ -46,5 +46,6 @@ namespace resource
 
       unsigned char* tex;
       int width, height;
+      int channels;
   };
 }

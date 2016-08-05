@@ -28,13 +28,13 @@ namespace render_backend
       std::shared_ptr<resource::mesh>
         generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh);
 
-      void
-        set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int w, int h, texture_kind k);
+      void set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int w, int h, texture_kind k);
+      void set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, std::string path, texture_kind k);
 
       void render();
-      void batch(std::shared_ptr<scene::scene_manager> sm);
+      void init_render_backend(std::shared_ptr<scene::scene_manager> sm);
 
-      void set_ui_manager(std::shared_ptr<ui::ui_manager> ui);
+      void set_managers(std::shared_ptr<ui::ui_manager> ui, std::shared_ptr<resource::resource_manager> rm);
       void set_camera(std::shared_ptr<scene::camera> cam);
       void update_renderer();
       void add_state(std::string s, long r);

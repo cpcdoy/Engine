@@ -16,7 +16,7 @@ namespace resource
 
   bool soil_loader::load(const char* path)
   {
-    tex = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_RGBA);
+    tex = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_RGBA);
     texs.push_back(tex);
 
     if (!tex)

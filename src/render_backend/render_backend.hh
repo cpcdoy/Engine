@@ -3,7 +3,8 @@
 # include <memory>
 # include <string>
 
-# include "../resource/resource_manager.hh"
+//# include "../resource/resource_manager.hh"
+# include "../resource/texture_kind.hh"
 # include "../scene/scene_manager.hh"
 
 namespace render_backend
@@ -38,7 +39,11 @@ namespace render_backend
       {
       }
 
-      virtual void batch(std::shared_ptr<scene::scene_manager>)
+      virtual void set_compatible_texture(std::shared_ptr<resource::mesh>&, std::string, texture_kind)
+      {
+      }
+
+      virtual void init_render_backend(std::shared_ptr<scene::scene_manager>)
       {
       }
 
@@ -46,9 +51,10 @@ namespace render_backend
       {
       }
 
-      virtual void set_ui_manager(std::shared_ptr<ui::ui_manager> ui)
+      virtual void set_managers(std::shared_ptr<ui::ui_manager> ui, std::shared_ptr<resource::resource_manager> rm)
       {
         this->ui = ui;
+        this->rm = rm;
       }
 
       virtual void set_camera(std::shared_ptr<scene::camera> cam)
@@ -73,5 +79,6 @@ namespace render_backend
 
       std::shared_ptr<ui::ui_manager> ui;
       std::shared_ptr<scene::camera> cam;
+      std::shared_ptr<resource::resource_manager> rm;
   };
 }

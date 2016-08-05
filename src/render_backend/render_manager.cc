@@ -44,9 +44,14 @@ namespace render_backend
       current_managee->set_compatible_texture(mesh, tex, w, h, k);
     }
 
-  void render_manager::batch(std::shared_ptr<scene::scene_manager> sm)
+  void render_manager::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, std::string path, texture_kind k)
   {
-    current_managee->batch(sm);
+    current_managee->set_compatible_texture(mesh, path, k);
+  }
+
+  void render_manager::init_render_backend(std::shared_ptr<scene::scene_manager> sm)
+  {
+    current_managee->init_render_backend(sm);
   }
 
   void render_manager::render()
@@ -54,9 +59,9 @@ namespace render_backend
     current_managee->render();
   }
 
-  void render_manager::set_ui_manager(std::shared_ptr<ui::ui_manager> ui)
+  void render_manager::set_managers(std::shared_ptr<ui::ui_manager> ui, std::shared_ptr<resource::resource_manager> rm)
   {
-    current_managee->set_ui_manager(ui);
+    current_managee->set_managers(ui, rm);
   }
 
   void render_manager::set_camera(std::shared_ptr<scene::camera> cam)

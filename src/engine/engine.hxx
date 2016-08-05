@@ -9,7 +9,7 @@ namespace engine
     {
       debug::log::get(debug::logINFO) << "Running the engine's main loop" << std::endl;
 
-      rb->batch(sm);
+      rb->init_render_backend(sm);
       while (ui->ui_satisfies_running_condition())
       {
         for (const auto& f : {fs...})
