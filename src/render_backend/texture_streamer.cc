@@ -8,26 +8,13 @@ namespace render_backend
     this->sl = sl;
   }
 
-  void texture_streaming_job::process(GLuint pbo)
+  void texture_streaming_job::process(GLuint pbo, GLuint texture)
   {
-    debug::log::get(debug::logINDENT, 5) << "Streaming texture \"" << streamed_tex->get_path() << "\"" << std::endl;
+    debug::log::get(debug::logINFO) << "Streaming texture \"" << streamed_tex->get_path() << "\"" << std::endl;
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
 
     if (!sl->load(streamed_tex->get_path().c_str()))
       return;
-
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, sl->get_width(), sl->get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, sl->get_generated_texture());
-    //glGenerateMipmap(GL_TEXTURE_2D);
-
-    glBindTexture(GL_TEXTURE_2D, texture);
 
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sl->get_width(), sl->get_height(), GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
@@ -37,18 +24,19 @@ namespace render_backend
     if (ptr)
     {
       for (long j = 0; j < size / 8; j++)
-        ptr[j] = sl->get_generated_texture()[j];
+        ptr[j] = 255;
       glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-
-      streamed_tex->set_loaded_tex(texture);
-      streamed_tex->set_state(resource::data_state::loaded);
     }
     else
       debug::log::get(debug::logERROR) << "Could not map the texture buffer" << std::endl;
 
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    streamed_tex->set_loaded_tex(texture);
+    streamed_tex->set_state(resource::data_state::loaded);
 
-    //glBindTexture(GL_TEXTURE_2D, 0);
+    debug::log::get(debug::logINDENT, 5) << "Streamed texture \"" << streamed_tex->get_path() << "\" bound to " << texture << std::endl;
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
   }
 
   texture_streamer::texture_streamer()
@@ -60,17 +48,29 @@ namespace render_backend
   {
     this->main_window = main_window;
 
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-    generate_pbos(max_tex_size);
-
     generate_fake_texture();
+
+    //glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    generate_pbos(max_tex_size);
   }
 
   void texture_streamer::query_texture_streaming_job(resource::streamed_texture* t)
   {
-
     debug::log::get(debug::logINFO) << "Querying a streaming job for " << t->get_path() << std::endl;
     queue.push(texture_streaming_job(t, sl));
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 2048, 2048, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    //glGenerateMipmap(GL_TEXTURE_2D);
+    //
+    texture_binding_pool.push(texture);
   }
 
   std::shared_ptr<resource::streamed_texture> texture_streamer::query_streamed_texture(std::string path)
@@ -78,14 +78,14 @@ namespace render_backend
     return std::make_shared<resource::streamed_texture>(fake_tex, path);
   }
 
-      void texture_streamer::set_fake_window(GLFWwindow* w)
-      {
-        tex_streamer_fake_window = w;
-      }
+  void texture_streamer::set_fake_window(GLFWwindow* w)
+  {
+    tex_streamer_fake_window = w;
+  }
 
   void texture_streamer::stream()
   {
-    data_streamer_thread = std::thread([=]()
+    data_streamer_thread = std::thread([&]()
         {
           glfwMakeContextCurrent(tex_streamer_fake_window);
           glfwWindowHint(GLFW_VISIBLE, false);
@@ -96,12 +96,17 @@ namespace render_backend
             if (!empty())
             {
               texture_streaming_job job = pop();
-              job.process(pbos[i]);
+
+              GLuint tex = texture_binding_pool.pop();
+              job.process(pbos[i], tex);
 
               glFlush();
 
               i = 1 - i;
+              //std::this_thread::sleep_for(std::chrono::milliseconds(400));
             }
+            else
+              std::this_thread::sleep_for(std::chrono::seconds(1));
         });
   }
 
@@ -116,6 +121,7 @@ namespace render_backend
 
   void texture_streamer::generate_fake_texture()
   {
+    debug::log::get(debug::logINFO) << "Generating fake texture" << std::endl;
     if (!sl->load("res/tex/fake_tex.jpg"))
     {
       debug::log::get(debug::logERROR) << "Could not generate the fake texture" << std::endl;
@@ -131,5 +137,6 @@ namespace render_backend
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, sl->get_width(), sl->get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, sl->get_generated_texture());
     //glGenerateMipmap(GL_TEXTURE_2D);
+    //
   }
 }

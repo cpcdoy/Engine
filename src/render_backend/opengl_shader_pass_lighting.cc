@@ -70,6 +70,7 @@ namespace render_backend
       glUniformMatrix4fv(uniforms[11], 1, GL_FALSE, &m->get_model()[0][0]);
       glUniformMatrix3fv(uniforms[12], 1, GL_FALSE, &glm::transpose(glm::inverse(glm::mat3(m->get_model())))[0][0]);
 
+      
       glActiveTexture(GL_TEXTURE2);
       glBindTexture(GL_TEXTURE_2D, m->get_texture());
 

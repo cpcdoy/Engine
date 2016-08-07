@@ -8,16 +8,22 @@ namespace debug
 
   std::ostream& log::get(log_level level, int indent)
   {
-    static log l;
+    static std::atomic<size_t> thread_counter{0};
+
+    static thread_local size_t thread_id = 0;
+    if (thread_id == 0)
+      thread_id = thread_counter++;
+
+    static thread_local log l;
 
     int ind = 29;
-    static int prev_ind = ind;
+    static thread_local int prev_ind = ind;
 
     indent = indent < 0 ? 0 : indent;
 
     if (level < logINDENT)
       std::cout << "[" << current_date_time() << 
-        "][";
+        "][" << "Thread " << thread_id << "][";
 
     if (level == log_level::logERROR)
       std::cout << COLOR_RED << "ERROR";

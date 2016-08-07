@@ -26,8 +26,8 @@ uniform vec3 view_pos;
 #define PI 3.1415926535897932
 #define ONE_OVER_PI 0.318309
 
-float metalness = 1.0;//clamp(texture(metalness_map, fs_in.tex_coords).r, 0.02, 0.99);//1.0;
-float roughness = 0.68;//- max(texture(roughness_map, fs_in.tex_coords).r, 0.001);//0.68;
+float metalness = clamp(texture(metalness_map, fs_in.tex_coords).r, 0.02, 0.99);//1.0;
+float roughness = 1.0 - max(texture(roughness_map, fs_in.tex_coords).r, 0.001);//0.68;
 
 vec4 base_color = vec4(1.0);
 
