@@ -23,42 +23,15 @@ namespace resource
   class streamed_texture
   {
     public:
-      streamed_texture(GLuint fake_tex, std::string path, long unload_time=100)
-        : state(data_state::unloaded),
-          path(path),
-          fake_tex(fake_tex),
-          unload_time(unload_time)
-      {
-      }
+      streamed_texture(GLuint fake_tex, std::string path, long unload_time=100);
 
-      GLuint query_texture()
-      {
-        if (state == data_state::unloaded)
-        {
-          state = data_state::loading;
-          render_backend::opengl_pipeline_state::instance().get_tex_streamer()->query_texture_streaming_job(this);
-        }
-        if (state == data_state::loaded)
-          return loaded;
-        else
-          return fake_tex;
-        
-        last_used = glfwGetTime();
-      }
+      GLuint query_texture();
+      
+      void unload_if_unused();
 
-      void unload_if_unused()
-      {
-        if (state == data_state::loaded && glfwGetTime() - last_used > unload_time)
-        {
-          glDeleteTextures(1, &loaded_tex);
-          state = data_state::unloaded;
-        }
-      }
-
-      std::string get_path()
-      {
-        return path;
-      }
+      std::string get_path();
+      void set_loaded_tex(GLuint tex);
+      void set_state(data_state st);
 
     protected:
       data_state state;

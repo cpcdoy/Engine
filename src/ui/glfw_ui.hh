@@ -25,8 +25,10 @@ namespace ui
       virtual bool satisfies_running_condition() override;
 
       GLFWwindow* get_window();
+      GLFWwindow* get_fake_window();
 
     protected:
       GLFWwindow* window;
+      GLFWwindow* tex_streamer_fake_window;
   };
 }

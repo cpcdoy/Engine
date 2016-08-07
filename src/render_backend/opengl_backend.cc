@@ -92,9 +92,7 @@ namespace render_backend
 
   void opengl_backend::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int width, int height, texture_kind k)
   {
-    debug::log::get(debug::logINFO) << "Generating a texture streaming job (" << width << "*" << height << ")" << std::endl;
-
-    /*GLuint texture;
+    GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -103,10 +101,10 @@ namespace render_backend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
-    glGenerateMipmap(GL_TEXTURE_2D);*/
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     auto gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
-    /*if (k == texture_kind::ALBEDO)
+    if (k == texture_kind::ALBEDO)
       gl_mesh->set_texture(texture);
     else if (k == texture_kind::NORMAL)
       gl_mesh->set_normal_texture(texture);
@@ -115,7 +113,7 @@ namespace render_backend
     else if (k == texture_kind::ROUGHNESS)
       gl_mesh->set_roughness_texture(texture);
     else if (k == texture_kind::AO)
-      gl_mesh->set_ao_texture(texture);*/
+      gl_mesh->set_ao_texture(texture);
 
     //debug::log::get(debug::logINDENT, 5) << "tex : " << texture << std::endl;
   }
@@ -186,9 +184,13 @@ namespace render_backend
 
   void opengl_backend::init_data_streamer()
   {
+    auto glfw = std::static_pointer_cast<ui::glfw_ui>(ui->get_ui());
+    GLFWwindow* main_window = glfw->get_window();
+    GLFWwindow* fake_window = glfw->get_fake_window();
+
+    tex_streamer->set_fake_window(fake_window);
     tex_streamer->stream();
 
-    GLFWwindow* main_window = std::static_pointer_cast<ui::glfw_ui>(ui->get_ui())->get_window();
     glfwMakeContextCurrent(main_window);
   }
 

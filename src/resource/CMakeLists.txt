@@ -1,2 +1,1 @@
-add_library(resource OBJECT obj_loader.cc mesh.cc resource_manager.cc
-  gl_mesh.cc soil_loader.cc)
+add_library(resource OBJECT streamed_texture.cc obj_loader.cc mesh.cc gl_mesh.cc soil_loader.cc resource_manager.cc)

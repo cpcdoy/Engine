@@ -11,16 +11,16 @@
 # include <algorithm>
 
 # include "../scene/camera.hh"
+//# include "texture_streamer.hh"
 # include "render_backend.hh"
 # include "../resource/mesh.hh"
-# include "../resource/gl_mesh.hh"
+//# include "../resource/gl_mesh.hh"
 # include "opengl_backend_utils.hh"
 
 # include "opengl_passes.hh"
 
-# include "opengl_pipeline_state.hh"
+//# include "opengl_pipeline_state.hh"
 
-# include "texture_streamer.hh"
 
 namespace render_backend
 {

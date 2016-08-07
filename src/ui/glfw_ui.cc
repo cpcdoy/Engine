@@ -43,7 +43,9 @@ namespace ui
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_SRGB_CAPABLE, true);
 
-    window = glfwCreateWindow(w, h, title.c_str(), NULL, NULL);
+    tex_streamer_fake_window = glfwCreateWindow(1, 1, "fake", nullptr, nullptr);
+    window = glfwCreateWindow(w, h, title.c_str(), NULL, tex_streamer_fake_window);
+
     if (!window)
     {
       debug::log::get(debug::logERROR) << "Failed to open a GLFW window" << std::endl;
@@ -75,5 +77,10 @@ namespace ui
   GLFWwindow* glfw_ui::get_window()
   {
     return window;
+  }
+
+  GLFWwindow* glfw_ui::get_fake_window()
+  {
+    return tex_streamer_fake_window;
   }
 }

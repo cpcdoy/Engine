@@ -12,8 +12,8 @@
 # include "opengl_backend_utils.hh"
 # include "../resource/gl_mesh.hh"
 # include "../scene/camera.hh"
-# include "../resource/streamed_texture.hh"
-# include "opengl_pipeline_state.hh"
+//# include "../resource/streamed_texture.hh"
+//# include "opengl_pipeline_state.hh"
 
 namespace render_backend
 {

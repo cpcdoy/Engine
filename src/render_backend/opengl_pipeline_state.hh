@@ -8,7 +8,7 @@
 # include <memory>
 # include <map>
 
-//# include "texture_streamer.hh"
+# include "texture_streamer.hh"
 
 namespace render_backend
 {
@@ -17,10 +17,7 @@ namespace render_backend
   class opengl_pipeline_state
   {
     public:
-      opengl_pipeline_state()
-      {
-        states.insert(std::make_pair("shadow_map_res", 1024));
-      }
+      opengl_pipeline_state();
 
       static opengl_pipeline_state& instance()
       {
@@ -28,32 +25,13 @@ namespace render_backend
         return s;
       }
 
-      void set_texture_streamer(std::shared_ptr<texture_streamer>& t)
-      {
-        tex_streamer = t;
-      }
+      void set_texture_streamer(std::shared_ptr<texture_streamer>& t);
 
-      std::shared_ptr<texture_streamer>& get_tex_streamer()
-      {
-        return tex_streamer;
-      }
+      void query_texture_streaming_job(resource::streamed_texture* s);
       
-      void add_state(std::string s, long v)
-      {
-        states.insert(std::make_pair(s, v));
-      }
+      void add_state(std::string s, long v);
 
-      long get_state_of(std::string s)
-      {
-        try
-        {
-          return states.at(s);
-        }
-        catch (std::out_of_range& e)
-        {
-          return 0;
-        }
-      }
+      long get_state_of(std::string s);
 
     private:
       std::map<std::string, long> states;

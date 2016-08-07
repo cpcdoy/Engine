@@ -48,6 +48,11 @@ namespace util
           cond_.notify_one();
         }
 
+        bool empty()
+        {
+          return queue.empty();
+        }
+
       protected:
         std::queue<T> queue;
         std::mutex mutex_;
