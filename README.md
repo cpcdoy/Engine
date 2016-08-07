@@ -10,7 +10,7 @@ Rendering Engine
 
 4. [Appendix](#Appendix)
 
-A rendering engine that works based on plug-ins that can be easily added to the code.
+A real-time 3D rendering engine.
 
 
 <a name="Build"/>

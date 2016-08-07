@@ -68,7 +68,6 @@ namespace render_backend
 
   void texture_streamer::query_texture_streaming_job(resource::streamed_texture* t)
   {
-
     debug::log::get(debug::logINFO) << "Querying a streaming job for " << t->get_path() << std::endl;
     queue.push(texture_streaming_job(t, sl));
   }
@@ -116,6 +115,7 @@ namespace render_backend
 
   void texture_streamer::generate_fake_texture()
   {
+    debug::log::get(debug::logINFO) << "Generating fake texture" << std::endl;
     if (!sl->load("res/tex/fake_tex.jpg"))
     {
       debug::log::get(debug::logERROR) << "Could not generate the fake texture" << std::endl;
