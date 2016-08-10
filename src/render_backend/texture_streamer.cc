@@ -8,33 +8,41 @@ namespace render_backend
     this->sl = sl;
   }
 
-  void texture_streaming_job::process(GLuint pbo, GLuint texture)
+  void texture_streaming_job::process(GLuint* pbo, int i, GLuint texture)
   {
     debug::log::get(debug::logINFO) << "Streaming texture \"" << streamed_tex->get_path() << "\"" << std::endl;
 
     if (!sl->load(streamed_tex->get_path().c_str()))
       return;
 
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    int size = sl->get_width() * sl->get_height() * 4;
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_DRAW);
-    long* ptr = (long*)glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-    if (ptr)
+    for (int i = 0; i < 2; i++)
     {
-      std::memcpy(ptr, sl->get_generated_texture(), size);
-      glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo[i]);
+      glBindTexture(GL_TEXTURE_2D, texture);
 
       glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sl->get_width(), sl->get_height(), GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+      if (i == 2)
+        break;
+
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo[1 - i]);
+
+      int size = sl->get_width() * sl->get_height() * 4;
+      glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_DRAW);
+      long* ptr = (long*)glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+      if (ptr)
+      {
+        std::memcpy(ptr, sl->get_generated_texture(), size);
+        glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+
+        streamed_tex->set_loaded_tex(texture);
+        streamed_tex->set_state(resource::data_state::loaded);
+
+        debug::log::get(debug::logINDENT, 5) << "Bound to unit " << texture << std::endl;
+      }
+      else
+        debug::log::get(debug::logERROR) << "Could not map the texture buffer" << std::endl;
     }
-    else
-      debug::log::get(debug::logERROR) << "Could not map the texture buffer" << std::endl;
-
-    streamed_tex->set_loaded_tex(texture);
-    streamed_tex->set_state(resource::data_state::loaded);
-
-    debug::log::get(debug::logINDENT, 5) << "Bound to unit " << texture << std::endl;
 
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -69,10 +77,10 @@ namespace render_backend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, sl->get_width(), sl->get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    //glGenerateMipmap(GL_TEXTURE_2D);
+    glGenerateMipmap(GL_TEXTURE_2D);
     
     sl->clean();
     texture_binding_pool.push(texture);
@@ -105,13 +113,12 @@ namespace render_backend
               GLuint tex = texture_binding_pool.pop();
 
               opengl_pipeline_state::instance().lock();
-              job.process(pbos[i], tex);
+              job.process(pbos, i, tex);
               opengl_pipeline_state::instance().unlock();
 
-              glFlush();
+              glFinish();
 
               i = 1 - i;
-              //std::this_thread::sleep_for(std::chrono::milliseconds(400));
             }
             else
               std::this_thread::sleep_for(std::chrono::seconds(1));

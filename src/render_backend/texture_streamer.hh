@@ -25,7 +25,7 @@ namespace render_backend
     public:
       texture_streaming_job(resource::streamed_texture* t, std::shared_ptr<resource::soil_loader> sl);
 
-      void process(GLuint pbo, GLuint texture);
+      void process(GLuint* pbo, int i, GLuint texture);
 
     protected:
       resource::streamed_texture* streamed_tex;
