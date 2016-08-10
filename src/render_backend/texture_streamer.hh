@@ -6,6 +6,7 @@
 #  include <GLFW/glfw3.h>
 # endif
 # include <iostream>
+# include <cstring>
 
 # include "streamer.hh"
 # include "../resource/soil_loader.hh"

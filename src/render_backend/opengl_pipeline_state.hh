@@ -7,6 +7,7 @@
 # endif
 # include <memory>
 # include <map>
+# include <mutex>
 
 # include "texture_streamer.hh"
 
@@ -33,9 +34,14 @@ namespace render_backend
 
       long get_state_of(std::string s);
 
+      void lock();
+      void unlock();
+
     private:
       std::map<std::string, long> states;
 
       std::shared_ptr<texture_streamer> tex_streamer;
+
+      std::mutex mutex;
   };
 }

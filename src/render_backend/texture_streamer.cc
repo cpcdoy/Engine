@@ -11,21 +11,22 @@ namespace render_backend
   void texture_streaming_job::process(GLuint pbo, GLuint texture)
   {
     debug::log::get(debug::logINFO) << "Streaming texture \"" << streamed_tex->get_path() << "\"" << std::endl;
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
 
     if (!sl->load(streamed_tex->get_path().c_str()))
       return;
 
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sl->get_width(), sl->get_height(), GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     int size = sl->get_width() * sl->get_height() * 4;
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_COPY);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_DRAW);
     long* ptr = (long*)glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
     if (ptr)
     {
-      for (long j = 0; j < size / 8; j++)
-        ptr[j] = 255;
+      std::memcpy(ptr, sl->get_generated_texture(), size);
       glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+
+      glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sl->get_width(), sl->get_height(), GL_RGBA, GL_UNSIGNED_BYTE, 0);
     }
     else
       debug::log::get(debug::logERROR) << "Could not map the texture buffer" << std::endl;
@@ -33,7 +34,7 @@ namespace render_backend
     streamed_tex->set_loaded_tex(texture);
     streamed_tex->set_state(resource::data_state::loaded);
 
-    debug::log::get(debug::logINDENT, 5) << "Streamed texture \"" << streamed_tex->get_path() << "\" bound to " << texture << std::endl;
+    debug::log::get(debug::logINDENT, 5) << "Bound to unit " << texture << std::endl;
 
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -59,6 +60,9 @@ namespace render_backend
     debug::log::get(debug::logINFO) << "Querying a streaming job for " << t->get_path() << std::endl;
     queue.push(texture_streaming_job(t, sl));
 
+    if (!sl->load(t->get_path().c_str()))
+      return;
+
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -67,9 +71,10 @@ namespace render_backend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 2048, 2048, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, sl->get_width(), sl->get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     //glGenerateMipmap(GL_TEXTURE_2D);
-    //
+    
+    sl->clean();
     texture_binding_pool.push(texture);
   }
 
@@ -98,7 +103,10 @@ namespace render_backend
               texture_streaming_job job = pop();
 
               GLuint tex = texture_binding_pool.pop();
+
+              opengl_pipeline_state::instance().lock();
               job.process(pbos[i], tex);
+              opengl_pipeline_state::instance().unlock();
 
               glFlush();
 
@@ -114,9 +122,11 @@ namespace render_backend
   {
     glGenBuffers(2, pbos);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbos[0]);
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_COPY);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_DRAW);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbos[1]);
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_COPY);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_DRAW);
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
   }
 
   void texture_streamer::generate_fake_texture()
@@ -127,7 +137,6 @@ namespace render_backend
       debug::log::get(debug::logERROR) << "Could not generate the fake texture" << std::endl;
       return;
     }
-    glEnable(GL_TEXTURE_2D);
     glGenTextures(1, &fake_tex);
     glBindTexture(GL_TEXTURE_2D, fake_tex);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -137,6 +146,5 @@ namespace render_backend
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, sl->get_width(), sl->get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, sl->get_generated_texture());
     //glGenerateMipmap(GL_TEXTURE_2D);
-    //
   }
 }

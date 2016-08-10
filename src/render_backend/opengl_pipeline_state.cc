@@ -33,4 +33,14 @@ namespace render_backend
       return 0;
     }
   }
+
+  void opengl_pipeline_state::lock()
+  {
+    mutex.lock();
+  }
+
+  void opengl_pipeline_state::unlock()
+  {
+    mutex.unlock();
+  }
 }

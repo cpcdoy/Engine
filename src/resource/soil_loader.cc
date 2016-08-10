@@ -34,4 +34,9 @@ namespace resource
   {
     return tex;
   }
+
+  void soil_loader::clean()
+  {
+    SOIL_free_image_data(tex);
+  }
 }

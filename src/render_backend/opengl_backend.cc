@@ -202,13 +202,17 @@ namespace render_backend
 
 		double currentTime = glfwGetTime();
     for (auto pass : pipeline)
+    {
+      opengl_pipeline_state::instance().lock();
       pass->process_pass(render_queue, cam);
+      opengl_pipeline_state::instance().unlock();
+    }
 
 		if (currentTime - elapsedTIme >= 1.0)
 		{
       double ms = 1000.0 / double(nb_frames);
-      std::cout << ms << " ms --> "
-                << nb_frames << " fps" << std::endl;
+
+      debug::log::get(debug::logINFO) << ms << " ms --> " << nb_frames << " fps" << std::endl;
 			nb_frames = 0;
 			elapsedTIme += 1.0;
 		}

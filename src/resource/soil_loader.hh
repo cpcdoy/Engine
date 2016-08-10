@@ -17,6 +17,7 @@ namespace resource
 
       virtual bool load(const char* path) override;
       virtual unsigned char* get_generated_texture() override;
+      virtual void clean() override;
     private:
       std::vector<unsigned char*> texs;
   };

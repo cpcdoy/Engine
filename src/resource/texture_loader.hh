@@ -26,6 +26,10 @@ namespace resource
         return nullptr;
       }
 
+      virtual void clean()
+      {
+      }
+
       virtual int get_height()
       {
         return height;
