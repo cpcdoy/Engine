@@ -21,6 +21,28 @@ namespace render_backend
     return mips;
   }
 
+  std::deque<int> compute_mipmap_offsets(int w, int h, int bs, int mips)
+  {
+    std::deque<int> w_mips = compute_mipmap_dimensions(w);
+    std::deque<int> h_mips = compute_mipmap_dimensions(h);
+
+    std::deque<int> mip_offsets;
+
+    unsigned int size = 0;
+    unsigned int offset = 0;
+    for (int mip = 0; mip <= mips; mip++)
+    {
+      mip_offsets.push_back(offset);
+      w = w_mips[mip];
+      h = h_mips[mip];
+      size = ((w + 3) / 4) * ((h + 3) / 4) * bs;
+
+      offset += size;
+    }
+
+    return mip_offsets;
+  }
+
   void texture_streaming_job::process(GLuint* pbo, int i, GLuint texture)
   {
     debug::log::get(debug::logINFO) << "Streaming texture \"" << streamed_tex->get_path() << "\"" << std::endl;
@@ -34,32 +56,31 @@ namespace render_backend
     int w = sl->get_width();
     int h = sl->get_height();
     int bs = sl->get_block_size();
-    int offset = 0;
     unsigned int size;
     int mips = std::floor(std::log2(std::max(sl->get_width(), sl->get_width())));
 
     std::deque<int> w_mips = compute_mipmap_dimensions(w);
     std::deque<int> h_mips = compute_mipmap_dimensions(h);
 
+    std::deque<int> mip_offsets = compute_mipmap_offsets(w, h, bs, mips);
+
     for (int mip = mips; mip >= 0; mip--)
     {
       w = w_mips[mip];
       h = h_mips[mip];
       size = ((w + 3) / 4) * ((h + 3) / 4) * bs;
-      std::cout << "mip " << mip << " w " << w << " h " << h << " s " << size << std::endl;
+
       glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_DRAW);
       long* ptr = (long*)glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
       if (ptr)
       {
-        std::memcpy(ptr, sl->get_generated_texture() + offset, size);
+        std::memcpy(ptr, sl->get_generated_texture() + mip_offsets[mip], size);
         glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
         //if (sl->is_compressed())
         /*else
           glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sl->get_width(), sl->get_height(), GL_RGBA, GL_UNSIGNED_BYTE, 0);*/
 
         glCompressedTexSubImage2D(GL_TEXTURE_2D, mip, 0, 0, w, h, sl->get_format(), size, 0);
-
-        offset += size;
       }
       else
       {
