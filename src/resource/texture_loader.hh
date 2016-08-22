@@ -45,11 +45,35 @@ namespace resource
         return loader_id;
       }
 
+      virtual int get_mipmap_levels()
+      {
+        return mipmap_levels;
+      }
+
+      virtual bool is_compressed()
+      {
+        return compressed;
+      }
+
+      virtual int get_block_size()
+      {
+        return block_size;
+      }
+
+      virtual int get_format()
+      {
+        return format;
+      }
+
     protected:
       std::string loader_id = "virtual empty texture loader";
 
       unsigned char* tex;
       int width, height;
       int channels;
+      int mipmap_levels;
+      int block_size;
+      int format;
+      bool compressed;
   };
 }

@@ -9,6 +9,7 @@
 # include <cstring>
 
 # include "streamer.hh"
+# include "../resource/dds_loader.hh"
 # include "../resource/soil_loader.hh"
 
 namespace resource
@@ -23,14 +24,14 @@ namespace render_backend
   class texture_streaming_job
   {
     public:
-      texture_streaming_job(resource::streamed_texture* t, std::shared_ptr<resource::soil_loader> sl);
+      texture_streaming_job(resource::streamed_texture* t, std::shared_ptr<resource::dds_loader> sl);
 
       void process(GLuint* pbo, int i, GLuint texture);
 
     protected:
       resource::streamed_texture* streamed_tex;
 
-      std::shared_ptr<resource::soil_loader> sl;
+      std::shared_ptr<resource::dds_loader> sl;
   };
 
   class texture_streamer : public streamer<texture_streaming_job>
@@ -63,7 +64,7 @@ namespace render_backend
 
       std::thread data_streamer_thread;
 
-      std::shared_ptr<resource::soil_loader> sl;
+      std::shared_ptr<resource::dds_loader> sl;
 
       bool end_streaming = false;
 
