@@ -98,6 +98,7 @@ namespace render_backend
   }
 
   texture_streamer::texture_streamer()
+    : end_streaming(false)
   {
     sl = std::make_shared<resource::dds_loader>();
   }
@@ -183,9 +184,10 @@ namespace render_backend
               glFinish();
 
               i = 1 - i;
+              std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
             else
-              std::this_thread::sleep_for(std::chrono::seconds(1));
+              std::this_thread::yield();
         });
   }
 

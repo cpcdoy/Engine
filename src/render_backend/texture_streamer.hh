@@ -66,7 +66,7 @@ namespace render_backend
 
       std::shared_ptr<resource::dds_loader> sl;
 
-      bool end_streaming = false;
+      std::atomic<bool> end_streaming;
 
       streaming_queue<GLuint> texture_binding_pool;
   };
