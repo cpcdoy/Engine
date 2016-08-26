@@ -57,6 +57,7 @@ namespace resource
       std::vector<glm::vec2> get_uvs();
       std::vector<glm::vec3> get_normals();
 
+      glm::vec3 get_pos();
       void set_pos(glm::vec3 pos);
       void set_scale(glm::vec3 scale);
 
@@ -77,5 +78,6 @@ namespace resource
       std::string mesh_backend_id = "gl";
 
       glm::mat4 model;
+      glm::vec3 pos;
   };
 }

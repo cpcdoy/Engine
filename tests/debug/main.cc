@@ -47,17 +47,14 @@ int main(void)
   e.load_texture("res/tex/dds/T_Tile_White_AO.dds", m1, texture_kind::AO);
   m1->set_pos(glm::vec3(-0.1, 5, 1.3));
 
-  for (int i = 0; i < 60; i += 2)
-  {
-    mesh m5 = e.load_mesh("res/obj/sphere.obj");
-    m5->set_lod_distance(0, 100);
-    e.add_mesh_lod("res/obj/sphere_lod_1.obj", m5, 200, 1);
-    e.load_texture("res/tex/dds/T_Brick_Yellow_D.dds", m5);
-    e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m5, texture_kind::METALNESS);
-    e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m5, texture_kind::ROUGHNESS);
-    e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m5, texture_kind::AO);
-    m5->set_pos(glm::vec3(-0.1, 7 + i, 1.3));
-  }
+  mesh m5 = e.load_mesh("res/obj/sphere.obj");
+  m5->set_lod_distance(0, 100);
+  e.add_mesh_lod("res/obj/sphere_lod_1.obj", m5, 200, 1);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_D.dds", m5);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m5, texture_kind::METALNESS);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m5, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m5, texture_kind::AO);
+  m5->set_pos(glm::vec3(-0.1, 7, 1.3));
 
   camera cam = e.create_camera();
   e.set_current_camera(cam);

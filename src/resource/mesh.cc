@@ -66,7 +66,13 @@ namespace resource
 
   void mesh::set_pos(glm::vec3 pos)
   {
+    this->pos = pos;
     model = glm::translate(model, pos);
+  }
+
+  glm::vec3 mesh::get_pos()
+  {
+    return pos;
   }
 
   void mesh::set_scale(glm::vec3 scale)

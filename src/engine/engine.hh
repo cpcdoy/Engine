@@ -1,5 +1,7 @@
 #pragma once
 
+# include <algorithm>
+
 # include "../resource/resource_manager.hh"
 # include "../render_backend/render_manager.hh"
 # include "../ui/ui_manager.hh"
