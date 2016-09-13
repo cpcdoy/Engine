@@ -71,6 +71,13 @@ add_dependencies(check Engine_check)
 
 target_link_libraries(Engine_check ${CMAKE_DL_LIBS} GL GLEW glfw SOIL glsl_optimizer)
 
+add_custom_target(glsl-optimizer_parser_generation
+  WORKING_DIRECTORY ./3rd_party/glsl-optimizer
+  COMMAND ./generateParsers.sh
+)
+add_dependencies(check glsl-optimizer_parser_generation)
+add_dependencies(Engine Engine_check glsl-optimizer_parser_generation)
+
 add_custom_target(deep_clean
   COMMAND find . -iwholename '*cmake*' -not -name CMakeLists.txt -delete
   COMMAND find . -iwholename '*Makefile*' -delete
