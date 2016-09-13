@@ -465,13 +465,15 @@ _mesa_exec_free( void *addr );
 #ifdef HAVE___BUILTIN_FFS
 #define ffs __builtin_ffs
 #else
-extern int ffs(int i);
+//extern int ffs(int i);
+extern int ffs (int __i) __THROW __attribute__ ((__const__));
 #endif
 
 #ifdef HAVE___BUILTIN_FFSLL
 #define ffsll __builtin_ffsll
 #else
-extern int ffsll(long long int i);
+//extern int ffsll(long long int i);
+__extension__ extern int ffsll (long long int __ll);
 #endif
 #endif /* FFS_DEFINED */
 
