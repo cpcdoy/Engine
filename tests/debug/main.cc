@@ -23,10 +23,10 @@ int main(void)
   e.load_texture("res/tex/dds/default_AO.dds", m4, texture_kind::AO);
   m4->set_pos(glm::vec3(0, 0.15, 0));
 
-  mesh m6 = e.load_mesh("res/obj/nanosuit.obj");
+  mesh m6 = e.load_mesh("res/obj/vase.obj");
   e.load_texture("res/tex/dds/fake_tex.dds", m6);
   e.load_texture("res/tex/dds/default_AO.dds", m6, texture_kind::AO);
-  m6->set_pos(glm::vec3(2, 0.15, 0));
+  m6->set_pos(glm::vec3(2, -0.50, 0));
   m6->set_scale(glm::vec3(0.7));
 
   mesh m2 = e.load_mesh("res/obj/sphere.obj");

@@ -1,4 +1,4 @@
-#version 430 core
+#version 330 core
 #define BRDF_FD_OREN_NAYAR
 //#define BRDF_FD_LAMBERT
 
@@ -77,15 +77,15 @@ vec3 fresnel_schlick(float cos_t, vec3 f0)
 
 float schlick_geometry(float n_dot_l, float n_dot_v, float roughness)
 {
-	float a = roughness + 1.0; //Disney: reducde "hotness"
-	float k = a * a * 0.125;
+    float a = roughness + 1.0; //Disney: reducde "hotness"
+    float k = a * a * 0.125;
   float one_minus_k = 1 - k;
 
-	float vis_schlick_v = n_dot_v * one_minus_k + k;
-	float vis_schlick_l = n_dot_l * one_minus_k + k;
-  
+    float vis_schlick_v = n_dot_v * one_minus_k + k;
+    float vis_schlick_l = n_dot_l * one_minus_k + k;
+
   //UE4
-	return (n_dot_v / vis_schlick_v) * (n_dot_l / vis_schlick_l);
+    return (n_dot_v / vis_schlick_v) * (n_dot_l / vis_schlick_l);
 }
 
 //BRDFs
@@ -99,6 +99,7 @@ vec4 brdf_lambert()
 
   return color;
 }
+
 #elif defined(BRDF_FD_OREN_NAYAR)
 vec4 brd_oren_nayar(float n_dot_v, float n_dot_l, vec3 light_dir, vec3 view_dir, vec3 n)
 {
@@ -141,7 +142,7 @@ float compute_shadows(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
   if(projCoords.z > 1.0)
     return 0.0;
 
-  float closestDepth = texture(shadow_map, projCoords.xy).r; 
+  float closestDepth = texture(shadow_map, projCoords.xy).r;
   float currentDepth = projCoords.z;
 
   float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.005);
@@ -153,8 +154,8 @@ float compute_shadows(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
   for(int x = -1; x <= 1; ++x)
     for(int y = -1; y <= 1; ++y)
     {
-      float pcfDepth = texture(shadow_map, projCoords.xy + vec2(x, y) * texelSize).r; 
-      shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+      float pcfDepth = texture(shadow_map, projCoords.xy + vec2(x, y) * texelSize).r;
+      shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
     }
   shadow /= 9.0;
 
@@ -180,22 +181,22 @@ void main()
 
   vec3 h = normalize(v + l);
 
-	float n_dot_v = clamp(dot(n, v), 0.0, 1.0);
-	float n_dot_l = clamp(dot(n, l), 0.0, 1.0);
-	float n_dot_h = clamp(dot(n, h), 0.0, 1.0);
+  float n_dot_v = clamp(dot(n, v), 0.0, 1.0);
+  float n_dot_l = clamp(dot(n, l), 0.0, 1.0);
+  float n_dot_h = clamp(dot(n, h), 0.0, 1.0);
   float v_dot_h = clamp(dot(v, h), 0.0, 1.0);
 
 #ifdef BRDF_FD_LAMBERT
-	vec4 fd = brdf_lambert();
+  vec4 fd = brdf_lambert();
 #elif defined(BRDF_FD_OREN_NAYAR)
   vec4 fd = brd_oren_nayar(n_dot_v, n_dot_l, lightDir, v, n);
 #endif
-	vec3 fs = brdf_cook_torrance(v_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
+  vec3 fs = brdf_cook_torrance(v_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
 
-  vec3 ambient = 0.2 * texture(ao_map, gl_FragCoord.xy / screen_res).r * color;
+  vec3 ambient = vec3(0.2 * texture(ao_map, gl_FragCoord.xy / screen_res).r);
 
   float shadow = compute_shadows(fs_in.frag_pos_light_space, normal, l);
-  vec3 lighting = (ambient + (fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow)) * light_color; //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;
+  vec3 lighting = (ambient + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * color; //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;
 
   frag_color = vec4(lighting, fd.a);
 }
