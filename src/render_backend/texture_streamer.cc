@@ -89,8 +89,8 @@ namespace render_backend
       }
     }
 
+    sl->clean();
     streamed_tex->set_loaded_tex(texture);
-    streamed_tex->set_state(resource::data_state::loaded);
     debug::log::get(debug::logINDENT, 5) << "Bound to unit " << texture << std::endl;
 
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
@@ -209,7 +209,7 @@ namespace render_backend
   void texture_streamer::generate_fake_texture()
   {
     debug::log::get(debug::logINFO) << "Generating fake texture" << std::endl;
-    if (!sl->load("res/tex/fake_tex.dds"))
+    if (!sl->load("res/tex/dds/fake_tex.dds"))
     {
       debug::log::get(debug::logERROR) << "Could not generate the fake texture" << std::endl;
       return;

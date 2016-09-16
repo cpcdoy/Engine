@@ -20,13 +20,29 @@ namespace resource
     all,
   };
 
+  struct aabb
+  {
+    aabb()
+    {
+    }
+    aabb(glm::vec3 center, glm::vec3 half_extent)
+      : center(center),
+      half_extent(half_extent)
+    {
+    }
+
+    glm::vec3 center;
+
+    glm::vec3 half_extent;
+  };
+
   struct mesh_resource
   {
     mesh_resource();
     mesh_resource(int dist, int level)
+      : dist(dist),
+      level(level)
     {
-      this->dist = dist;
-      this->level = level;
     }
 
     int dist;
@@ -37,6 +53,8 @@ namespace resource
     std::vector<glm::vec3> vertices;
 
     std::vector<mesh> sub_meshes;
+
+    struct aabb aabb;
   };
 
   class mesh : public entity
@@ -61,10 +79,16 @@ namespace resource
       void set_pos(glm::vec3 pos);
       void set_scale(glm::vec3 scale);
 
+      void set_aabb(glm::vec3 center, glm::vec3 ext);
+      struct aabb get_aabb();
+
       void compute_current_lod(glm::vec3 cam_pos);
       int get_current_lod();
 
       virtual void add_lod(int dist, int lod, std::shared_ptr<mesh>& mesh);
+      virtual void query_texture_unloading()
+      {
+      }
 
       glm::mat4 get_model();
 

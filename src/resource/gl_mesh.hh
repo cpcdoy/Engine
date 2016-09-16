@@ -12,6 +12,7 @@
 # include "mesh.hh"
 
 # include "streamed_texture.hh"
+# include "texture_kind.hh"
 
 namespace resource
 {
@@ -23,11 +24,13 @@ namespace resource
       GLuint roughness_tex = 0;
       GLuint ao_tex = 0;
 
-      std::shared_ptr<streamed_texture> albedo_streamed_tex;
+      /*std::shared_ptr<streamed_texture> albedo_streamed_tex;
       std::shared_ptr<streamed_texture> normal_streamed_tex;
       std::shared_ptr<streamed_texture> metalness_streamed_tex;
       std::shared_ptr<streamed_texture> roughness_streamed_tex;
-      std::shared_ptr<streamed_texture> ao_streamed_tex;
+      std::shared_ptr<streamed_texture> ao_streamed_tex;*/
+
+      std::array<std::shared_ptr<streamed_texture>, 5> streamed_texs;
 
       bool has_tex = false;
 
@@ -76,6 +79,7 @@ namespace resource
       std::shared_ptr<streamed_texture>& get_streamed_ao_texture();
 
       virtual void add_lod(int dist, int lod, std::shared_ptr<mesh>& mesh) override;
+      virtual void query_texture_unloading() override;
 
     private:
       std::vector<GLuint> vaos;

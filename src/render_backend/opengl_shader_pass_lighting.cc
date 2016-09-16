@@ -32,7 +32,7 @@ namespace render_backend
     glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
 
-  void opengl_shader_pass_lighting::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam)
+  void opengl_shader_pass_lighting::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long rq_size)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -65,8 +65,9 @@ namespace render_backend
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("ssao_texture"));
 
-    for (auto m : render_queue)
+    for (int i = 0; i < rq_size; i++)
     {
+      const auto& m = render_queue[i];
       glUniformMatrix4fv(uniforms[11], 1, GL_FALSE, &m->get_model()[0][0]);
       glUniformMatrix3fv(uniforms[12], 1, GL_FALSE, &glm::transpose(glm::inverse(glm::mat3(m->get_model())))[0][0]);
 

@@ -5,6 +5,8 @@ int main(void)
 {
   engine::engine e;
 
+  //Remove debug output (EXPERIMENTAL)
+  //debug::log::get(debug::logDEBUG, 0, false);
   //Optional
   e.set_engine_render_context(render_backend::render_plugins::OpenGL, 4, 3);
   //Optional

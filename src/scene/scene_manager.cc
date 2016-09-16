@@ -61,8 +61,39 @@ namespace scene
     return current_managee->get_current_camera();
   }
 
-  std::vector<std::shared_ptr<resource::mesh>> scene_manager::get_render_queue()
+  std::vector<std::shared_ptr<resource::mesh>>& scene_manager::get_render_queue()
   {
     return current_managee->get_render_queue();
+  }
+
+  int scene_manager::get_render_queue_size()
+  {
+    return current_managee->get_render_queue_size();
+  }
+
+  void scene_manager::set_render_queue_size(int size)
+  {
+    current_managee->set_render_queue_size(size);
+  }
+
+  size_t scene_manager::compute_view_frustum_culling(std::vector<std::shared_ptr<resource::mesh>>& rq, std::shared_ptr<camera>& cam)
+  {
+    size_t rq_size = 0;
+    auto cam_pos = cam->get_camera_position();
+    std::partition(rq.begin(), rq.end(), [&cam, &rq_size, &cam_pos](const std::shared_ptr<resource::mesh>& m)
+    {
+      auto res = cam->point_in_view(m->get_pos());
+      if (res)
+      {
+        m->compute_current_lod(cam_pos);
+        rq_size++;
+      }
+      else
+        m->query_texture_unloading();
+
+      return res;
+    });
+
+    return rq_size;
   }
 }

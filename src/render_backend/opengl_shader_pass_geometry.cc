@@ -50,7 +50,7 @@ namespace render_backend
     opengl_pipeline_state::instance().add_state("g_position_depth", g_position_depth);
   }
 
-  void opengl_shader_pass_geometry::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam)
+  void opengl_shader_pass_geometry::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, g_buffer);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

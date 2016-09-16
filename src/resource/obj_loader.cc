@@ -43,12 +43,14 @@ namespace resource
     m->set_vertices(out_vertices);
     m->set_uvs(out_uvs);
     m->set_normals(out_normals);
+    m->set_aabb(max_vertex - center, center);
 
     return m;
   }
 
   bool obj_loader::load(const char* path)
   {
+    glm::vec3 min_vertex;
     debug::log::get(debug::logINFO) << "Loading OBJ file " << path << std::endl;
     
     out_vertices.clear();
@@ -74,6 +76,19 @@ namespace resource
         glm::vec3 vertex;
         fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
         temp_vertices.push_back(vertex);
+        if (vertex.x > max_vertex.x)
+          max_vertex.x = vertex.x;
+        if (vertex.y > max_vertex.y)
+          max_vertex.y = vertex.y;
+        if (vertex.z > max_vertex.z)
+          max_vertex.z = vertex.z;
+
+        if (vertex.x < min_vertex.x)
+          min_vertex.x = vertex.x;
+        if (vertex.y < min_vertex.y)
+          min_vertex.y = vertex.y;
+        if (vertex.z < min_vertex.z)
+          min_vertex.z = vertex.z;
       }
       else if (strcmp(lineHeader, "vt") == 0)
       {
@@ -123,6 +138,8 @@ namespace resource
         fgets(b, 1000, file);
       }
     }
+    center = (max_vertex + min_vertex) / 2.0f;
+    std::cout << "center v " << center.x << " " << center.y << " " << center.z << std::endl;
 
     for (unsigned int i = 0; i < vertex_indices.size(); i++)
     {

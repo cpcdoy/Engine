@@ -6,6 +6,10 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++11 -pedantic -fPIC -pthread -ggdb3")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -Werror -O3")
 
+SET(CMAKE_AR  "gcc-ar")
+SET(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+SET(CMAKE_CXX_ARCHIVE_FINISH   true)
+
 include_directories(src/debug)
 include_directories(src/resource)
 include_directories(src/ui)

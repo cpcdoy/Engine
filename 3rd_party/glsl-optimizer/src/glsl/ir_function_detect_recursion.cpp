@@ -243,6 +243,8 @@ destroy_links(exec_list *list, function *f)
 /**
  * Remove a function if it has either no in or no out links
  */
+#pragma GCC push_options
+#pragma GCC optimize ("O2")
 static void
 remove_unlinked_functions(const void *key, void *data, void *closure)
 {
@@ -264,6 +266,7 @@ remove_unlinked_functions(const void *key, void *data, void *closure)
       visitor->progress = true;
    }
 }
+#pragma GCC pop_options
 
 
 static void

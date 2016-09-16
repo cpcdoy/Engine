@@ -3,50 +3,64 @@
 namespace debug
 {
   log::log()
+    : out(std::cout.rdbuf())
   {
   }
 
-  std::ostream& log::get(log_level level, int indent)
+  void log::set_debug(bool debug)
   {
-    static std::atomic<size_t> thread_counter{0};
+    out.rdbuf(debug ? std::cout.rdbuf() : &nb);
+  }
+
+  std::ostream& log::get(log_level level, int indent, bool debug)
+  {
+    static std::atomic<size_t> thread_counter{1};
 
     static thread_local size_t thread_id = 0;
     if (thread_id == 0)
-      thread_id = thread_counter++;
+      thread_id = ++thread_counter;
 
     static thread_local log l;
 
     int ind = 40;
     static thread_local int prev_ind = ind;
+    static bool once = false;
+    if (!debug && !once)
+    {
+      once = true;
+      l.set_debug(debug);
+      l.out << "debug : " << debug << std::endl;
+      return l.out;
+    }
 
     indent = indent < 0 ? 0 : indent;
 
     if (level < logINDENT)
-      std::cout << "[" << current_date_time() << 
+      l.out << "[" << current_date_time() << 
         "][" << "Thread " << thread_id << "][";
 
     if (level == log_level::logERROR)
-      std::cout << COLOR_RED << "ERROR";
+      l.out << COLOR_RED << "ERROR";
     else if (level == log_level::logINFO)
-      std::cout << COLOR_BLUE << "INFO";
+      l.out << COLOR_BLUE << "INFO";
     else if (level == logWARN)
-      std::cout << COLOR_YELLOW << "WARN";
+      l.out << COLOR_YELLOW << "WARN";
     else if (level < logINDENT)
-      std::cout << COLOR_MAGENTA << "DEBUG";
+      l.out << COLOR_MAGENTA << "DEBUG";
     
     if (level < logINDENT)
-      std::cout << COLOR_RESET  << "] "
+      l.out << COLOR_RESET  << "] "
         << ((level == log_level::logINFO || level == log_level::logWARN) ? " " : "");
     else if (level == logREINDENT)
-      std::cout << COLOR_RESET << std::string(ind + prev_ind + indent, ' ');
+      l.out << COLOR_RESET << std::string(ind + prev_ind + indent, ' ');
     else
-      std::cout << COLOR_RESET << std::string(ind + indent, ' ');
+      l.out << COLOR_RESET << std::string(ind + indent, ' ');
     
     if (level == logINDENT)
       prev_ind = indent;
 
     l.messageLevel = level;
-    return std::cout;
+    return  l.out;
   }
 
   log::~log()

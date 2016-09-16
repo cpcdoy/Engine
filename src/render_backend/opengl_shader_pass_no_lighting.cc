@@ -10,7 +10,7 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "view"));
   }
 
-  void opengl_shader_pass_no_lighting::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam)
+  void opengl_shader_pass_no_lighting::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long)
   {
     glUseProgram(program);
 

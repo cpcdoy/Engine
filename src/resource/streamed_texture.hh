@@ -23,7 +23,8 @@ namespace resource
   class streamed_texture
   {
     public:
-      streamed_texture(GLuint fake_tex, std::string path, long unload_time=100);
+      streamed_texture(GLuint fake_tex, std::string path, long unload_time=10);
+      ~streamed_texture();
 
       GLuint query_texture();
       
@@ -42,6 +43,6 @@ namespace resource
       GLuint loaded_tex;
 
       long last_used;
-      long unload_time = 100;
+      long unload_time = 10;
   };
 }

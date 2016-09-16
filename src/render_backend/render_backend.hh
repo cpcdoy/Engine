@@ -47,7 +47,7 @@ namespace render_backend
       {
       }
 
-      virtual void render()
+      virtual void render(long)
       {
       }
 

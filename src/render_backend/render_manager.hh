@@ -31,7 +31,7 @@ namespace render_backend
       void set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int w, int h, texture_kind k);
       void set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, std::string path, texture_kind k);
 
-      void render();
+      void render(long);
       void init_render_backend(std::shared_ptr<scene::scene_manager> sm);
 
       void set_managers(std::shared_ptr<ui::ui_manager> ui, std::shared_ptr<resource::resource_manager> rm);

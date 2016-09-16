@@ -34,7 +34,7 @@ namespace render_backend
         glDeleteShader(program);
       }
 
-      virtual void process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam) = 0;
+      virtual void process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long rq_size = 1) = 0;
 
     protected:
       std::vector<GLint> uniforms;

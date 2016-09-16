@@ -58,9 +58,19 @@ namespace scene
         return scene_graph_id;
       }
 
-      virtual std::vector<std::shared_ptr<resource::mesh>> get_render_queue()
+      virtual std::vector<std::shared_ptr<resource::mesh>>& get_render_queue()
       {
         return render_queue;
+      }
+
+      virtual int get_render_queue_size()
+      {
+        return render_queue_size;
+      }
+
+      virtual void set_render_queue_size(int size)
+      {
+        render_queue_size = size;
       }
 
     protected:
@@ -70,5 +80,7 @@ namespace scene
       std::vector<std::shared_ptr<resource::mesh>> render_queue;
 
       std::shared_ptr<ui::ui_manager> ui;
+
+      int render_queue_size = 0;
   };
 }

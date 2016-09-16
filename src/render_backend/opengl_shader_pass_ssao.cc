@@ -106,7 +106,7 @@ namespace render_backend
     glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
 
-  void opengl_shader_pass_ssao::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>&, std::shared_ptr<scene::camera> cam)
+  void opengl_shader_pass_ssao::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>&, std::shared_ptr<scene::camera> cam, long)
   {
 		glBindFramebuffer(GL_FRAMEBUFFER, ssao_fbo);
 		glClear(GL_COLOR_BUFFER_BIT);

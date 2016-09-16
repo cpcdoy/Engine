@@ -10,8 +10,14 @@ namespace resource
   {
   }
 
+  streamed_texture::~streamed_texture()
+  {
+    glDeleteTextures(1, &loaded_tex);
+  }
+
   GLuint streamed_texture::query_texture()
   {
+    last_used = glfwGetTime();
     if (state == data_state::unloaded)
     {
       state = data_state::loading;
@@ -21,14 +27,14 @@ namespace resource
       return loaded_tex;
     else
       return fake_tex;
-
-    last_used = glfwGetTime();
   }
 
   void streamed_texture::set_loaded_tex(GLuint tex)
   {
     loaded_tex = tex;
+    state = data_state::loaded;
   }
+
   void streamed_texture::set_state(data_state st)
   {
     state = st;
@@ -39,6 +45,7 @@ namespace resource
     if (state == data_state::loaded && glfwGetTime() - last_used > unload_time)
     {
       glDeleteTextures(1, &loaded_tex);
+      glBindTexture(GL_TEXTURE_2D, 0);
       state = data_state::unloaded;
     }
   }

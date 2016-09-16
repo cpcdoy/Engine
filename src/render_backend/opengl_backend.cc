@@ -12,7 +12,10 @@ namespace render_backend
   opengl_backend::~opengl_backend()
   {
     debug::log::get(debug::logINFO) << "Shutting down the OpenGL render backend" << std::endl;
+    glBindVertexArray(0);
     glDeleteVertexArrays(vaos.size(), (const GLuint*)&vaos);
+    glDeleteVertexArrays(1, &base_vao);
+    glDeleteBuffers(vbos.size(), &vbos[0]);
   }
 
   bool opengl_backend::init_backend(int w, int h)
@@ -153,6 +156,10 @@ namespace render_backend
 
     vaos.push_back(vao);
 
+    vbos.push_back(vertices_vbo);
+    vbos.push_back(uvs_vbo);
+    vbos.push_back(normals_vbo);
+
     debug::log::get(debug::logINDENT, 5) << "VAO : " << vao << std::endl;
 
     return vao;
@@ -194,9 +201,9 @@ namespace render_backend
     glfwMakeContextCurrent(main_window);
   }
 
-  void opengl_backend::render()
+  void opengl_backend::render(long rq_size)
   {
-		static double elapsedTIme = 0;
+		static double elapsedTime = 0;
     static int nb_frames = 0;
     nb_frames++;
 
@@ -204,17 +211,17 @@ namespace render_backend
     for (auto pass : pipeline)
     {
       opengl_pipeline_state::instance().lock();
-      pass->process_pass(render_queue, cam);
+      pass->process_pass(render_queue, cam, rq_size);
       opengl_pipeline_state::instance().unlock();
     }
 
-		if (currentTime - elapsedTIme >= 1.0)
+		if (currentTime - elapsedTime >= 1.0)
 		{
       double ms = 1000.0 / double(nb_frames);
 
       debug::log::get(debug::logINFO) << ms << " ms --> " << nb_frames << " fps" << std::endl;
 			nb_frames = 0;
-			elapsedTIme += 1.0;
+			elapsedTime += 1.0;
 		}
   }
 

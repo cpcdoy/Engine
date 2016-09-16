@@ -114,4 +114,14 @@ namespace resource
   {
     return model;
   }
+
+  void mesh::set_aabb(glm::vec3 center, glm::vec3 ext)
+  {
+    lods[lod].aabb = aabb(center, ext);
+  }
+
+  struct aabb mesh::get_aabb()
+  {
+    return lods[lod].aabb;
+  }
 }

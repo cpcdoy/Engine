@@ -42,7 +42,7 @@ namespace render_backend
       virtual void set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, std::string path, texture_kind k) override;
 
       virtual void init_render_backend(std::shared_ptr<scene::scene_manager> sm) override;
-      virtual void render() override;
+      virtual void render(long) override;
 
       GLuint generate_vao(std::shared_ptr<resource::gl_mesh> mesh);
 
@@ -63,6 +63,7 @@ namespace render_backend
 
       GLuint base_vao;
       std::vector<GLuint> vaos;
+      std::vector<GLuint> vbos;
 
       std::vector<std::string> gl_caps;
 

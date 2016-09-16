@@ -54,9 +54,9 @@ namespace render_backend
     current_managee->init_render_backend(sm);
   }
 
-  void render_manager::render()
+  void render_manager::render(long rq_size)
   {
-    current_managee->render();
+    current_managee->render(rq_size);
   }
 
   void render_manager::set_managers(std::shared_ptr<ui::ui_manager> ui, std::shared_ptr<resource::resource_manager> rm)
