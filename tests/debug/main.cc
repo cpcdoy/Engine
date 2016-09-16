@@ -28,8 +28,14 @@ int main(void)
   mesh m6 = e.load_mesh("res/obj/vase.obj");
   e.load_texture("res/tex/dds/fake_tex.dds", m6);
   e.load_texture("res/tex/dds/default_AO.dds", m6, texture_kind::AO);
-  m6->set_pos(glm::vec3(2, -0.50, 0));
+  m6->set_pos(glm::vec3(2, -0.8, 0));
   m6->set_scale(glm::vec3(0.7));
+
+  mesh m7 = e.load_mesh("res/obj/nanosuit.obj");
+  e.load_texture("res/tex/dds/fake_tex.dds", m7);
+  e.load_texture("res/tex/dds/default_AO.dds", m7, texture_kind::AO);
+  m7->set_pos(glm::vec3(2, 0.15, 0));
+  m7->set_scale(glm::vec3(0.7));
 
   mesh m2 = e.load_mesh("res/obj/sphere.obj");
   m2->set_lod_distance(0, 100);
