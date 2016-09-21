@@ -21,14 +21,14 @@ namespace render_backend
   bool opengl_backend::init_backend(int w, int h)
   {
     glewExperimental = true;
-    if (glewInit() != GLEW_OK) 
+    if (glewInit() != GLEW_OK)
     {
       debug::log::get(debug::logERROR) << "Failed to initialize GLEW" << std::endl;
       debug::log::get(debug::logINDENT) << "You need to call the ui_manager, initialize it and create a window before" << std::endl;
       return false;
     }
 
-		if (!check_gl_extensions())
+    if (!check_gl_extensions())
       return false;
 
     add_state("width", w);
@@ -58,7 +58,7 @@ namespace render_backend
     glCullFace(GL_BACK);
 
     glEnable(GL_FRAMEBUFFER_SRGB);
-    
+
     return true;
   }
 

@@ -82,7 +82,7 @@ namespace scene
     auto cam_pos = cam->get_camera_position();
     std::partition(rq.begin(), rq.end(), [&cam, &rq_size, &cam_pos](const std::shared_ptr<resource::mesh>& m)
     {
-      auto res = cam->point_in_view(m->get_pos());
+      auto res = cam->point_in_view(glm::vec3(glm::vec4(m->get_pos(), 0) * cam->get_view_matrix()));
       if (res)
       {
         m->compute_current_lod(cam_pos);

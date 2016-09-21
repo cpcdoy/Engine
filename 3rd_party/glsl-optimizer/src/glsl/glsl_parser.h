@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.0.4.19-fbaf.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 

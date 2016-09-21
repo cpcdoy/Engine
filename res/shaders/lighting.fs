@@ -14,8 +14,7 @@ in VS_OUT {
 uniform sampler2D shadow_map;
 uniform sampler2D ao_map;
 uniform sampler2D diffuse_map;
-uniform sampler2D metalness_map;
-uniform sampler2D roughness_map;
+uniform sampler2D metalness_roughness_map;
 uniform sampler2D baked_ao_map;
 
 uniform vec2 screen_res;
@@ -26,8 +25,9 @@ uniform vec3 view_pos;
 #define PI 3.1415926535897932
 #define ONE_OVER_PI 0.318309
 
-float metalness = clamp(texture(metalness_map, fs_in.tex_coords).r, 0.02, 0.99);//1.0;
-float roughness = 1.0 - max(texture(roughness_map, fs_in.tex_coords).r, 0.001);//0.68;
+vec2 metalness_roughness = texture(metalness_roughness_map, gl_FragCoord.xy / screen_res).rg;
+float metalness = clamp(metalness_roughness.r, 0.02, 0.99);//1.0;
+float roughness = 1.0 - max(metalness_roughness.g, 0.001);//0.68;
 
 vec4 base_color = vec4(1.0);
 
@@ -163,14 +163,14 @@ float compute_shadows(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
 }
 
 void main()
-{           
+{
   float baked_ao = texture(baked_ao_map, fs_in.tex_coords).r;
-  vec3 color = texture(diffuse_map, fs_in.tex_coords).rgb * vec3(baked_ao);
+  vec3 color = texture(diffuse_map, gl_FragCoord.xy / screen_res).rgb * vec3(baked_ao);
   base_color = vec4(color, 1.0);
 
   vec3 normal = normalize(fs_in.normal);
   vec3 light_color = vec3(0.6);
-  
+
   vec3 lightDir = light_pos - fs_in.frag_pos;
   vec3 l = normalize(lightDir);
 

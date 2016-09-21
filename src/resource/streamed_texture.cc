@@ -45,7 +45,7 @@ namespace resource
     if (state == data_state::loaded && glfwGetTime() - last_used > unload_time)
     {
       glDeleteTextures(1, &loaded_tex);
-      glBindTexture(GL_TEXTURE_2D, 0);
+      //glBindTexture(GL_TEXTURE_2D, 0);
       state = data_state::unloaded;
     }
   }
