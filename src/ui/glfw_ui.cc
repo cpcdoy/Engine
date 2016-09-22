@@ -15,7 +15,7 @@ namespace ui
     glfwDestroyWindow(window);
     glfwTerminate();
   }
-  
+
   bool glfw_ui::init_base_ui()
   {
     debug::log::get(debug::logINFO) << "Initializing the GLFW UI" << std::endl;
@@ -30,7 +30,7 @@ namespace ui
   bool glfw_ui::create_window(int h, int w, std::string title)
   {
     debug::log::get(debug::logINFO) << "Creating a GLFW window" << std::endl;
-    
+
     int major, minor, revision;
     glfwGetVersion(&major, &minor, &revision);
 

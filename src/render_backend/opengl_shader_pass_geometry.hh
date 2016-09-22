@@ -14,7 +14,7 @@ namespace render_backend
 
     private:
       GLuint g_buffer;
-      GLuint g_position_depth, g_normal, g_albedo, g_metalness_roughness;
+      GLuint g_position_depth, g_normal, g_albedo, g_metalness_roughness_baked_ao;
       GLuint metalness_map, roughness_map, albedo_map;
   };
 }

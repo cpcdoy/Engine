@@ -37,14 +37,14 @@ namespace render_backend
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
        debug::log::get(debug::log_level::logERROR) << "Albedo buffer incomplete" << std::endl;
     // Metalness/Roughness buffer
-    glGenTextures(1, &g_metalness_roughness);
-    glBindTexture(GL_TEXTURE_2D, g_metalness_roughness);
+    glGenTextures(1, &g_metalness_roughness_baked_ao);
+    glBindTexture(GL_TEXTURE_2D, g_metalness_roughness_baked_ao);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, g_metalness_roughness, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, g_metalness_roughness_baked_ao, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-       debug::log::get(debug::log_level::logERROR) << "Metalness/Roughness buffer incomplete" << std::endl;
+       debug::log::get(debug::log_level::logERROR) << "Metalness/Roughness/Baked AO buffer incomplete" << std::endl;
 
     GLuint attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
     glDrawBuffers(4, attachments);
@@ -55,17 +55,19 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "albedo_map"));
     uniforms.push_back(glGetUniformLocation(program, "metalness_map"));
     uniforms.push_back(glGetUniformLocation(program, "roughness_map"));
+    uniforms.push_back(glGetUniformLocation(program, "baked_ao_map"));
 
     glUseProgram(program);
 
     glUniform1i(uniforms[3], 0);
     glUniform1i(uniforms[4], 1);
     glUniform1i(uniforms[5], 2);
+    glUniform1i(uniforms[6], 3);
 
     opengl_pipeline_state::instance().add_state("g_buffer", g_buffer);
     opengl_pipeline_state::instance().add_state("g_normal", g_normal);
     opengl_pipeline_state::instance().add_state("g_albedo", g_albedo);
-    opengl_pipeline_state::instance().add_state("g_metalness_roughness", g_metalness_roughness);
+    opengl_pipeline_state::instance().add_state("g_metalness_roughness_baked_ao", g_metalness_roughness_baked_ao);
     opengl_pipeline_state::instance().add_state("g_position_depth", g_position_depth);
   }
 
@@ -91,6 +93,9 @@ namespace render_backend
 
       glActiveTexture(GL_TEXTURE2);
       glBindTexture(GL_TEXTURE_2D, m->get_roughness_texture());
+
+      glActiveTexture(GL_TEXTURE3);
+      glBindTexture(GL_TEXTURE_2D, m->get_ao_texture());
 
       glBindVertexArray(m->get_vao());
       glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());
