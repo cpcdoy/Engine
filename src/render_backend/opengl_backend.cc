@@ -58,6 +58,7 @@ namespace render_backend
     glCullFace(GL_BACK);
 
     glEnable(GL_FRAMEBUFFER_SRGB);
+    //glEnable(GL_MULTISAMPLE);
 
     return true;
   }

@@ -14,8 +14,7 @@ in VS_OUT {
 uniform sampler2D shadow_map;
 uniform sampler2D ao_map;
 uniform sampler2D diffuse_map;
-uniform sampler2D metalness_roughness_map;
-uniform sampler2D baked_ao_map;
+uniform sampler2D metalness_roughness_baked_ao_map;
 
 uniform vec2 screen_res;
 
@@ -25,9 +24,11 @@ uniform vec3 view_pos;
 #define PI 3.1415926535897932
 #define ONE_OVER_PI 0.318309
 
-vec2 metalness_roughness = texture(metalness_roughness_map, gl_FragCoord.xy / screen_res).rg;
-float metalness = clamp(metalness_roughness.r, 0.02, 0.99);//1.0;
-float roughness = 1.0 - max(metalness_roughness.g, 0.001);//0.68;
+vec2 ss_coords = gl_FragCoord.xy / screen_res;
+
+vec3 metalness_roughness_baked_ao = texture2D(metalness_roughness_baked_ao_map, ss_coords).rgb;
+float metalness = clamp(metalness_roughness_baked_ao.r, 0.02, 0.99);//1.0;
+float roughness = 1.0 - max(metalness_roughness_baked_ao.g, 0.001);//0.68;
 
 vec4 base_color = vec4(1.0);
 
@@ -77,15 +78,15 @@ vec3 fresnel_schlick(float cos_t, vec3 f0)
 
 float schlick_geometry(float n_dot_l, float n_dot_v, float roughness)
 {
-    float a = roughness + 1.0; //Disney: reducde "hotness"
-    float k = a * a * 0.125;
+  float a = roughness + 1.0; //Disney: reducde "hotness"
+  float k = a * a * 0.125;
   float one_minus_k = 1 - k;
 
-    float vis_schlick_v = n_dot_v * one_minus_k + k;
-    float vis_schlick_l = n_dot_l * one_minus_k + k;
+  float vis_schlick_v = n_dot_v * one_minus_k + k;
+  float vis_schlick_l = n_dot_l * one_minus_k + k;
 
   //UE4
-    return (n_dot_v / vis_schlick_v) * (n_dot_l / vis_schlick_l);
+  return (n_dot_v / vis_schlick_v) * (n_dot_l / vis_schlick_l);
 }
 
 //BRDFs
@@ -162,10 +163,35 @@ float compute_shadows(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
   return shadow;
 }
 
+// Uncharted 2's filmic tonemapping operators
+vec3 uncharted_tonemap(vec3 x)
+{
+   const float A = 0.15;
+   const float B = 0.50;
+   const float C = 0.10;
+   const float D = 0.20;
+   const float E = 0.02;
+   const float F = 0.30;
+   const float W = 11.2;
+
+   return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+}
+
+vec3 exposure(vec3 color)
+{
+  const float exposure_bias = 2.0f;
+  vec3 curr = uncharted_tonemap(exposure_bias * color);
+
+  const vec3 W = vec3(11.2);
+  vec3 white_scale = 1.0 / uncharted_tonemap(W);
+
+  return curr * white_scale;
+}
+
 void main()
 {
-  float baked_ao = texture(baked_ao_map, fs_in.tex_coords).r;
-  vec3 color = texture(diffuse_map, gl_FragCoord.xy / screen_res).rgb * vec3(baked_ao);
+  vec3 baked_ao = vec3(metalness_roughness_baked_ao.b);
+  vec3 color = texture(diffuse_map, ss_coords).rgb * baked_ao;
   base_color = vec4(color, 1.0);
 
   vec3 normal = normalize(fs_in.normal);
@@ -193,10 +219,10 @@ void main()
 #endif
   vec3 fs = brdf_cook_torrance(v_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
 
-  vec3 ambient = vec3(0.2 * texture(ao_map, gl_FragCoord.xy / screen_res).r);
+  vec3 ambient = vec3(0.2 * texture(ao_map, ss_coords).r);
 
   float shadow = compute_shadows(fs_in.frag_pos_light_space, normal, l);
   vec3 lighting = (ambient + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * color; //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;
 
-  frag_color = vec4(lighting, fd.a);
+  frag_color = vec4(exposure(lighting), fd.a);
 }

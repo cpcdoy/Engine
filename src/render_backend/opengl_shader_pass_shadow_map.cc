@@ -40,7 +40,7 @@ namespace render_backend
 
     glUseProgram(program);
 
-    glm::vec3 lightPos = glm::vec3(-5, 10, -5);
+    glm::vec3 lightPos = glm::vec3(-5, 11, -5);
     lightPos.z = cos(glfwGetTime()) * 2.0f;
 
     float area = 10;

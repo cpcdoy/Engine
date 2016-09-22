@@ -13,12 +13,12 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "shadow_map")); // 5
     uniforms.push_back(glGetUniformLocation(program, "ao_map"));
     uniforms.push_back(glGetUniformLocation(program, "diffuse_map"));
-    uniforms.push_back(glGetUniformLocation(program, "metalness_roughness_map"));
+    uniforms.push_back(glGetUniformLocation(program, "metalness_roughness_baked_ao_map"));
     //uniforms.push_back(glGetUniformLocation(program, "roughness_map"));
-    uniforms.push_back(glGetUniformLocation(program, "baked_ao_map")); // 9
-    uniforms.push_back(glGetUniformLocation(program, "model"));
+    //uniforms.push_back(glGetUniformLocation(program, "baked_ao_map"));
+    uniforms.push_back(glGetUniformLocation(program, "model")); // 9
     uniforms.push_back(glGetUniformLocation(program, "trans_inv_model"));
-    uniforms.push_back(glGetUniformLocation(program, "screen_res")); // 12
+    uniforms.push_back(glGetUniformLocation(program, "screen_res")); // 11
 
     glUseProgram(program);
 
@@ -27,7 +27,7 @@ namespace render_backend
     glUniform1i(uniforms[7], 2);
     //glUniform1i(uniforms[8], 3);
     glUniform1i(uniforms[8], 3);
-    glUniform1i(uniforms[9], 4);
+    //glUniform1i(uniforms[9], 4);
 
     glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
@@ -43,7 +43,7 @@ namespace render_backend
     auto view = cam->get_view_matrix();
 
     //
-    glm::vec3 lightPos = glm::vec3(-5, 10, -5);
+    glm::vec3 lightPos = glm::vec3(-5, 11, -5);
     lightPos.z = cos(glfwGetTime()) * 2.0f;
 
     float area = 10;
@@ -69,16 +69,14 @@ namespace render_backend
     glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("g_albedo"));
 
     glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("g_metalness_roughness"));
+    glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("g_metalness_roughness_baked_ao"));
 
     for (int i = 0; i < rq_size; i++)
     {
       const auto& m = render_queue[i];
-      glUniformMatrix4fv(uniforms[10], 1, GL_FALSE, &m->get_model()[0][0]);
-      glUniformMatrix3fv(uniforms[11], 1, GL_FALSE, &glm::transpose(glm::inverse(glm::mat3(m->get_model())))[0][0]);
+      glUniformMatrix4fv(uniforms[9], 1, GL_FALSE, &m->get_model()[0][0]);
+      glUniformMatrix3fv(uniforms[10], 1, GL_FALSE, &glm::transpose(glm::inverse(glm::mat3(m->get_model())))[0][0]);
 
-      glActiveTexture(GL_TEXTURE4);
-      glBindTexture(GL_TEXTURE_2D, m->get_ao_texture());
       glBindVertexArray(m->get_vao());
       glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());
     }
