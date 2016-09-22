@@ -79,8 +79,8 @@ add_custom_target(glsl-optimizer_parser_generation
   WORKING_DIRECTORY ./3rd_party/glsl-optimizer
   COMMAND ./generateParsers.sh
 )
-add_dependencies(check glsl-optimizer_parser_generation)
-add_dependencies(Engine Engine_check glsl-optimizer_parser_generation)
+add_dependencies(glsl_optimizer glsl-optimizer_parser_generation)
+#add_dependencies(Engine Engine_check glsl-optimizer_parser_generation)
 
 add_custom_target(deep_clean
   COMMAND find . -iwholename '*cmake*' -not -name CMakeLists.txt -delete
