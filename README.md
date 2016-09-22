@@ -1,3 +1,5 @@
+[![TravisCI](https://travis-ci.org/cpcdoy/Engine.svg?branch=dev)](https://travis-ci.org/cpcdoy/Engine)
+
 # Engine
 Rendering Engine
 
