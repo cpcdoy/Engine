@@ -47,9 +47,9 @@ float ggx_distribution(float alpha, float n_dot_h)
   alpha *= alpha; //Disney's reparametrization of alpha
   float alpha_2 = alpha * alpha;
   float n_dot_h_2 = n_dot_h * n_dot_h;
-  float d = (n_dot_h_2 * (alpha_2 + ((1 - n_dot_h_2) / n_dot_h)));
+  float d = n_dot_h_2 * (alpha_2 - 1.0) + 1.0;
 
-  return (alpha_2 * ggx_chi(n_dot_h)) / max(PI * d * d, 1e-8);
+  return alpha_2 / max(PI * d * d, 1e-8);
 }
 
 // Gp
@@ -102,7 +102,7 @@ vec4 brdf_lambert()
 }
 
 #elif defined(BRDF_FD_OREN_NAYAR)
-vec4 brd_oren_nayar(float n_dot_v, float n_dot_l, vec3 light_dir, vec3 view_dir, vec3 n)
+vec4 brdf_oren_nayar(float n_dot_v, float n_dot_l, vec3 light_dir, vec3 view_dir, vec3 n)
 {
   float angle_v_n = acos(n_dot_v);
   float angle_l_n = acos(n_dot_l);
@@ -195,7 +195,7 @@ void main()
   base_color = vec4(color, 1.0);
 
   vec3 normal = normalize(fs_in.normal);
-  vec3 light_color = vec3(0.6);
+  vec3 light_color = vec3(0, 0.2, 0.4);
 
   vec3 lightDir = light_pos - fs_in.frag_pos;
   vec3 l = normalize(lightDir);
@@ -215,7 +215,7 @@ void main()
 #ifdef BRDF_FD_LAMBERT
   vec4 fd = brdf_lambert();
 #elif defined(BRDF_FD_OREN_NAYAR)
-  vec4 fd = brd_oren_nayar(n_dot_v, n_dot_l, lightDir, v, n);
+  vec4 fd = brdf_oren_nayar(n_dot_v, n_dot_l, lightDir, v, n);
 #endif
   vec3 fs = brdf_cook_torrance(v_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
 
