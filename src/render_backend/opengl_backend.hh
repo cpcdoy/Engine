@@ -19,6 +19,8 @@
 
 # include "opengl_passes.hh"
 
+#include "shader_generator.hh"
+
 //# include "opengl_pipeline_state.hh"
 
 
@@ -71,5 +73,7 @@ namespace render_backend
       std::vector<std::shared_ptr<opengl_shader_pass>> pipeline;
 
       std::shared_ptr<texture_streamer> tex_streamer;
+
+      shader_generator<opengl_shader_generator> sg;
   };
 }

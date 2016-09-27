@@ -1,4 +1,5 @@
 #include "opengl_backend.hh"
+#include "shader_generator.hh"
 #include "../utils/utils.hh"
 
 #include "../../3rd_party/glsl-optimizer/src/glsl/glsl_optimizer.h"

@@ -19,4 +19,4 @@ WORKDIR /Engine
 ADD . /Engine/
 
 RUN cmake .
-RUN make
+RUN make -j

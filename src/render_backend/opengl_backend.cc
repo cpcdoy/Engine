@@ -20,6 +20,13 @@ namespace render_backend
 
   bool opengl_backend::init_backend(int w, int h)
   {
+    sg.set_version(330, shader_generator<opengl_shader_generator>::core);
+    sg.pragma(shader_generator<opengl_shader_generator>::pragma_options<std::string>(std::string("nv_truc"), std::string("tru"), std::string("truc")));
+    sg.define(shader_generator<opengl_shader_generator>::define_options<std::string>(std::string("BRDF_OREN_NAYAR"), std::string("")));
+    sg.declare_variable("vec3", std::string("lol"), std::string("volatile"), std::string("static  "));
+    sg.function_call("texture2D", "ssao_map", "uv.xy", "lol");
+    sg.dump();
+
     glewExperimental = true;
     if (glewInit() != GLEW_OK)
     {
@@ -36,6 +43,7 @@ namespace render_backend
     add_state("shadow_map_res", 1024);
 
     opengl_pipeline_state::instance().get_state_of("width");
+
 
     //pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/no_lighting.vs", "res/shaders/no_lighting.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_shadow_map>("res/shaders/shadow_map.vs", "res/shaders/shadow_map.fs"));
