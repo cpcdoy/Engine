@@ -1,12 +1,17 @@
 #pragma once
 # include <type_traits>
-
-# include "opengl_shader_generators.hh"
-# include "../utils/utils.hh"
+# include <map>
+# include <sstream>
 
 namespace render_backend
 {
-    template<typename Backend>
+    enum shader_backend
+    {
+        glsl,
+        hlsl
+    };
+
+    template<enum shader_backend Backend>
         class shader_generator
         {
             public:
@@ -34,8 +39,14 @@ namespace render_backend
                     v
                 };
 
+                template<enum shader_backend T>
+                    using enable = typename std::enable_if<Backend == T>::type;
+
+                template<typename T, typename = void>
+                    struct pragma_options;
+
                 template<typename T>
-                    struct pragma_options
+                    struct pragma_options<T, enable<shader_backend::glsl>>
                     {
                         pragma_options(T opt, T par, T val)
                             : option(opt), param(par), value(val)

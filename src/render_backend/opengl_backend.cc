@@ -20,12 +20,17 @@ namespace render_backend
 
   bool opengl_backend::init_backend(int w, int h)
   {
-    sg.set_version(330, shader_generator<opengl_shader_generator>::core);
-    sg.pragma(shader_generator<opengl_shader_generator>::pragma_options<std::string>(std::string("nv_truc"), std::string("tru"), std::string("truc")));
-    sg.define(shader_generator<opengl_shader_generator>::define_options<std::string>(std::string("BRDF_OREN_NAYAR"), std::string("")));
+    sg.set_version(330, shader_generator<shader_backend::glsl>::core);
+    sg.pragma(shader_generator<shader_backend::glsl>::pragma_options<std::string>(std::string("nv_truc"), std::string("tru"), std::string("truc")));
+    sg.define(shader_generator<shader_backend::glsl>::define_options<std::string>(std::string("BRDF_OREN_NAYAR"), std::string("")));
     sg.declare_variable("vec3", std::string("lol"), std::string("volatile"), std::string("static  "));
     sg.function_call("texture2D", "ssao_map", "uv.xy", "lol");
     sg.dump();
+
+    //sp.emit<>();
+
+    shader_parser<opengl_shader_backend>().emit();
+    shader_parser<int>().emit();
 
     glewExperimental = true;
     if (glewInit() != GLEW_OK)
