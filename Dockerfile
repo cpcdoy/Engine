@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     bison \
     flex \
     git \
-    cmake
+    cmake \
+    pkg-config
 
 RUN mkdir /Engine
 WORKDIR /Engine
@@ -19,4 +20,4 @@ WORKDIR /Engine
 ADD . /Engine/
 
 RUN cmake .
-RUN make -j
+RUN make

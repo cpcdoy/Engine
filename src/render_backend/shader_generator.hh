@@ -11,7 +11,12 @@ namespace render_backend
         hlsl
     };
 
-    template<enum shader_backend Backend>
+    class opengl_shader_backend;
+
+    const char space = ' ';
+    const char new_line = '\n';
+
+    template<typename Backend>
         class shader_generator
         {
             public:
@@ -39,14 +44,8 @@ namespace render_backend
                     v
                 };
 
-                template<enum shader_backend T>
-                    using enable = typename std::enable_if<Backend == T>::type;
-
-                template<typename T, typename = void>
-                    struct pragma_options;
-
                 template<typename T>
-                    struct pragma_options<T, enable<shader_backend::glsl>>
+                    struct pragma_options
                     {
                         pragma_options(T opt, T par, T val)
                             : option(opt), param(par), value(val)
@@ -70,24 +69,11 @@ namespace render_backend
                         T rvalue;
                     };
 
-                std::string get_profile(enum profile profile)
-                {
-                    static std::map<enum profile, std::string> profiles;
-                    if (profiles.empty())
-                    {
-                        profiles.insert(std::make_pair(none, ""));
-                        profiles.insert(std::make_pair(core, "core"));
-                        profiles.insert(std::make_pair(profile, "profile"));
-                    }
+                static std::string get_profile(enum profile profile);
 
-                    return profiles[profile];
-                }
 
                 //Special operations
-                void set_version(int version, enum profile profile)
-                {
-                    gen << "#version " << version << space << get_profile(profile) << std::endl;
-                }
+                static std::string set_version(int version, enum profile profile);
 
                 template<typename... Options>
                     void pragma(Options... options)
@@ -186,19 +172,7 @@ namespace render_backend
 
                 void scope_end() {}
 
-                void dump()
-                {
-                    std::cout << "TEST" << std::endl;
-                    std::cout << gen.str() << std::endl;
-                }
-
-                std::string get_shader()
-                {
-                    return gen.str();
-                }
-
             protected:
                 std::stringstream gen;
-                const char space = ' ';
         };
 }
