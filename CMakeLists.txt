@@ -6,9 +6,20 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++11 -pedantic -fPIC -pthread -ggdb3")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -Werror -O3")
 
-SET(CMAKE_AR  "gcc-ar")
-SET(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
-SET(CMAKE_CXX_ARCHIVE_FINISH   true)
+set(CMAKE_AR  "gcc-ar")
+set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+set(CMAKE_CXX_ARCHIVE_FINISH   true)
+
+list(APPEND CMAKE_MODULE_PATH cmake_deps)
+
+find_package(PkgConfig REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(BISON REQUIRED)
+find_package(FLEX REQUIRED)
+find_package(SOIL REQUIRED)
+find_package(GLM REQUIRED)
+find_package(OpenGL REQUIRED)
+pkg_search_module(GLFW REQUIRED glfw3)
 
 include_directories(src/debug)
 include_directories(src/resource)
@@ -83,7 +94,7 @@ add_dependencies(glsl_optimizer glsl-optimizer_parser_generation)
 #add_dependencies(Engine Engine_check glsl-optimizer_parser_generation)
 
 add_custom_target(deep_clean
-  COMMAND find . -iwholename '*cmake*' -not -name CMakeLists.txt -delete
+  COMMAND find . -iwholename '*cmake*' -not -name CMakeLists.txt -not -name cmake_deps -not -name '*Find*' -delete
   COMMAND find . -iwholename '*Makefile*' -delete
   COMMAND rm -rf Testing Engine_check libEngine.so doc/ libglcpp-library.a
   libmesa.a libglsl_optimizer.a
