@@ -7,9 +7,10 @@ namespace render_backend
     class translator_state
     {
         public:
-            translator_state& operator<<(const std::string& str)
+            std::stringstream& operator<<(const std::string& str)
             {
                 stream << str;
+                return stream;
             }
 
             std::string get_shader_string()
