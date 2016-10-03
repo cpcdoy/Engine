@@ -14,6 +14,10 @@ namespace render_backend
         : pegtl::if_must<pegtl_string_t("//"),
                          pegtl::until<pegtl::eol>> {};
 
+    struct ignored
+        : pegtl::sor<plus_sep,
+                     inline_comment> {};
+
     struct backend_version
         : pegtl::digit {};
 
@@ -27,19 +31,24 @@ namespace render_backend
                      pegtl::opt<backend_profile>> {};
 
     struct version
-        : pegtl::seq<pegtl_string_t("backend version"),
+        : pegtl::seq<pegtl_string_t("backend"),
+                     sep,
+                     pegtl_string_t("version"),
                      sep,
                      backend_conf> {};
 
     struct rule_list
         : pegtl::until<pegtl::eof,
-                       pegtl::sor<inline_comment>> {};
+                       pegtl::sor<version,
+                                 ignored>> {};
 
     struct error_eater;
 
     struct allowed_rules
         : pegtl::until<pegtl::eof,
-                       pegtl::sor<inline_comment, error_eater>> {};
+                       pegtl::sor<version,
+                                  ignored,
+                                  error_eater>> {};
 
     struct error_eater
         : pegtl::seq<pegtl::opt<pegtl::raise<rule_list>>,

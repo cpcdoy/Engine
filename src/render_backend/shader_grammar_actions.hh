@@ -20,11 +20,32 @@ namespace render_backend
   };
 
   template <>
+  struct action_glsl<version>
+  {
+    static void apply(const pegtl::action_input& in)
+    {
+        auto comment = in.string();
+        translator_state::emission_stream() << "backend version";
+    }
+  };
+
+  template <>
+  struct action_glsl<backend_version>
+  {
+    static void apply(const pegtl::action_input& in)
+    {
+        auto comment = in.string();
+        translator_state::emission_stream() << "ver";
+    }
+  };
+
+  template <>
   struct action_glsl<backend_conf>
   {
     static void apply(const pegtl::action_input& in)
     {
-        //translator_state::emission_stream() << std::string shader_generator<opengl_shader_backend>::set_version(int version, enum profile profile)
+        auto comment = in.string();
+        translator_state::emission_stream() << "330";
     }
   };
 }
