@@ -14,7 +14,7 @@ namespace render_backend
 
             std::string get_shader_string()
             {
-                return stream.str();
+                return std::string(stream.str());
             }
 
             static translator_state& emission_stream()

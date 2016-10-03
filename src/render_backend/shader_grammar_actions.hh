@@ -14,7 +14,17 @@ namespace render_backend
   {
     static void apply(const pegtl::action_input& in)
     {
-        translator_state::emission_stream() << in.string();
+        auto comment = in.string();
+        translator_state::emission_stream() << "// GLSL comment : " << comment;
+    }
+  };
+
+  template <>
+  struct action_glsl<backend_conf>
+  {
+    static void apply(const pegtl::action_input& in)
+    {
+        //translator_state::emission_stream() << std::string shader_generator<opengl_shader_backend>::set_version(int version, enum profile profile)
     }
   };
 }

@@ -20,7 +20,7 @@ namespace render_backend
 
   bool opengl_backend::init_backend(int w, int h)
   {
-    std::cout << shader_translator<opengl_shader_backend>().emit("lol") << std::endl;
+    std::cout << shader_translator<opengl_shader_backend>().translate("lol") << std::endl;
 
     glewExperimental = true;
     if (glewInit() != GLEW_OK)

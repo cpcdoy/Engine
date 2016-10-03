@@ -15,9 +15,7 @@ namespace render_backend
         class shader_translator
         {
             public:
-                std::string emit(std::string file)
-                {
-                }
+                std::string translate(std::string file);
 
                 std::string get_emission();
         };
