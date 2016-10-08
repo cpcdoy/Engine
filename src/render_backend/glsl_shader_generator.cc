@@ -17,10 +17,22 @@ namespace render_backend
         }
 
     template<>
-        std::string shader_generator<opengl_shader_backend>::set_version(int version, enum profile profile)
+        std::string shader_generator<opengl_shader_backend>::generate_version(std::string version, enum profile profile)
         {
             std::stringstream stream;
             stream << "#version " << version << space << shader_generator<opengl_shader_backend>().get_profile(profile) << new_line;
+            return stream.str();
+        }
+
+    template<>
+        std::string shader_generator<opengl_shader_backend>::generate_vardec(std::string type, std::string name, std::string value)
+        {
+            std::stringstream stream;
+            stream << type << space << name;
+            if (value.length() > 0)
+                stream << space << "=" << space << value;
+            stream << semi_col << new_line;
+
             return stream.str();
         }
 }

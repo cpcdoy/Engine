@@ -28,8 +28,6 @@ namespace scene
     render_queue.push_back(mesh);
     render_queue_size++;
 
-    std::cout << "rq size " << render_queue_size << std::endl;
-
     debug::log::get(debug::logINDENT, 5) << "Number of meshes: " << meshes.size() << std::endl;
 
     return mesh;

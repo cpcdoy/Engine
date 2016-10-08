@@ -1,6 +1,9 @@
 #pragma once
 
 # include <sstream>
+# include <stack>
+# include <vector>
+# include <map>
 
 namespace render_backend
 {
@@ -9,8 +12,30 @@ namespace render_backend
         public:
             std::stringstream& operator<<(const std::string& str)
             {
-                stream << str;
+                stack.push(str);
                 return stream;
+            }
+
+            std::stringstream& get_stream()
+            {
+                return stream;
+            }
+
+            void add_vardec(std::string var)
+            {
+                vars.insert(std::make_pair(var, ""));
+            }
+
+            std::vector<std::string> unpack()
+            {
+                std::vector<std::string> pack;
+                while (!stack.empty())
+                {
+                    pack.push_back(stack.top());
+                    stack.pop();
+                }
+
+                return pack;
             }
 
             std::string get_shader_string()
@@ -31,5 +56,7 @@ namespace render_backend
 
         protected:
             std::stringstream stream;
+            std::stack<std::string> stack;
+            std::map<std::string, std::string> vars;
     };
 }

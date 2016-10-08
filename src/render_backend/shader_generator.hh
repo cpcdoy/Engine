@@ -15,6 +15,7 @@ namespace render_backend
 
     const char space = ' ';
     const char new_line = '\n';
+    const char semi_col = ';';
 
     template<typename Backend>
         class shader_generator
@@ -73,7 +74,10 @@ namespace render_backend
 
 
                 //Special operations
-                static std::string set_version(int version, enum profile profile);
+                static std::string generate_version(std::string version, enum profile profile);
+
+                //Vardec with optional value
+                static std::string generate_vardec(std::string type, std::string name, std::string value);
 
                 template<typename... Options>
                     void pragma(Options... options)
