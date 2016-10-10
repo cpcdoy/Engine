@@ -21,6 +21,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#pragma GCC diagnostic push
+
+#pragma GCC diagnostic ignored "-Wpedantic"
+#pragma GCC diagnostic ignored "-Wignored-qualifiers"
 /**
  * \file builtin_type_macros.h
  *
@@ -154,3 +158,5 @@ STRUCT_TYPE(gl_LightModelParameters)
 STRUCT_TYPE(gl_LightModelProducts)
 STRUCT_TYPE(gl_LightProducts)
 STRUCT_TYPE(gl_FogParameters)
+
+#pragma GCC diagnostic pop

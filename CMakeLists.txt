@@ -30,11 +30,11 @@ include_directories(src/engine)
 include_directories(src/scene)
 include_directories(src/utils)
 #glsl optimizer
-include_directories(3rd_party/glsl-optimizer/include)
-include_directories(3rd_party/glsl-optimizer/src/mesa)
-include_directories(3rd_party/glsl-optimizer/src/mapi)
-include_directories(3rd_party/glsl-optimizer/src/glsl)
-include_directories(3rd_party/glsl-optimizer/src)
+include_directories(SYSTEM 3rd_party/glsl-optimizer/include)
+include_directories(SYSTEM 3rd_party/glsl-optimizer/src/mesa)
+include_directories(SYSTEM 3rd_party/glsl-optimizer/src/mapi)
+include_directories(SYSTEM 3rd_party/glsl-optimizer/src/glsl)
+include_directories(SYSTEM 3rd_party/glsl-optimizer/src)
 #
 
 add_subdirectory(src/debug)
