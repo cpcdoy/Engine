@@ -7,7 +7,33 @@
 
 namespace render_backend
 {
-    class translator_state
+    class elements_stream
+    {
+        public:
+            elements_stream& operator<<(const std::string& str)
+            {
+                stack.push(str);
+                return *this;
+            }
+
+            std::vector<std::string> unpack()
+            {
+                std::vector<std::string> pack;
+                while (!stack.empty())
+                {
+                    pack.push_back(stack.top());
+                    stack.pop();
+                }
+
+                return pack;
+            }
+
+        protected:
+            std::stack<std::string> stack;
+
+    };
+
+    class translator_state : public elements_stream
     {
         public:
             std::stringstream& operator<<(const std::string& str)
@@ -26,18 +52,6 @@ namespace render_backend
                 vars.insert(std::make_pair(var, ""));
             }
 
-            std::vector<std::string> unpack()
-            {
-                std::vector<std::string> pack;
-                while (!stack.empty())
-                {
-                    pack.push_back(stack.top());
-                    stack.pop();
-                }
-
-                return pack;
-            }
-
             std::string get_shader_string()
             {
                 return std::string(stream.str());
@@ -49,6 +63,11 @@ namespace render_backend
                 return emission_stream;
             }
 
+            elements_stream& type_stream()
+            {
+                return type_stream_;
+            }
+
             void clear()
             {
                 stream.str(std::string());
@@ -56,7 +75,7 @@ namespace render_backend
 
         protected:
             std::stringstream stream;
-            std::stack<std::string> stack;
+            elements_stream type_stream_;
             std::map<std::string, std::string> vars;
     };
 }

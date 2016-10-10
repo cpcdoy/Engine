@@ -77,7 +77,7 @@ namespace render_backend
                 static std::string generate_version(std::string version, enum profile profile);
 
                 //Vardec with optional value
-                static std::string generate_vardec(std::string type, std::string name, std::string value);
+                static std::string generate_vardec(std::string type, std::string name, std::string value = "");
 
                 template<typename... Options>
                     void pragma(Options... options)

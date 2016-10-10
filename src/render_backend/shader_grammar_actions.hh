@@ -4,10 +4,10 @@
 
 namespace render_backend
 {
-    template <typename Rule>
-        struct action_glsl : pegtl::nothing<Rule>
-    {
-    };
+  template <typename Rule>
+      struct action_glsl : pegtl::nothing<Rule>
+  {
+  };
 
   template <>
   struct action_glsl<inline_comment>
@@ -40,24 +40,15 @@ namespace render_backend
   template <>
   struct action_glsl<vardec>
   {
-      static std::string infer_type(std::string value)
-      {
-          std::istringstream stream(value);
-          float f;
-          stream >> std::noskipws >> f;
-
-          if (!stream.fail())
-              return "float";
-          return "error_type";
-      }
-
     static void apply(const pegtl::action_input& in)
     {
+        auto type_pack = translator_state::emission_stream().type_stream().unpack();
         auto pack = translator_state::emission_stream().unpack();
-        if (pack.size() == 1)
-            translator_state::emission_stream().get_stream() << shader_generator<opengl_shader_backend>::generate_vardec("var", pack[0], "");
-        else if (pack.size() > 1)
-            translator_state::emission_stream().get_stream() << shader_generator<opengl_shader_backend>::generate_vardec(infer_type(pack[0]), pack[1], pack[0]);
+        auto size = pack.size();
+        if (size == 1)
+            translator_state::emission_stream().get_stream() << shader_generator<opengl_shader_backend>::generate_vardec("to_be_infered", pack[0]);
+        else if (size > 1)
+            translator_state::emission_stream().get_stream() << shader_generator<opengl_shader_backend>::generate_vardec(type_pack[0], pack[1], pack[0]);
     }
   };
 
@@ -67,6 +58,7 @@ namespace render_backend
     static void apply(const pegtl::action_input& in)
     {
         translator_state::emission_stream() << in.string();
+        translator_state::emission_stream().type_stream() << "float";
     }
   };
 
@@ -76,6 +68,7 @@ namespace render_backend
     static void apply(const pegtl::action_input& in)
     {
         translator_state::emission_stream() << in.string();
+        translator_state::emission_stream().type_stream() << "int";
     }
   };
 

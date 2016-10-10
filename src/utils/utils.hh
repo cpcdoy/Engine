@@ -2,10 +2,14 @@
 
 # include <string>
 # include <type_traits>
+# include <vector>
+# include <sstream>
 
 namespace util
 {
   std::string replace_all(std::string str, const std::string& from, const std::string& to);
+
+  std::vector<std::string> split(const std::string& s, char delim);
 
   template<typename T, typename... Rest>
       struct all_same : std::false_type {};
