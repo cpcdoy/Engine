@@ -54,4 +54,6 @@ Here is the current architecture:
 <a name="Appendix"/>
 ## Appendix
 
-Here's an [article](https://hackercorp.eu/ssao.html) about one method used in this engine
+### Articles
+
+- [SSAO](https://hackercorp.eu/ssao.html)
