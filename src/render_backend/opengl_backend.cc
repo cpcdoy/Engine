@@ -45,6 +45,7 @@ namespace render_backend
     pipeline.push_back(std::make_shared<opengl_shader_pass_geometry>("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_ssao>("res/shaders/SSAO.vs", "res/shaders/SSAO.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_lighting>("res/shaders/lighting.vs", "res/shaders/lighting.fs"));
+    pipeline.push_back(std::make_shared<opengl_shader_pass_atmosphere>("res/shaders/atmospheric_scattering.vs", "res/shaders/atmospheric_scattering.fs"));
 
     glGenVertexArrays(1, &base_vao);
     glBindVertexArray(base_vao);
@@ -233,8 +234,6 @@ namespace render_backend
   {
     cam->update(opengl_pipeline_state::instance().get_state_of("width"),
                 opengl_pipeline_state::instance().get_state_of("height"));
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
   void opengl_backend::add_state(std::string s, long r)

@@ -78,6 +78,7 @@ namespace resource
       glm::vec3 get_pos();
       void set_pos(glm::vec3 pos);
       void set_scale(glm::vec3 scale);
+      void set_rotation(float ang, glm::vec3 axis);
 
       void set_aabb(glm::vec3 center, glm::vec3 ext);
       struct aabb get_aabb();

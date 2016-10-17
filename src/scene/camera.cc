@@ -4,6 +4,7 @@ namespace scene
 {
   camera::camera()
   {
+    proj = glm::perspective(fov, ratio, near, far);
   }
 
   camera::~camera()
@@ -174,11 +175,12 @@ namespace scene
       pos += right * deltaTime * speed;
     if (glfwGetKey( window, GLFW_KEY_Q ) == GLFW_PRESS)
       pos -= right * deltaTime * speed;
+    if (glfwGetKey( window, GLFW_KEY_LEFT_SHIFT ) == GLFW_PRESS)
+      pos += direction * deltaTime * speed * 3.0f;
 
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
       pos.y += deltaTime * speed;
 
-    proj = glm::perspective(fov, ratio, near, far);
     view = glm::lookAt(pos, pos + direction, up);
 
     lastTime = currentTime;

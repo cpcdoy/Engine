@@ -94,7 +94,6 @@ namespace render_backend
     debug::log::get(debug::logINDENT, 5) << "Bound to unit " << texture << std::endl;
 
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-    glBindTexture(GL_TEXTURE_2D, 0);
   }
 
   texture_streamer::texture_streamer()
@@ -123,7 +122,7 @@ namespace render_backend
     queue.push(texture_streaming_job(t, sl));
 
     float an = 0.0f;
-    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &an); 
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &an);
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);

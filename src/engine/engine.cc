@@ -3,7 +3,7 @@
 namespace engine
 {
   engine::engine()
-    : 
+    :
     rb(std::make_shared<render_backend::render_manager>()),
     rm(std::make_shared<resource::resource_manager>(rb)),
     ui(std::make_shared<ui::ui_manager>()),

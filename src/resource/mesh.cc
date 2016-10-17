@@ -80,6 +80,11 @@ namespace resource
     model = glm::scale(model, scale);
   }
 
+  void mesh::set_rotation(float ang, glm::vec3 axis)
+  {
+    model = glm::rotate(model, ang, axis);
+  }
+
   void mesh::compute_current_lod(glm::vec3 cam_pos)
   {
     glm::vec3 mesh_pos = cam_pos - glm::vec3(model[3]);

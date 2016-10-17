@@ -169,7 +169,8 @@ namespace render_backend
         : pegtl::seq<exp, sep, must<semicol>> {};
 
     struct exps
-        : pegtl::plus<pegtl::seq<exp_construct, pegtl::star<exp_construct>>> {};
+        : pegtl::plus<pegtl::seq<exp_construct,
+                                 pegtl::star<exp_construct>>> {};
 
     // Dec
     struct dec
@@ -179,7 +180,8 @@ namespace render_backend
         : pegtl::seq<dec, sep, must<semicol>> {};
 
     struct decs
-        : pegtl::plus<pegtl::seq<dec_construct, pegtl::star<dec_construct>>> {};
+        : pegtl::plus<pegtl::seq<dec_construct,
+                                 pegtl::star<dec_construct>>> {};
 
     // Rules
     struct rules

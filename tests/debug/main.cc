@@ -14,16 +14,35 @@ int main(void)
 
   e.init();
 
-  mesh m3 = e.load_mesh("res/obj/sponza.obj");
+  /*mesh m3 = e.load_mesh("res/obj/sponza.obj");
   e.load_texture("res/tex/dds/T_Brick_Yellow_D.dds", m3);
   e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m3, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m3, texture_kind::ROUGHNESS);
-  e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m3, texture_kind::AO);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m3, texture_kind::AO);*/
 
-  mesh m4 = e.load_mesh("res/obj/california.obj");
-  e.load_texture("res/tex/dds/fake_tex.dds", m4);
-  e.load_texture("res/tex/dds/default_AO.dds", m4, texture_kind::AO);
-  m4->set_pos(glm::vec3(0, 0.15, 0));
+  mesh m4 = e.load_mesh("res/obj/Center City Sci-Fi.obj");
+  e.load_texture("res/tex/dds/T_Brick_Yellow_D.dds", m4);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m4, texture_kind::METALNESS);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m4, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m4, texture_kind::AO);
+  m4->set_pos(glm::vec3(0, 0.15, 5));
+  m4->set_scale(glm::vec3(0.02));
+
+  mesh m9 = e.load_mesh("res/obj/interior.obj");
+  e.load_texture("res/tex/dds/T_Brick_Yellow_D.dds", m9);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m9, texture_kind::METALNESS);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m9, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m9, texture_kind::AO);
+  m9->set_pos(glm::vec3(-4, 3, 1));
+  m9->set_scale(glm::vec3(0.005));
+  m9->set_rotation(-1.5f, glm::vec3(0, 1, 0));
+/*
+  mesh m8 = e.load_mesh("res/obj/Objects_001.obj");
+  e.load_texture("res/tex/dds/bark_D.dds", m8);
+  e.load_texture("res/tex/dds/bark_R.dds", m8, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/default_AO.dds", m8, texture_kind::AO);
+  m8->set_pos(glm::vec3(0, 0.15, 0));
+  m8->set_scale(glm::vec3(0.1));
 
   mesh m6 = e.load_mesh("res/obj/vase.obj");
   e.load_texture("res/tex/dds/fake_tex.dds", m6);
@@ -64,7 +83,7 @@ int main(void)
   e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m5, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m5, texture_kind::ROUGHNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m5, texture_kind::AO);
-  m5->set_pos(glm::vec3(-0.1, 7, 1.3));
+  m5->set_pos(glm::vec3(-0.1, 7, 1.3));*/
 
   camera cam = e.create_camera();
   e.set_current_camera(cam);
