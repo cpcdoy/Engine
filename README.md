@@ -8,7 +8,9 @@ Rendering Engine
 
 3. [Example usage](#Example)
 
-4. [Appendix](#Appendix)
+4. [Task list](#TODO)
+
+5. [Appendix](#Appendix)
 
 A real-time 3D rendering engine.
 
@@ -54,6 +56,11 @@ or
 `cmake ..`
 
 `make` or `make check`
+
+<a name="TODO"/>
+## Task list
+
+Check the TO DO list [here](https://trello.com/b/B5hQOW6n/engine)
 
 <a name="Archi"/>
 ## Architecture
