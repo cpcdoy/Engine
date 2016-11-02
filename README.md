@@ -15,6 +15,22 @@ A real-time 3D rendering engine.
 
 <a name="Build"/>
 ## Build
+### Dependencies
+
+Ubuntu:
+
+    apt-get update && apt-get install -y \
+    build-essential \
+    libglm-dev \
+    libglfw3-dev \
+    libglew-dev \
+    libsoil-dev \
+    bison \
+    flex \
+    git \
+    cmake \
+    pkg-config
+
 ### In-source build
 
 `cmake .`
