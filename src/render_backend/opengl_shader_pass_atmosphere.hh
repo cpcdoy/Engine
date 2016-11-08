@@ -14,5 +14,6 @@ namespace render_backend
 
     private:
       std::shared_ptr<resource::gl_mesh> sky_dome;
+      std::vector<glm::vec3> create_skydome_with_atmosphere(float r_inner, float r_outer);
   };
 }

@@ -19,10 +19,10 @@ namespace engine
         auto& rq = sm->get_render_queue();
 
         auto rq_size = sm->compute_view_frustum_culling(rq, cam);
-        sm->set_render_queue_size(rq.size());
+        sm->set_render_queue_size(rq_size);
 
         rb->update_renderer();
-        rb->render(rq.size());
+        rb->render(rq_size);
 
         ui->update_ui();
       }

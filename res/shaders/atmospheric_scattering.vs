@@ -9,9 +9,9 @@ uniform mat4 view;
 uniform mat4 model;
 uniform vec3 v3CameraPos;// The camera's current position
 uniform vec3 v3LightPos;// The direction vector to the light source
-vec3 v3InvWavelength = vec3(  1.0f / pow(0.650f, 4),
-        1.0f / pow(0.570f, 4),
-        1.0f / pow(0.475f, 4));
+vec3 v3InvWavelength = vec3(1.0f / pow(0.650f, 4),
+                            1.0f / pow(0.570f, 4),
+                            1.0f / pow(0.475f, 4));
 uniform float fCameraHeight;// The camera's current height
 uniform float fCameraHeight2;// fCameraHeight^2
 
@@ -20,7 +20,7 @@ float fOuterRadius2 = fOuterRadius * fOuterRadius;// fOuterRadius^2
 float fInnerRadius = 10.0f;// The inner (planetary) radius
 float fInnerRadius2 = fInnerRadius * fInnerRadius;// fInnerRadius^2
 float Km = 0.0025f;
-float Kr = 0.0015f;
+float Kr = 0.0010f;
 float ESun = 10.0f;
 float fKrESun = Kr * ESun;
 float fKmESun = Km * ESun;
@@ -30,8 +30,8 @@ float fScale = 1 / (fOuterRadius - fInnerRadius);
 float fScaleDepth = 0.25f;// The scale depth (i.e. the altitude at which the atmosphere's average density is found)
 float fScaleOverScaleDepth =  fScale / fScaleDepth;
 
-const int nSamples = 2;
-const float fSamples = 2.0;
+const int nSamples = 3;
+const float fSamples = 3.0;
 
 out vec3 v3Direction;
 out vec3 frontSecColor;

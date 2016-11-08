@@ -138,7 +138,7 @@ namespace scene
 
   void camera::set_window_context(std::shared_ptr<ui::ui_manager> ui)
   {
-		auto w = std::static_pointer_cast<ui::glfw_ui>(ui->get_ui())->get_window();
+    auto w = std::static_pointer_cast<ui::glfw_ui>(ui->get_ui())->get_window();
     this->window = w;
   }
 

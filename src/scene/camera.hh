@@ -99,7 +99,7 @@ namespace scene
       float speed = 10.0f;
       float mouseSpeed = 0.005f;
 
-      float near = 0.1f;
+      float near = 0.0001f;
       float far = 100.0f;
 
       float ratio = 16.0f / 9.0f;

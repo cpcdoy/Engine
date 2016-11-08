@@ -23,6 +23,9 @@ namespace render_backend
     glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers);
     debug::log::get(debug::logDEBUG) << "Max VAOs number : " << max_vaos << std::endl;
     debug::log::get(debug::logDEBUG) << "Max texture2D layers : " << max_layers << std::endl;
+    GLint MaxPatchVertices = 0;
+    glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
+    debug::log::get(debug::logDEBUG) << "Max patch vertices : " << MaxPatchVertices << std::endl;
 
     if (extensions)
       debug::log::get(debug::logINFO) << "GL_EXTENSIONS : " << extensions << std::endl;
@@ -44,7 +47,7 @@ namespace render_backend
     glGetIntegerv(GL_NUM_EXTENSIONS, &num_extensions);
 
     debug::log::get(debug::logINFO) << "Supported extensions (" << num_extensions << ") :"
-																		<< std::endl;
+                                    << std::endl;
     auto caps = get_gl_extensions();
     for (GLint i = 0; i < num_extensions; ++i)
     {
@@ -64,6 +67,6 @@ namespace render_backend
 
   float lerp(float v0, float v1, float t)
   {
-    return (1-t)*v0 + t*v1;
+    return (1 - t) * v0 + t * v1;
   }
 }

@@ -9,7 +9,7 @@ uniform sampler2D tex_noise;
 
 const float radius = 1.0;
 
-#define KERNEL_SIZE 32
+#define KERNEL_SIZE 16
 uniform vec3 samples[KERNEL_SIZE];
 uniform vec2 screen_res;
 

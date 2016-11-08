@@ -45,12 +45,12 @@ namespace render_backend
     pipeline.push_back(std::make_shared<opengl_shader_pass_geometry>("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_ssao>("res/shaders/SSAO.vs", "res/shaders/SSAO.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_lighting>("res/shaders/lighting.vs", "res/shaders/lighting.fs"));
-    pipeline.push_back(std::make_shared<opengl_shader_pass_atmosphere>("res/shaders/atmospheric_scattering.vs", "res/shaders/atmospheric_scattering.fs"));
+    //pipeline.push_back(std::make_shared<opengl_shader_pass_atmosphere>("res/shaders/atmospheric_scattering.vs", "res/shaders/atmospheric_scattering.fs"));
 
     glGenVertexArrays(1, &base_vao);
     glBindVertexArray(base_vao);
 
-    auto sky = glm::vec3(0.0, 0.2, 0.4);
+    auto sky = glm::vec3(0.98, 0.83, 0.64);
     glClearColor(sky.x, sky.y, sky.z, 1.0f);
     glClearDepth(1.0);
 
