@@ -8,13 +8,31 @@ Rendering Engine
 
 3. [Example usage](#Example)
 
-4. [Appendix](#Appendix)
+4. [Task list](#TODO)
+
+5. [Appendix](#Appendix)
 
 A real-time 3D rendering engine.
 
 
 <a name="Build"/>
 ## Build
+### Dependencies
+
+Ubuntu:
+
+    apt-get update && apt-get install -y \
+    build-essential \
+    libglm-dev \
+    libglfw3-dev \
+    libglew-dev \
+    libsoil-dev \
+    bison \
+    flex \
+    git \
+    cmake \
+    pkg-config
+
 ### In-source build
 
 `cmake .`
@@ -39,6 +57,11 @@ or
 
 `make` or `make check`
 
+<a name="TODO"/>
+## Task list
+
+Check the TO DO list [here](https://trello.com/b/B5hQOW6n/engine)
+
 <a name="Archi"/>
 ## Architecture
 Here is the current architecture:
@@ -54,4 +77,6 @@ Here is the current architecture:
 <a name="Appendix"/>
 ## Appendix
 
-Here's an [article](https://hackercorp.eu/ssao.html) about one method used in this engine
+### Articles
+
+- [SSAO](https://hackercorp.eu/ssao.html)
