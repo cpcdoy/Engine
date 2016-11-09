@@ -110,6 +110,8 @@ namespace render_backend
 
     //glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     generate_pbos(max_tex_size);
+
+    anisotropy_level = opengl_pipeline_state::instance().get_state_of_lock("aniso_level");
   }
 
   void texture_streamer::query_texture_streaming_job(resource::streamed_texture* t)
@@ -121,8 +123,6 @@ namespace render_backend
 
     queue.push(texture_streaming_job(t, sl));
 
-    float an = 0.0f;
-    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &an);
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -130,7 +130,7 @@ namespace render_backend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, an);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropy_level);
     int mips = std::floor(std::log2(std::max(sl->get_width(), sl->get_width())));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mips);
 
@@ -148,7 +148,6 @@ namespace render_backend
       size = ((w + 3) / 4) * ((h + 3) / 4) * bs;
       glCompressedTexImage2D(GL_TEXTURE_2D, mip, sl->get_format(), w, h, 0, size, nullptr);
     }
-    //glGenerateMipmap(GL_TEXTURE_2D);
 
     sl->clean();
     texture_binding_pool.push(texture);

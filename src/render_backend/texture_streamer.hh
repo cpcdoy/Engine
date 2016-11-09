@@ -59,7 +59,7 @@ namespace render_backend
       GLuint pbos[2];
 
       GLuint fake_tex;
-      
+
       int max_tex_size = 2048*2048*4*sizeof(GLubyte);
 
       std::thread data_streamer_thread;
@@ -69,5 +69,7 @@ namespace render_backend
       std::atomic<bool> end_streaming;
 
       streaming_queue<GLuint> texture_binding_pool;
+
+      float anisotropy_level = 0.0f;
   };
 }

@@ -1,8 +1,25 @@
 #version 330 core
-#define BRDF_FD_OREN_NAYAR
-//#define BRDF_FD_LAMBERT
+//#define BRDF_FD_OREN_NAYAR
+#define BRDF_FD_LAMBERT
 
-in vec3 sh_color;
+vec3 sh_color;
+
+const float C1 = 0.429043;
+const float C2 = 0.511664;
+const float C3 = 0.743125;
+const float C4 = 0.886227;
+const float C5 = 0.247708;
+
+// Funston Beach Sunset
+const vec3 L00  = vec3(0.68, 0.69, 0.70);
+const vec3 L1m1 = vec3(0.32, 0.37, 0.44);
+const vec3 L10  = vec3(0.17, 0.17, 0.17);
+const vec3 L11  = vec3(0.45, 0.42, 0.34);
+const vec3 L2m2 = vec3(0.17, 0.17, 0.15);
+const vec3 L2m1 = vec3(0.08, 0.09, 0.10);
+const vec3 L20  = vec3(0.03, 0.03, 0.01);
+const vec3 L21  = vec3(0.16, 0.14, 0.10);
+const vec3 L22  = vec3(0.37, 0.31, 0.20);
 
 out vec4 frag_color;
 
@@ -13,25 +30,38 @@ in VS_OUT {
   vec4 frag_pos_light_space;
 } fs_in;
 
+
+uniform mat4 light_space_matrix;
+
 uniform sampler2D shadow_map;
 uniform sampler2D ao_map;
 uniform sampler2D diffuse_map;
 uniform sampler2D metalness_roughness_baked_ao_map;
+uniform sampler2D g_position_depth;
+uniform sampler2D g_normal;
 
 uniform vec2 screen_res;
 
 uniform vec3 light_pos;
 uniform vec3 view_pos;
 
+uniform mat4 view;
+uniform mat4 projection;
+
 #define PI 3.1415926535897932
 #define ONE_OVER_PI 0.318309
 
-vec2 ss_coords = gl_FragCoord.xy / screen_res;
-
+vec2 ss_coords = fs_in.tex_coords;
 
 vec3 metalness_roughness_baked_ao = texture2D(metalness_roughness_baked_ao_map, ss_coords).rgb;
 float metalness = clamp(metalness_roughness_baked_ao.r, 0.02, 0.99);//1.0;
 float roughness = 1.0 - max(metalness_roughness_baked_ao.g, 0.001);//0.68;
+
+vec4 frag_info_fs = texture(g_position_depth, ss_coords).rgba;
+vec3 frag_pos_fs = (inverse(view) * vec4(frag_info_fs.rgb, 1.0)).rgb;
+float depth_fs = frag_info_fs.a;
+vec3 normal_fs = texture(g_normal, ss_coords).rgb;
+vec4 frag_pos_fs_light_space = light_space_matrix * vec4(frag_pos_fs, 1.0);
 
 vec4 base_color = vec4(1.0);
 
@@ -122,7 +152,10 @@ vec4 brdf_oren_nayar(float n_dot_v, float n_dot_l, vec3 light_dir, vec3 view_dir
 
   float L1 = max(0.0, n_dot_l) * (A + B * max(0.0, gamma) * C);
 
-  return vec4(base_color.rgb * vec3(L1), 1.0);
+  vec4 color = base_color;
+  color.rgb = mix(color.rgb, vec3(0.0), metalness);
+
+  return vec4(color.rgb * vec3(L1), 1.0);
 }
 #endif
 
@@ -198,20 +231,32 @@ void main()
   if (res == 0.0f)
     discard;*/
 
+  vec3 light_color = vec3(0.98, 0.83, 0.64);
+  if (depth_fs == 1.0f)
+  {
+    frag_color = vec4(light_color, 1.0);
+    discard;
+  }
+
+  sh_color = C1 * L22 * (normal_fs.x * normal_fs.x - normal_fs.y * normal_fs.y) +
+             C3 * L20 * normal_fs.z * normal_fs.z +
+             C4 * L00 - C5 * L20 +
+             2.0 * C1 * (L2m2 * normal_fs.x * normal_fs.y + L21 * normal_fs.x * normal_fs.z + L2m1 * normal_fs.y * normal_fs.z) +
+             2.0 * C2 * (L11 * normal_fs.x + L1m1 * normal_fs.y + L10 * normal_fs.z);
+
+  sh_color *= 2.5f;
+
   vec3 baked_ao = vec3(metalness_roughness_baked_ao.b);
-  vec3 color = texture(diffuse_map, ss_coords).rgb * baked_ao;
+  vec3 color = texture(diffuse_map, ss_coords).rgb;
   base_color = vec4(color, 1.0);
 
-  vec3 normal = normalize(fs_in.normal);
-  vec3 light_color = vec3(0.98, 0.83, 0.64);
-
-  vec3 lightDir = light_pos - fs_in.frag_pos;
+  vec3 lightDir = light_pos - frag_pos_fs;
   vec3 l = normalize(lightDir);
 
-  vec3 viewDirUnNorm = view_pos - fs_in.frag_pos;
+  vec3 viewDirUnNorm = view_pos - frag_pos_fs;
   vec3 v = normalize(viewDirUnNorm);
 
-  vec3 n = normalize(fs_in.normal);
+  vec3 n = normalize(normal_fs);
 
   vec3 h = normalize(v + l);
 
@@ -227,9 +272,9 @@ void main()
 #endif
   vec3 fs = brdf_cook_torrance(v_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
 
-  vec3 ambient = vec3(0.2 * texture(ao_map, ss_coords).r);
+  vec3 ambient = vec3(0.2 * texture(ao_map, ss_coords).r * baked_ao);
 
-  float shadow = compute_shadows(fs_in.frag_pos_light_space, normal, l);
+  float shadow = compute_shadows(frag_pos_fs_light_space, n, l);
   vec3 lighting = (ambient + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * sh_color * color; //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;
 
   frag_color = vec4(exposure(lighting), fd.a);

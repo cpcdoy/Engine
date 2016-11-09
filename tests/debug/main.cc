@@ -49,14 +49,14 @@ int main(void)
   e.load_texture("res/tex/dds/default_AO.dds", m2, texture_kind::AO);
   m2->set_pos(glm::vec3(-0.1, 5, -1));
 
-  mesh m9 = e.load_mesh("res/obj/Objects_001.obj");
+  /*mesh m9 = e.load_mesh("res/obj/Objects_001.obj");
   m9->set_lod_distance(0, 100);
   e.load_texture("res/tex/dds/bark_D.dds", m9);
   e.load_texture("res/tex/dds/bark_M.dds", m9, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/bark_R.dds", m9, texture_kind::ROUGHNESS);
   e.load_texture("res/tex/dds/default_AO.dds", m9, texture_kind::AO);
   m9->set_pos(glm::vec3(4.5, 0.15, 0));
-  m9->set_scale(glm::vec3(0.05));
+  m9->set_scale(glm::vec3(0.05));*/
 
   mesh m1 = e.load_mesh("res/obj/sphere_s.obj");
   m1->set_lod_distance(0, 100);

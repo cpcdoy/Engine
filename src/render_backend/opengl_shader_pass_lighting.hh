@@ -14,5 +14,6 @@ namespace render_backend
 
     private:
       int shadow_map_res = 1024;
+      GLuint quad_vao;
   };
 }

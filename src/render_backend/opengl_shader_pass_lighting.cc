@@ -19,6 +19,39 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "model")); // 9
     uniforms.push_back(glGetUniformLocation(program, "trans_inv_model"));
     uniforms.push_back(glGetUniformLocation(program, "screen_res")); // 11
+    uniforms.push_back(glGetUniformLocation(program, "g_position_depth"));
+    uniforms.push_back(glGetUniformLocation(program, "g_normal")); // 13
+
+    static const GLfloat quad_vertex_buffer[] =
+    {
+      -1.0f, 1.0f, 0.0f,
+      -1.0f, -1.0f, 0.0f,
+      1.0f, 1.0f, 0.0f,
+      1.0f, -1.0f, 0.0f,
+    };
+
+    static const GLfloat quad_uvs[] =
+    {
+      0.0f, 1.0f,
+      0.0f, 0.0f,
+      1.0f, 1.0f,
+      1.0f, 0.0f,
+    };
+
+    GLuint quad_vertex_vbo, quad_uv_vbo;
+    //quad VAO
+    glGenVertexArrays(1, &quad_vao);
+    glBindVertexArray(quad_vao);
+    glGenBuffers(1, &quad_vertex_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, quad_vertex_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertex_buffer), quad_vertex_buffer, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (void*)0);
+    glGenBuffers(1, &quad_uv_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, quad_uv_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quad_uvs), &quad_uvs, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GL_FLOAT), (void*)0);
 
     glUseProgram(program);
 
@@ -28,6 +61,8 @@ namespace render_backend
     //glUniform1i(uniforms[8], 3);
     glUniform1i(uniforms[8], 3);
     //glUniform1i(uniforms[9], 4);
+    glUniform1i(uniforms[12], 4);
+    glUniform1i(uniforms[13], 5);
 
     glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
@@ -71,14 +106,13 @@ namespace render_backend
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("g_metalness_roughness_baked_ao"));
 
-    for (int i = 0; i < rq_size; i++)
-    {
-      const auto& m = render_queue[i];
-      glUniformMatrix4fv(uniforms[9], 1, GL_FALSE, &m->get_model()[0][0]);
-      glUniformMatrix3fv(uniforms[10], 1, GL_FALSE, &glm::transpose(glm::inverse(glm::mat3(m->get_model())))[0][0]);
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("g_position_depth"));
 
-      glBindVertexArray(m->get_vao());
-      glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());
-    }
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, opengl_pipeline_state::instance().get_state_of("g_normal"));
+
+    glBindVertexArray(quad_vao);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
   }
 }

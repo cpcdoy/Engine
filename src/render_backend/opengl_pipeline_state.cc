@@ -22,6 +22,13 @@ namespace render_backend
     states.insert(std::make_pair(s, v));
   }
 
+  void opengl_pipeline_state::add_state_lock(std::string s, long v)
+  {
+    std::lock_guard<std::mutex> lock(mutex);
+
+    add_state(s, v);
+  }
+
   long opengl_pipeline_state::get_state_of(std::string s)
   {
     try
@@ -32,6 +39,13 @@ namespace render_backend
     {
       return 0;
     }
+  }
+
+  long opengl_pipeline_state::get_state_of_lock(std::string s)
+  {
+    std::lock_guard<std::mutex> lock(mutex);
+
+    return get_state_of(s);
   }
 
   void opengl_pipeline_state::lock()
