@@ -18,11 +18,13 @@ int main(void)
   e.load_texture("res/tex/dds/T_Brick_Yellow_D.dds", m3);
   e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m3, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m3, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_N.dds", m3, texture_kind::NORMAL);
   e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m3, texture_kind::AO);
 
   mesh m4 = e.load_mesh("res/obj/california.obj");
   e.load_texture("res/tex/dds/fake_tex.dds", m4);
   e.load_texture("res/tex/dds/default_AO.dds", m4, texture_kind::AO);
+  e.load_texture("res/tex/dds/brushed_metal_N.dds", m4, texture_kind::NORMAL);
   m4->set_pos(glm::vec3(0, 0.15, 0));
   /*
 
@@ -46,6 +48,7 @@ int main(void)
   e.load_texture("res/tex/dds/wood_albedo.dds", m2);
   e.load_texture("res/tex/dds/wood_metalness.dds", m2, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/wood_roughness.dds", m2, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/default_N.dds", m2, texture_kind::NORMAL);
   e.load_texture("res/tex/dds/default_AO.dds", m2, texture_kind::AO);
   m2->set_pos(glm::vec3(-0.1, 5, -1));
 
@@ -64,6 +67,7 @@ int main(void)
   e.load_texture("res/tex/dds/T_Tile_White_D.dds", m1);
   e.load_texture("res/tex/dds/T_Tile_White_M.dds", m1, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Tile_White_R.dds", m1, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/T_Tile_White_N.dds", m1, texture_kind::NORMAL);
   e.load_texture("res/tex/dds/T_Tile_White_AO.dds", m1, texture_kind::AO);
   m1->set_pos(glm::vec3(-0.1, 5, 1.3));
 
@@ -73,6 +77,7 @@ int main(void)
   e.load_texture("res/tex/dds/T_Brick_Yellow_D.dds", m5);
   e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m5, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m5, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_N.dds", m5, texture_kind::NORMAL);
   e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m5, texture_kind::AO);
   m5->set_pos(glm::vec3(-0.1, 7, 1.3));
 

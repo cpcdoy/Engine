@@ -49,13 +49,16 @@ namespace render_backend
     GLuint attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
     glDrawBuffers(4, attachments);
 
-    uniforms.push_back(glGetUniformLocation(program, "model"));
+    uniforms.push_back(glGetUniformLocation(program, "model")); // 0
     uniforms.push_back(glGetUniformLocation(program, "projection"));
     uniforms.push_back(glGetUniformLocation(program, "view"));
     uniforms.push_back(glGetUniformLocation(program, "albedo_map"));
     uniforms.push_back(glGetUniformLocation(program, "metalness_map"));
-    uniforms.push_back(glGetUniformLocation(program, "roughness_map"));
+    uniforms.push_back(glGetUniformLocation(program, "roughness_map")); // 5
     uniforms.push_back(glGetUniformLocation(program, "baked_ao_map"));
+    uniforms.push_back(glGetUniformLocation(program, "normal_map"));
+    uniforms.push_back(glGetUniformLocation(program, "model_view"));
+    uniforms.push_back(glGetUniformLocation(program, "normal_matrix")); // 9
 
     glUseProgram(program);
 
@@ -63,6 +66,7 @@ namespace render_backend
     glUniform1i(uniforms[4], 1);
     glUniform1i(uniforms[5], 2);
     glUniform1i(uniforms[6], 3);
+    glUniform1i(uniforms[7], 4);
 
     opengl_pipeline_state::instance().add_state("g_buffer", g_buffer);
     opengl_pipeline_state::instance().add_state("g_normal", g_normal);
@@ -75,15 +79,25 @@ namespace render_backend
   {
     glBindFramebuffer(GL_FRAMEBUFFER, g_buffer);
     glClear(GL_DEPTH_BUFFER_BIT);
+
     glUseProgram(program);
 
-    glUniformMatrix4fv(uniforms[1], 1, GL_FALSE, &cam->get_projection_matrix()[0][0]);
-    glUniformMatrix4fv(uniforms[2], 1, GL_FALSE, &cam->get_view_matrix()[0][0]);
+    auto proj = cam->get_projection_matrix();
+    auto view = cam->get_view_matrix();
+
+    glUniformMatrix4fv(uniforms[1], 1, GL_FALSE, &proj[0][0]);
+    glUniformMatrix4fv(uniforms[2], 1, GL_FALSE, &view[0][0]);
 
     for (int i = 0; i < rq_size; i++)
     {
       auto m = render_queue[i];
-      glUniformMatrix4fv(uniforms[0], 1, GL_FALSE, &m->get_model()[0][0]);
+      auto model = m->get_model();
+      auto model_view = view * model;
+      auto normal_matrix = glm::transpose(glm::inverse(glm::mat3(model_view)));
+
+      glUniformMatrix4fv(uniforms[0], 1, GL_FALSE, &model[0][0]);
+      glUniformMatrix4fv(uniforms[8], 1, GL_FALSE, &model_view[0][0]);
+      glUniformMatrix3fv(uniforms[9], 1, GL_FALSE, &normal_matrix[0][0]);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, m->get_texture());
@@ -96,6 +110,9 @@ namespace render_backend
 
       glActiveTexture(GL_TEXTURE3);
       glBindTexture(GL_TEXTURE_2D, m->get_ao_texture());
+
+      glActiveTexture(GL_TEXTURE4);
+      glBindTexture(GL_TEXTURE_2D, m->get_normal_texture());
 
       glBindVertexArray(m->get_vao());
       glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());

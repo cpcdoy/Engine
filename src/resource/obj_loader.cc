@@ -15,6 +15,8 @@ namespace resource
     out_vertices.clear();
     out_uvs.clear();
     out_normals.clear();
+    out_tangents.clear();
+    out_bitangents.clear();
   }
 
   void obj_loader::load_obj(const char *path)
@@ -23,16 +25,16 @@ namespace resource
   }
 
   inline
-  void obj_loader::clean_load()
-  {
-    temp_vertices.clear();
-    temp_uvs.clear();
-    temp_normals.clear();
-    
-    vertex_indices.clear();
-    uv_indices.clear();
-    normal_indices.clear();
-  }
+    void obj_loader::clean_load()
+    {
+      tmp_vertices.clear();
+      tmp_uvs.clear();
+      tmp_normals.clear();
+
+      vertex_indices.clear();
+      uv_indices.clear();
+      normal_indices.clear();
+    }
 
   std::shared_ptr<mesh> obj_loader::generate_mesh()
   {
@@ -43,6 +45,8 @@ namespace resource
     m->set_vertices(out_vertices);
     m->set_uvs(out_uvs);
     m->set_normals(out_normals);
+    m->set_tangents(out_tangents);
+    m->set_bitangents(out_bitangents);
     m->set_aabb(max_vertex - center, center);
 
     return m;
@@ -52,10 +56,11 @@ namespace resource
   {
     glm::vec3 min_vertex;
     debug::log::get(debug::logINFO) << "Loading OBJ file " << path << std::endl;
-    
+
     out_vertices.clear();
     out_uvs.clear();
     out_normals.clear();
+    out_tangents.clear();
 
     FILE* file = fopen(path, "r");
     if (file == NULL)
@@ -75,7 +80,7 @@ namespace resource
       {
         glm::vec3 vertex;
         fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-        temp_vertices.push_back(vertex);
+        tmp_vertices.push_back(vertex);
         if (vertex.x > max_vertex.x)
           max_vertex.x = vertex.x;
         if (vertex.y > max_vertex.y)
@@ -95,13 +100,13 @@ namespace resource
         glm::vec2 uv;
         fscanf(file, "%f %f\n", &uv.x, &uv.y);
         uv.y = -uv.y;
-        temp_uvs.push_back(uv);
+        tmp_uvs.push_back(uv);
       }
       else if (strcmp(lineHeader, "vn") == 0)
       {
         glm::vec3 normal;
         fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-        temp_normals.push_back(normal);
+        tmp_normals.push_back(normal);
       }
       else if (strcmp(lineHeader, "f") == 0)
       {
@@ -118,8 +123,8 @@ namespace resource
           fseek(file, curr_pos, SEEK_SET);
           matches = fscanf(file, "%u//%u %u//%u %u//%u\n", &vertex_index[0], &normal_index[0], &vertex_index[1], &normal_index[1], &vertex_index[2], &normal_index[2]);
           if (matches != 6)
-            debug::log::get(debug::logERROR) << "File can't be read, try triangularizing the faces"
-                                                   << std::endl;
+            debug::log::get(debug::logERROR) << "File can't be processed, try triangularizing the faces"
+              << std::endl;
           return false;
         }
         vertex_indices.push_back(vertex_index[0]);
@@ -139,7 +144,7 @@ namespace resource
       }
     }
     center = (max_vertex + min_vertex) / 2.0f;
-    std::cout << "center v " << center.x << " " << center.y << " " << center.z << std::endl;
+    //std::cout << "center v " << center.x << " " << center.y << " " << center.z << std::endl;
 
     for (unsigned int i = 0; i < vertex_indices.size(); i++)
     {
@@ -147,9 +152,9 @@ namespace resource
       unsigned int uv_index = uv_indices[i];
       unsigned int normal_index = normal_indices[i];
 
-      glm::vec3 vertex = temp_vertices[vertex_index - 1];
-      glm::vec2 uv = temp_uvs[uv_index - 1];
-      glm::vec3 normal = temp_normals[normal_index - 1];
+      glm::vec3 vertex = tmp_vertices[vertex_index - 1];
+      glm::vec2 uv = tmp_uvs[uv_index - 1];
+      glm::vec3 normal = tmp_normals[normal_index - 1];
 
       out_vertices.push_back(vertex);
       out_uvs.push_back(uv);
@@ -162,9 +167,52 @@ namespace resource
 
     debug::log::get(debug::logINFO) << "Loaded OBJ file " << path << "" << std::endl;
     debug::log::get(debug::logINDENT, 5) << "Stats:" << std::endl;
-    debug::log::get(debug::logINDENT, 6+5) << out_vertices.size() << " vertices" << std::endl;
-    debug::log::get(debug::logREINDENT) << out_vertices.size() / 3 << " tris" << std::endl;
+    debug::log::get(debug::logINDENT, 6 + 5) << out_vertices.size() << " vertices" << std::endl;
+    debug::log::get(debug::logREINDENT) << out_vertices.size() / 3 << " triangles" << std::endl;
+
+    //compute_tangent_basis();
+    //average_tangents();
 
     return true;
+  }
+
+  void obj_loader::compute_tangent_basis()
+  {
+    debug::log::get(debug::logINDENT, 5) << "Generating tangents and bitangents" << std::endl;
+
+    out_tangents.clear();
+    out_bitangents.clear();
+
+    for (size_t i = 0; i < out_vertices.size(); i += 3)
+    {
+      const auto& v0 = out_vertices[i];
+      const auto& v1 = out_vertices[i + 1];
+      const auto& v2 = out_vertices[i + 2];
+
+      const auto& uv0 = out_uvs[i];
+      const auto& uv1 = out_uvs[i + 1];
+      const auto& uv2 = out_uvs[i + 2];
+
+      const auto& dd_v0 = v1 - v0;
+      const auto& dd_v1 = v2 - v0;
+
+      const auto& dd_uv0 = uv1 - uv0;
+      const auto& dd_uv1 = uv2 - uv0;
+
+      float r = 1.0f / (dd_uv0.x * dd_uv1.y - dd_uv0.y * dd_uv1.x);
+      glm::vec3 tangent = glm::normalize((dd_v0 * dd_uv1.y - dd_v1 * dd_uv0.y) * r);
+      glm::vec3 bitangent = glm::normalize((dd_v1 * dd_uv0.x - dd_v0 * dd_uv1.x) * r);
+
+      tmp_tangents.push_back(tangent);
+      tmp_tangents.push_back(tangent);
+      tmp_tangents.push_back(tangent);
+
+      tmp_bitangents.push_back(bitangent);
+      tmp_bitangents.push_back(bitangent);
+      tmp_bitangents.push_back(bitangent);
+    }
+
+    debug::log::get(debug::logINDENT, 5) << "tang " << out_tangents.size() << std::endl;
+    debug::log::get(debug::logINDENT, 5) << "bitang " << out_bitangents.size() << std::endl;
   }
 }

@@ -13,6 +13,8 @@ namespace resource
     lods[lod].vertices = m->get_vertices();
     lods[lod].uvs = m->get_uvs();
     lods[lod].normals = m->get_normals();
+    lods[lod].tangents = m->get_tangents();
+    lods[lod].bitangents = m->get_bitangents();
   }
 
   gl_mesh::~gl_mesh()
@@ -149,6 +151,8 @@ namespace resource
     set_vertices(mesh->get_vertices(), lod);
     set_uvs(mesh->get_uvs(), lod);
     set_normals(mesh->get_normals(), lod);
+    set_tangents(mesh->get_tangents(), lod);
+    set_bitangents(mesh->get_bitangents(), lod);
 
     std::shared_ptr<resource::gl_mesh> gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
     set_vao(gl_mesh->get_vao());

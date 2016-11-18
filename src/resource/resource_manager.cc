@@ -67,7 +67,7 @@ namespace resource
     }
 
     debug::log::get(debug::logERROR) << "Loading model lod of " << path << " failed"
-                                    << std::endl;
+                                     << std::endl;
   }
 
   void resource_manager::load_texture(std::string path, std::shared_ptr<mesh>& mesh, texture_kind k)

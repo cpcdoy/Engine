@@ -3,7 +3,6 @@
 # include <sstream>
 # include <stack>
 # include <vector>
-# include <map>
 
 namespace render_backend
 {
@@ -33,6 +32,13 @@ namespace render_backend
 
     };
 
+    struct variable_data
+    {
+      std::string type;
+      std::string name;
+      std::string value;
+    };
+
     class translator_state : public elements_stream
     {
         public:
@@ -47,35 +53,36 @@ namespace render_backend
                 return stream;
             }
 
-            void add_vardec(std::string var)
+            void add_vardec(std::string type, std::string name, std::string val = "")
             {
-                vars.insert(std::make_pair(var, ""));
+              variable_data var = { type, name, val };
+              vars.push_back(var);
             }
 
             std::string get_shader_string()
             {
-                return std::string(stream.str());
+              return std::string(stream.str());
             }
 
             static translator_state& emission_stream()
             {
-                static translator_state emission_stream;
-                return emission_stream;
+              static translator_state emission_stream;
+              return emission_stream;
             }
 
             elements_stream& type_stream()
             {
-                return type_stream_;
+              return type_stream_;
             }
 
             void clear()
             {
-                stream.str(std::string());
+              stream.str(std::string());
             }
 
         protected:
             std::stringstream stream;
             elements_stream type_stream_;
-            std::map<std::string, std::string> vars;
+            std::vector<variable_data> vars;
     };
 }

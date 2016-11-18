@@ -1,11 +1,11 @@
 // comment test
 
-//var lol = 1.qdsdlqjd4f;
+//auto lol = 1.qdsdlqjd4f;
 
 backend version 330 core
 
-var var;
+auto auto;
 
-var lol = 1.924f;
+auto lol = 1.924f;
 
-var lolilol = 1;
+auto lolilol = 1;

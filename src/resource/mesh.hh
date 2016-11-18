@@ -48,9 +48,11 @@ namespace resource
     int dist;
     int level = 0;
 
+    std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
-    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> tangents;
+    std::vector<glm::vec3> bitangents;
 
     std::vector<mesh> sub_meshes;
 
@@ -63,17 +65,17 @@ namespace resource
       mesh();
       ~mesh();
 
-      void set_vertices(std::vector<glm::vec3> v);
-      void set_uvs(std::vector<glm::vec2> u);
-      void set_normals(std::vector<glm::vec3> n);
-
-      void set_vertices(std::vector<glm::vec3> v, int lod);
-      void set_uvs(std::vector<glm::vec2> u, int lod);
-      void set_normals(std::vector<glm::vec3> n, int lod);
+      void set_vertices(std::vector<glm::vec3> v, int lod = 0);
+      void set_uvs(std::vector<glm::vec2> u, int lod = 0);
+      void set_normals(std::vector<glm::vec3> n, int lod = 0);
+      void set_tangents(std::vector<glm::vec3> t, int lod = 0);
+      void set_bitangents(std::vector<glm::vec3> bt, int lod = 0);
 
       std::vector<glm::vec3> get_vertices();
       std::vector<glm::vec2> get_uvs();
       std::vector<glm::vec3> get_normals();
+      std::vector<glm::vec3> get_tangents();
+      std::vector<glm::vec3> get_bitangents();
 
       glm::vec3 get_pos();
       void set_pos(glm::vec3 pos);

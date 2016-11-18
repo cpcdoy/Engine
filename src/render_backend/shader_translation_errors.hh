@@ -41,7 +41,8 @@ namespace render_backend
             size_t char_pos = in.byte_in_line();
 
             std::ostringstream o;
-            o << pegtl::position_info(in) << "\n    ";
+            o << "An error occurred while parsing the shader \"";
+            o << pegtl::position_info(in) << "\":\n    ";
             auto lines = util::split(in.begin() - char_pos, '\n');
 
             std::string line = lines.size() ? lines[0] : in.begin();

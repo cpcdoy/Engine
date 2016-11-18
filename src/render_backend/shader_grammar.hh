@@ -146,8 +146,10 @@ namespace render_backend
     struct vardec_init
         : pegtl::sor<vardec_value_float, vardec_value_int> {};
 
+    struct auto_keyword
+        : pegtl_string_t("auto") {};
     struct vardec
-        : pegtl::seq<pegtl_string_t("var"),
+        : pegtl::seq<auto_keyword,
                      sep,
                      must<vardec_name>,
                      sep,

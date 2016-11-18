@@ -18,21 +18,6 @@ namespace resource
   {
   }
 
-  void mesh::set_vertices(std::vector<glm::vec3> v)
-  {
-    lods[lod].vertices = v;
-  }
-
-  void mesh::set_uvs(std::vector<glm::vec2> u)
-  {
-    lods[lod].uvs = u;
-  }
-
-  void mesh::set_normals(std::vector<glm::vec3> n)
-  {
-    lods[lod].normals = n;
-  }
-
   void mesh::set_vertices(std::vector<glm::vec3> v, int lod)
 
   {
@@ -49,6 +34,16 @@ namespace resource
     lods[lod].normals = n;
   }
 
+  void mesh::set_tangents(std::vector<glm::vec3> t, int lod)
+  {
+    lods[lod].tangents = t;
+  }
+
+  void mesh::set_bitangents(std::vector<glm::vec3> bt, int lod)
+  {
+    lods[lod].bitangents = bt;
+  }
+
   std::vector<glm::vec3> mesh::get_vertices()
   {
     return lods[lod].vertices;
@@ -62,6 +57,16 @@ namespace resource
   std::vector<glm::vec3> mesh::get_normals()
   {
     return lods[lod].normals;
+  }
+
+  std::vector<glm::vec3> mesh::get_tangents()
+  {
+    return lods[lod].tangents;
+  }
+
+  std::vector<glm::vec3> mesh::get_bitangents()
+  {
+    return lods[lod].bitangents;
   }
 
   void mesh::set_pos(glm::vec3 pos)

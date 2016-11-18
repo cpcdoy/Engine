@@ -250,10 +250,10 @@ void main()
   vec3 color = texture(diffuse_map, ss_coords).rgb;
   base_color = vec4(color, 1.0);
 
-  vec3 lightDir = light_pos - frag_pos_fs;
+  vec3 lightDir = mat3(view) * light_pos - frag_pos_fs;
   vec3 l = normalize(lightDir);
 
-  vec3 viewDirUnNorm = view_pos - frag_pos_fs;
+  vec3 viewDirUnNorm = mat3(view) * view_pos - frag_pos_fs;
   vec3 v = normalize(viewDirUnNorm);
 
   vec3 n = normalize(normal_fs);

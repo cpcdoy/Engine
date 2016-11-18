@@ -85,9 +85,5 @@ namespace resource
       std::vector<GLuint> vaos;
 
       gl_material material;
-
-      GLuint vertices_vbo;
-      GLuint uv_vbo;
-      GLuint normals_vbo;
   };
 }
