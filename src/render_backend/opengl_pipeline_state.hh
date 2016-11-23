@@ -10,6 +10,7 @@
 # include <mutex>
 
 # include "texture_streamer.hh"
+# include "opengl_shader_backend.hh"
 
 namespace render_backend
 {
@@ -39,11 +40,15 @@ namespace render_backend
       void lock();
       void unlock();
 
+      opengl_shader_manager& get_shader_manager();
+
     private:
       std::map<std::string, long> states;
 
       std::shared_ptr<texture_streamer> tex_streamer;
 
       std::mutex mutex;
+
+      opengl_shader_manager osm;
   };
 }

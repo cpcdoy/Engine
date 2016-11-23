@@ -59,7 +59,7 @@ float roughness = 1.0 - max(metalness_roughness_baked_ao.g, 0.001);//0.68;
 
 vec4 frag_info_fs = texture(g_position_depth, ss_coords).rgba;
 vec3 frag_pos_fs = (inverse(view) * vec4(frag_info_fs.rgb, 1.0)).rgb;
-float depth_fs = frag_info_fs.a;
+float depth_fs = frag_info_fs.z;
 vec3 normal_fs = texture(g_normal, ss_coords).rgb;
 vec4 frag_pos_fs_light_space = light_space_matrix * vec4(frag_pos_fs, 1.0);
 
@@ -232,7 +232,7 @@ void main()
     discard;*/
 
   vec3 light_color = vec3(0.98, 0.83, 0.64);
-  if (depth_fs == 1.0f)
+  if (depth_fs >= 0.9f)
   {
     frag_color = vec4(light_color, 1.0);
     discard;

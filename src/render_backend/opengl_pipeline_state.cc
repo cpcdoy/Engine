@@ -57,4 +57,9 @@ namespace render_backend
   {
     mutex.unlock();
   }
+
+  opengl_shader_manager& opengl_pipeline_state::get_shader_manager()
+  {
+    return osm;
+  }
 }
