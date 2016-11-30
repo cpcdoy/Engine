@@ -232,11 +232,6 @@ void main()
     discard;*/
 
   vec3 light_color = vec3(0.98, 0.83, 0.64);
-  if (depth_fs >= 0.9f)
-  {
-    frag_color = vec4(light_color, 1.0);
-    discard;
-  }
 
   sh_color = C1 * L22 * (normal_fs.x * normal_fs.x - normal_fs.y * normal_fs.y) +
              C3 * L20 * normal_fs.z * normal_fs.z +

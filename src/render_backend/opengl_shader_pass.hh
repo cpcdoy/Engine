@@ -20,9 +20,9 @@ namespace render_backend
   class opengl_shader_pass
   {
     public:
-      opengl_shader_pass(std::string vs, std::string fs)
+      opengl_shader_pass(std::string vs, std::string fs, std::string tcs = "", std::string tes = "", std::string gs = "", std::string cs = "")
       {
-        program = opengl_pipeline_state::instance().get_shader_manager().compile_shaders(vs, fs);
+        program = opengl_pipeline_state::instance().get_shader_manager().compile_shaders(vs, fs, tcs, tes, gs, cs);
 
         w = opengl_pipeline_state::instance().get_state_of("width");
         h = opengl_pipeline_state::instance().get_state_of("height");

@@ -2,8 +2,8 @@
 
 namespace render_backend
 {
-  opengl_shader_pass_geometry::opengl_shader_pass_geometry(std::string vs, std::string fs)
-    : opengl_shader_pass(vs, fs)
+  opengl_shader_pass_geometry::opengl_shader_pass_geometry(std::string vs, std::string fs, std::string tcs, std::string tes)
+    : opengl_shader_pass(vs, fs, tcs, tes)
   {
     glGenFramebuffers(1, &g_buffer);
     glBindFramebuffer(GL_FRAMEBUFFER, g_buffer);
@@ -59,6 +59,7 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "normal_map"));
     uniforms.push_back(glGetUniformLocation(program, "model_view"));
     uniforms.push_back(glGetUniformLocation(program, "normal_matrix")); // 9
+    uniforms.push_back(glGetUniformLocation(program, "cam_pos")); // 10
 
     glUseProgram(program);
 
@@ -78,7 +79,7 @@ namespace render_backend
   void opengl_shader_pass_geometry::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long rq_size)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, g_buffer);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     glUseProgram(program);
 
@@ -87,6 +88,7 @@ namespace render_backend
 
     glUniformMatrix4fv(uniforms[1], 1, GL_FALSE, &proj[0][0]);
     glUniformMatrix4fv(uniforms[2], 1, GL_FALSE, &view[0][0]);
+    glUniformMatrix3fv(uniforms[10], 1, GL_FALSE, &cam->get_camera_position()[0]);
 
     for (int i = 0; i < rq_size; i++)
     {
@@ -115,7 +117,7 @@ namespace render_backend
       glBindTexture(GL_TEXTURE_2D, m->get_normal_texture());
 
       glBindVertexArray(m->get_vao());
-      glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());
+      glDrawArrays(GL_PATCHES, 0, m->get_vertices().size());
     }
   }
 }

@@ -11,8 +11,8 @@ namespace render_backend
     opengl_opt_ctx = glslopt_initialize(kGlslTargetOpenGL);
 
     shader_stages_info.insert(std::make_pair(vertex, stage_info { "vertex", GL_VERTEX_SHADER }));
-    shader_stages_info.insert(std::make_pair(ths, stage_info { "tesselation hull shader", GL_TESS_EVALUATION_SHADER }));
-    shader_stages_info.insert(std::make_pair(tcs, stage_info { "tesselation control shader", GL_TESS_CONTROL_SHADER }));
+    shader_stages_info.insert(std::make_pair(tcs, stage_info { "tesselation control", GL_TESS_CONTROL_SHADER }));
+    shader_stages_info.insert(std::make_pair(tes, stage_info { "tesselation evaluation", GL_TESS_EVALUATION_SHADER }));
     shader_stages_info.insert(std::make_pair(geometry, stage_info { "geometry", GL_GEOMETRY_SHADER }));
     shader_stages_info.insert(std::make_pair(fragment, stage_info { "fragment", GL_FRAGMENT_SHADER }));
     shader_stages_info.insert(std::make_pair(compute, stage_info { "compute", GL_COMPUTE_SHADER }));
@@ -27,14 +27,14 @@ namespace render_backend
 
   GLuint opengl_shader_manager::compile_shaders(std::string v_path,
       std::string f_path,
-      std::string ths_path,
       std::string tcs_path,
+      std::string tes_path,
       std::string g_path,
       std::string c_path)
   {
     compile_shader(v_path, vertex, true);
     compile_shader(tcs_path, tcs, false);
-    compile_shader(ths_path, ths, false);
+    compile_shader(tes_path, tes, false);
     compile_shader(g_path, geometry, false);
     compile_shader(f_path, fragment, true);
     compile_shader(c_path, compute, false);
@@ -62,7 +62,7 @@ namespace render_backend
 
     debug::log::get(debug::logINFO) << "Compiling " << current_shader_type_str << " shader : " << path << std::endl;
     glslopt_shader *shader_opt;
-    GLuint shader_id = glCreateShader(stage == vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+    GLuint shader_id = glCreateShader(current_stage);
 
     std::string shader_code;
     std::ifstream shader_stream(path, std::ios::in);
@@ -74,9 +74,9 @@ namespace render_backend
         shader_code += "\n" + Line;
       shader_stream.close();
 
-      debug::log::get(debug::logINFO) << "Optimizing " << current_shader_type_str << " shader" << std::endl;
       if (optimize && is_stage_optimizable)
       {
+        debug::log::get(debug::logINFO) << "Optimizing " << current_shader_type_str << " shader" << std::endl;
         if (stage == vertex)
           shader_opt = glslopt_optimize(opengl_opt_ctx, kGlslOptShaderVertex, shader_code.c_str(), 0);
         else

@@ -10,8 +10,8 @@ namespace render_backend
   enum shader_stage
   {
     vertex,
-    ths,
     tcs,
+    tes,
     geometry,
     fragment,
     compute,
@@ -25,8 +25,8 @@ namespace render_backend
       ~opengl_shader_manager();
       GLuint compile_shaders(std::string v_path,
                              std::string f_path,
-                             std::string ths_path = "",
                              std::string tcs_path = "",
+                             std::string tes_path = "",
                              std::string g_path = "",
                              std::string c_path = "");
       bool compile_shader(std::string path, enum shader_stage stage, bool optimize);

@@ -21,11 +21,12 @@ int main(void)
   e.load_texture("res/tex/dds/T_Brick_Yellow_N.dds", m3, texture_kind::NORMAL);
   e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m3, texture_kind::AO);
 
-  mesh m4 = e.load_mesh("res/obj/california.obj");
+  mesh m4 = e.load_mesh("res/obj/california_sub.obj");
   e.load_texture("res/tex/dds/fake_tex.dds", m4);
   e.load_texture("res/tex/dds/default_AO.dds", m4, texture_kind::AO);
-  e.load_texture("res/tex/dds/brushed_metal_N.dds", m4, texture_kind::NORMAL);
-  m4->set_pos(glm::vec3(0, 0.15, 0));
+  e.load_texture("res/tex/dds/default_N.dds", m4, texture_kind::NORMAL);
+  m4->set_pos(glm::vec3(0, 0.85, 0));
+  m4->set_rotation(-1.6, glm::vec3(1, 0, 0));
   /*
 
   mesh m6 = e.load_mesh("res/obj/vase.obj");
