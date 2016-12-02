@@ -1,5 +1,11 @@
-# Engine [![TravisCI](https://travis-ci.org/cpcdoy/Engine.svg?branch=dev)](https://travis-ci.org/cpcdoy/Engine)
-Rendering Engine
+# Engine
+
+[![Travis CI](https://img.shields.io/travis/rust-lang/rust/master.svg?style=flat-square)](https://travis-ci.org/cpcdoy/Engine.svg?branch=dev)
+[![Trello](https://img.shields.io/badge/trello-todo%20list-blue.svg?style=flat-square)](https://trello.com/b/B5hQOW6n/engine)
+
+
+
+A 3D real-time rendering Engine
 
 ## Table of content
 1. [Build](#Build)
@@ -11,9 +17,6 @@ Rendering Engine
 4. [Task list](#TODO)
 
 5. [Appendix](#Appendix)
-
-A real-time 3D rendering engine.
-
 
 <a name="Build"/>
 ## Build
