@@ -1,4 +1,4 @@
-#version 330 core
+#version 330
 //#define BRDF_FD_OREN_NAYAR
 #define BRDF_FD_LAMBERT
 
@@ -23,13 +23,7 @@ const vec3 L22  = vec3(0.37, 0.31, 0.20);
 
 out vec4 frag_color;
 
-in VS_OUT {
-  vec3 frag_pos;
-  vec3 normal;
-  vec2 tex_coords;
-  vec4 frag_pos_light_space;
-} fs_in;
-
+in vec2 tex_coords;
 
 uniform mat4 light_space_matrix;
 
@@ -51,7 +45,7 @@ uniform mat4 projection;
 #define PI 3.1415926535897932
 #define ONE_OVER_PI 0.318309
 
-vec2 ss_coords = fs_in.tex_coords;
+vec2 ss_coords = tex_coords;
 
 vec3 metalness_roughness_baked_ao = texture2D(metalness_roughness_baked_ao_map, ss_coords).rgb;
 float metalness = clamp(metalness_roughness_baked_ao.r, 0.02, 0.99);//1.0;
@@ -251,7 +245,7 @@ void main()
   vec3 viewDirUnNorm = mat3(view) * view_pos - frag_pos_fs;
   vec3 v = normalize(viewDirUnNorm);
 
-  vec3 n = normalize(normal_fs);
+  vec3 n = normal_fs;
 
   vec3 h = normalize(v + l);
 
@@ -270,7 +264,7 @@ void main()
   vec3 ambient = vec3(0.2 * texture(ao_map, ss_coords).r * baked_ao);
 
   float shadow = compute_shadows(frag_pos_fs_light_space, n, l);
-  vec3 lighting = (ambient + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * sh_color * color; //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;
+  vec3 lighting = (ambient + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * sh_color * color;
 
   frag_color = vec4(exposure(lighting), fd.a);
 }

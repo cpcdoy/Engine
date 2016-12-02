@@ -13,6 +13,5 @@ void main()
 {
   frag_pos = (model * vec4(position_, 1.0f)).xyz;
   tex_coords = tex_coords_;
-
-  normal = (model * vec4(normal_, 1.0)).xyz;
+  normal = normalize(normal_);
 }

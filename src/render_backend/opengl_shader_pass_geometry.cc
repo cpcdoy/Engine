@@ -50,7 +50,7 @@ namespace render_backend
     glDrawBuffers(4, attachments);
 
     uniforms.push_back(glGetUniformLocation(program, "model")); // 0
-    uniforms.push_back(glGetUniformLocation(program, "projection"));
+    uniforms.push_back(glGetUniformLocation(program, "view_proj"));
     uniforms.push_back(glGetUniformLocation(program, "view"));
     uniforms.push_back(glGetUniformLocation(program, "albedo_map"));
     uniforms.push_back(glGetUniformLocation(program, "metalness_map"));
@@ -83,10 +83,10 @@ namespace render_backend
 
     glUseProgram(program);
 
-    auto proj = cam->get_projection_matrix();
     auto view = cam->get_view_matrix();
+    auto view_proj = cam->get_projection_matrix() * view;
 
-    glUniformMatrix4fv(uniforms[1], 1, GL_FALSE, &proj[0][0]);
+    glUniformMatrix4fv(uniforms[1], 1, GL_FALSE, &view_proj[0][0]);
     glUniformMatrix4fv(uniforms[2], 1, GL_FALSE, &view[0][0]);
     glUniformMatrix3fv(uniforms[10], 1, GL_FALSE, &cam->get_camera_position()[0]);
 
