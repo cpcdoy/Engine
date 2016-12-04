@@ -31,109 +31,25 @@ namespace resource
     return vaos[lod];
   }
 
-  void gl_mesh::set_texture(GLuint tex)
+  void gl_mesh::set_texture(GLuint tex, texture_kind kind)
   {
-    material.albedo_tex = tex;
+    material.tex_ids[kind] = tex;
   }
 
-  GLuint gl_mesh::get_texture()
+  GLuint gl_mesh::get_texture(texture_kind kind)
   {
-    auto t = material.streamed_texs[texture_kind::ALBEDO];
+    auto t = material.streamed_texs[kind];
     return t ? t->query_texture() : 0;
   }
 
-  void gl_mesh::set_normal_texture(GLuint tex)
+  void gl_mesh::set_streamed_texture(std::shared_ptr<streamed_texture> tex, texture_kind kind)
   {
-    material.normal_tex = tex;
+    material.streamed_texs[kind] = tex;
   }
 
-  GLuint gl_mesh::get_normal_texture()
+  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_texture(texture_kind kind)
   {
-    auto t = material.streamed_texs[texture_kind::NORMAL];
-    return t ? t->query_texture() : 0;
-  }
-
-  void gl_mesh::set_roughness_texture(GLuint tex)
-  {
-    material.roughness_tex = tex;
-  }
-
-  GLuint gl_mesh::get_roughness_texture()
-  {
-    auto t = material.streamed_texs[texture_kind::ROUGHNESS];
-    return t ? t->query_texture() : 0;
-  }
-
-  void gl_mesh::set_metalness_texture(GLuint tex)
-  {
-    material.metalness_tex = tex;
-  }
-
-  GLuint gl_mesh::get_metalness_texture()
-  {
-    auto t = material.streamed_texs[texture_kind::METALNESS];
-    return t ? t->query_texture() : 0;
-  }
-
-  void gl_mesh::set_ao_texture(GLuint tex)
-  {
-    material.ao_tex = tex;
-  }
-
-  GLuint gl_mesh::get_ao_texture()
-  {
-    auto t = material.streamed_texs[texture_kind::AO];
-    return t ? t->query_texture() : 0;
-  }
-
-  void gl_mesh::set_streamed_texture(std::shared_ptr<streamed_texture> tex)
-  {
-    material.streamed_texs[texture_kind::ALBEDO] = tex;
-  }
-
-  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_texture()
-  {
-    return material.streamed_texs[texture_kind::ALBEDO];
-  }
-
-  void gl_mesh::set_streamed_normal_texture(std::shared_ptr<streamed_texture> tex)
-  {
-    material.streamed_texs[texture_kind::NORMAL] = tex;
-  }
-
-  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_normal_texture()
-  {
-    return material.streamed_texs[texture_kind::NORMAL];
-  }
-
-  void gl_mesh::set_streamed_roughness_texture(std::shared_ptr<streamed_texture> tex)
-  {
-    material.streamed_texs[texture_kind::ROUGHNESS] = tex;
-  }
-
-  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_roughness_texture()
-  {
-    return material.streamed_texs[texture_kind::ROUGHNESS];
-  }
-
-  void gl_mesh::set_streamed_metalness_texture(std::shared_ptr<streamed_texture> tex)
-  {
-    material.streamed_texs[texture_kind::METALNESS] = tex;
-  }
-
-  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_metalness_texture()
-  {
-    return material.streamed_texs[texture_kind::METALNESS];
-  }
-
-  void gl_mesh::set_streamed_ao_texture(std::shared_ptr<streamed_texture> tex)
-  {
-    material.streamed_texs[texture_kind::AO] = tex;
-  }
-
-  std::shared_ptr<streamed_texture>& gl_mesh::get_streamed_ao_texture()
-  {
-    return material.streamed_texs[texture_kind::AO];
+    return material.streamed_texs[kind];
   }
 
   void gl_mesh::query_texture_unloading()

@@ -71,7 +71,7 @@ namespace render_backend
       size = ((w + 3) / 4) * ((h + 3) / 4) * bs;
 
       glBufferData(GL_PIXEL_UNPACK_BUFFER, size, 0, GL_STREAM_DRAW);
-      long* ptr = (long*)glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
+      long* ptr = (long*)glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
       if (ptr)
       {
         std::memcpy(ptr, sl->get_generated_texture() + mip_offsets[mip], size);
@@ -136,7 +136,7 @@ namespace render_backend
 
     int w = sl->get_width();
     int h = sl->get_height();
-    int size = ((w + 3) / 4) * ((h + 3) / 4) * sl->get_block_size();
+    int size;
     std::deque<int> w_mips = compute_mipmap_dimensions(w);
     std::deque<int> h_mips = compute_mipmap_dimensions(h);
     int bs = sl->get_block_size();
@@ -209,7 +209,8 @@ namespace render_backend
     debug::log::get(debug::logINFO) << "Generating fake texture" << std::endl;
     if (!sl->load("res/tex/dds/fake_tex.dds"))
     {
-      debug::log::get(debug::logERROR) << "Could not generate the fake texture" << std::endl;
+      debug::log::get(debug::logERROR) << "Could not generate the fake texture :" << std::endl;
+      debug::log::get(debug::logINDENT, 5) << "Please put a fake texture at \"res/tex/dds/fake_tex.dds\""  << std::endl;
       return;
     }
     glGenTextures(1, &fake_tex);
@@ -219,7 +220,7 @@ namespace render_backend
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-    unsigned int size = ((sl->get_width()+3)/4)*((sl->get_height()+3)/4)*sl->get_block_size();
+    unsigned int size = ((sl->get_width() + 3) / 4) * ((sl->get_height() + 3) / 4) * sl->get_block_size();
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, sl->get_format(), sl->get_width(), sl->get_height(), 0, size, sl->get_generated_texture());
     glGenerateMipmap(GL_TEXTURE_2D);
   }

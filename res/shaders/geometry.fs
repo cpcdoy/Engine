@@ -1,4 +1,5 @@
 #version 140
+
 out vec4 g_position_depth;
 out vec3 g_normal;
 out vec3 g_albedo;

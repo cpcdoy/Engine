@@ -60,11 +60,11 @@ namespace render_backend
     glUniform1i(uniforms[7], 2);
     //glUniform1i(uniforms[8], 3);
     glUniform1i(uniforms[8], 3);
-    //glUniform1i(uniforms[9], 4);
+
+    glUniform2fv(uniforms[11], 1, &glm::vec2(w, h)[0]);
+   //glUniform1i(uniforms[9], 4);
     glUniform1i(uniforms[12], 4);
     glUniform1i(uniforms[13], 5);
-
-    glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
   }
 
   void opengl_shader_pass_lighting::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long rq_size)

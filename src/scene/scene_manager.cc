@@ -86,10 +86,10 @@ namespace scene
       if (res)
       {
         m->compute_current_lod(cam_pos);
-        rq_size++;
       }
       else
         m->query_texture_unloading();
+        rq_size++;
 
       return res;
     });

@@ -105,7 +105,7 @@ vec3 fresnel_schlick(float cos_t, vec3 f0)
 
 float schlick_geometry(float n_dot_l, float n_dot_v, float roughness)
 {
-  float a = roughness + 1.0; //Disney: reducde "hotness"
+  float a = roughness + 1.0; //Disney: reduced "hotness"
   float k = a * a * 0.125;
   float one_minus_k = 1 - k;
 
@@ -244,8 +244,9 @@ void main()
 
   vec3 viewDirUnNorm = mat3(view) * view_pos - frag_pos_fs;
   vec3 v = normalize(viewDirUnNorm);
+  vec3 v_pos = normalize(-frag_pos_fs);
 
-  vec3 n = normal_fs;
+  vec3 n = normalize(normal_fs);
 
   vec3 h = normalize(v + l);
 
@@ -266,5 +267,5 @@ void main()
   float shadow = compute_shadows(frag_pos_fs_light_space, n, l);
   vec3 lighting = (ambient + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * sh_color * color;
 
-  frag_color = vec4(exposure(lighting), fd.a);
+  frag_color = vec4(n, fd.a);
 }

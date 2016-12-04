@@ -10,6 +10,9 @@ namespace render_backend
     caps.push_back("GL_ARB_multi_draw_indirect");
     caps.push_back("GL_ARB_gpu_shader5");
     caps.push_back("GL_ARB_bindless_texture");
+    caps.push_back("GL_ARB_sparse_texture");
+    caps.push_back("GL_ARB_uniform_buffer_object");
+    caps.push_back("GL_ARB_shader_storage_buffer_object");
 
     return caps;
   }
