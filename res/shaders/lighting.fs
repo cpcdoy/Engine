@@ -246,7 +246,7 @@ void main()
   vec3 v = normalize(viewDirUnNorm);
   vec3 v_pos = normalize(-frag_pos_fs);
 
-  vec3 n = normalize(normal_fs);
+  vec3 n = normal_fs;
 
   vec3 h = normalize(v + l);
 

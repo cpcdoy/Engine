@@ -58,11 +58,9 @@ namespace render_backend
     glUniform1i(uniforms[5], 0);
     glUniform1i(uniforms[6], 1);
     glUniform1i(uniforms[7], 2);
-    //glUniform1i(uniforms[8], 3);
     glUniform1i(uniforms[8], 3);
 
     glUniform2fv(uniforms[11], 1, &glm::vec2(w, h)[0]);
-   //glUniform1i(uniforms[9], 4);
     glUniform1i(uniforms[12], 4);
     glUniform1i(uniforms[13], 5);
   }
