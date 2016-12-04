@@ -267,5 +267,5 @@ void main()
   float shadow = compute_shadows(frag_pos_fs_light_space, n, l);
   vec3 lighting = (ambient + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * sh_color * color;
 
-  frag_color = vec4(n, fd.a);
+  frag_color = vec4(exposure(lighting), fd.a);
 }

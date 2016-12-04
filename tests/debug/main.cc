@@ -19,6 +19,7 @@ int main(void)
   e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m3, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m3, texture_kind::ROUGHNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_N.dds", m3, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_DI.dds", m3, texture_kind::DISPLACEMENT);
   e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m3, texture_kind::AO);
 
   mesh m4 = e.load_mesh("res/obj/california_sub.obj");
@@ -27,17 +28,18 @@ int main(void)
   e.load_texture("res/tex/dds/default_N.dds", m4, texture_kind::NORMAL);
   m4->set_pos(glm::vec3(0, 0.85, 0));
   m4->set_rotation(-1.6, glm::vec3(1, 0, 0));
-  /*
 
   mesh m6 = e.load_mesh("res/obj/vase.obj");
   e.load_texture("res/tex/dds/fake_tex.dds", m6);
   e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m6, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m6, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_N.dds", m6, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_DI.dds", m6, texture_kind::DISPLACEMENT);
   e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m6, texture_kind::AO);
   m6->set_pos(glm::vec3(2, -0.8, 0));
   m6->set_scale(glm::vec3(0.7));
 
-  mesh m7 = e.load_mesh("res/obj/nanosuit.obj");
+  /*mesh m7 = e.load_mesh("res/obj/nanosuit.obj");
   e.load_texture("res/tex/dds/fake_tex.dds", m7);
   e.load_texture("res/tex/dds/default_AO.dds", m7, texture_kind::AO);
   m7->set_pos(glm::vec3(2, 0.15, 0));
@@ -49,7 +51,8 @@ int main(void)
   e.load_texture("res/tex/dds/wood_albedo.dds", m2);
   e.load_texture("res/tex/dds/wood_metalness.dds", m2, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/wood_roughness.dds", m2, texture_kind::ROUGHNESS);
-  e.load_texture("res/tex/dds/default_N.dds", m2, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/wood_N.dds", m2, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/wood_DI.dds", m2, texture_kind::DISPLACEMENT);
   e.load_texture("res/tex/dds/default_AO.dds", m2, texture_kind::AO);
   m2->set_pos(glm::vec3(-0.1, 5, -1));
 
@@ -69,6 +72,7 @@ int main(void)
   e.load_texture("res/tex/dds/T_Tile_White_M.dds", m1, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Tile_White_R.dds", m1, texture_kind::ROUGHNESS);
   e.load_texture("res/tex/dds/T_Tile_White_N.dds", m1, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/T_Tile_White_DI.dds", m1, texture_kind::DISPLACEMENT);
   e.load_texture("res/tex/dds/T_Tile_White_AO.dds", m1, texture_kind::AO);
   m1->set_pos(glm::vec3(-0.1, 5, 1.3));
 
@@ -79,6 +83,7 @@ int main(void)
   e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m5, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m5, texture_kind::ROUGHNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_N.dds", m5, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_DI.dds", m5, texture_kind::DISPLACEMENT);
   e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m5, texture_kind::AO);
   m5->set_pos(glm::vec3(-0.1, 7, 1.3));
 
