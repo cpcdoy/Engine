@@ -10,6 +10,9 @@ namespace render_backend
     caps.push_back("GL_ARB_multi_draw_indirect");
     caps.push_back("GL_ARB_gpu_shader5");
     caps.push_back("GL_ARB_bindless_texture");
+    caps.push_back("GL_ARB_sparse_texture");
+    caps.push_back("GL_ARB_uniform_buffer_object");
+    caps.push_back("GL_ARB_shader_storage_buffer_object");
 
     return caps;
   }
@@ -21,16 +24,17 @@ namespace render_backend
     int max_vaos;
     int max_layers;
     float anisotropy_level = 0.0f;
-    int MaxPatchVertices = 0;
+    int max_patch_verts = 0;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &max_vaos);
     glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers);
-    glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
+    glGetIntegerv(GL_MAX_PATCH_VERTICES, &max_patch_verts);
     glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisotropy_level);
     debug::log::get(debug::logDEBUG) << "Max VAOs number : " << max_vaos << std::endl;
     debug::log::get(debug::logDEBUG) << "Max texture2D layers : " << max_layers << std::endl;
-    debug::log::get(debug::logDEBUG) << "Max patch vertices : " << MaxPatchVertices << std::endl;
+    debug::log::get(debug::logDEBUG) << "Max patch vertices : " << max_patch_verts << std::endl;
     debug::log::get(debug::logDEBUG) << "Max anisotropy level : " << anisotropy_level << std::endl;
     opengl_pipeline_state::instance().add_state_lock("aniso_level", anisotropy_level);
+    opengl_pipeline_state::instance().add_state_lock("max_patches", max_patch_verts);
 
     if (extensions)
       debug::log::get(debug::logINFO) << "GL_EXTENSIONS : " << extensions << std::endl;

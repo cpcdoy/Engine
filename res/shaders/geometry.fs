@@ -1,4 +1,5 @@
 #version 140
+
 out vec4 g_position_depth;
 out vec3 g_normal;
 out vec3 g_albedo;
@@ -54,9 +55,8 @@ vec3 perturb_normal(vec3 n, vec3 v, vec2 uv)
 void main()
 {
   g_position_depth.xyz = frag_pos;
-  g_position_depth.a = linearize_depth(gl_FragCoord.z);
 
-  g_normal = normalize(normal);
+  g_normal = normal;
   g_normal = perturb_normal(g_normal, view_dir, tex_coords);
 
   g_albedo = texture2D(albedo_map, tex_coords).rgb;

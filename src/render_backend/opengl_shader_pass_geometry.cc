@@ -2,8 +2,8 @@
 
 namespace render_backend
 {
-  opengl_shader_pass_geometry::opengl_shader_pass_geometry(std::string vs, std::string fs)
-    : opengl_shader_pass(vs, fs)
+  opengl_shader_pass_geometry::opengl_shader_pass_geometry(std::string vs, std::string fs, std::string tcs, std::string tes)
+    : opengl_shader_pass(vs, fs, tcs, tes)
   {
     glGenFramebuffers(1, &g_buffer);
     glBindFramebuffer(GL_FRAMEBUFFER, g_buffer);
@@ -50,15 +50,18 @@ namespace render_backend
     glDrawBuffers(4, attachments);
 
     uniforms.push_back(glGetUniformLocation(program, "model")); // 0
-    uniforms.push_back(glGetUniformLocation(program, "projection"));
+    uniforms.push_back(glGetUniformLocation(program, "view_proj"));
     uniforms.push_back(glGetUniformLocation(program, "view"));
     uniforms.push_back(glGetUniformLocation(program, "albedo_map"));
     uniforms.push_back(glGetUniformLocation(program, "metalness_map"));
     uniforms.push_back(glGetUniformLocation(program, "roughness_map")); // 5
     uniforms.push_back(glGetUniformLocation(program, "baked_ao_map"));
     uniforms.push_back(glGetUniformLocation(program, "normal_map"));
+    uniforms.push_back(glGetUniformLocation(program, "displacement_map"));
     uniforms.push_back(glGetUniformLocation(program, "model_view"));
-    uniforms.push_back(glGetUniformLocation(program, "normal_matrix")); // 9
+    uniforms.push_back(glGetUniformLocation(program, "normal_matrix")); // 10
+    uniforms.push_back(glGetUniformLocation(program, "cam_pos"));
+    uniforms.push_back(glGetUniformLocation(program, "projection")); // 12
 
     glUseProgram(program);
 
@@ -67,6 +70,7 @@ namespace render_backend
     glUniform1i(uniforms[5], 2);
     glUniform1i(uniforms[6], 3);
     glUniform1i(uniforms[7], 4);
+    glUniform1i(uniforms[8], 5);
 
     opengl_pipeline_state::instance().add_state("g_buffer", g_buffer);
     opengl_pipeline_state::instance().add_state("g_normal", g_normal);
@@ -78,15 +82,18 @@ namespace render_backend
   void opengl_shader_pass_geometry::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long rq_size)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, g_buffer);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     glUseProgram(program);
 
-    auto proj = cam->get_projection_matrix();
     auto view = cam->get_view_matrix();
+    auto proj = cam->get_projection_matrix();
+    auto view_proj = proj * view;
 
-    glUniformMatrix4fv(uniforms[1], 1, GL_FALSE, &proj[0][0]);
+    glUniformMatrix4fv(uniforms[1], 1, GL_FALSE, &view_proj[0][0]);
     glUniformMatrix4fv(uniforms[2], 1, GL_FALSE, &view[0][0]);
+    glUniform3fv(uniforms[11], 1, &cam->get_camera_position()[0]);
+    glUniformMatrix4fv(uniforms[12], 1, GL_FALSE, &proj[0][0]);
 
     for (int i = 0; i < rq_size; i++)
     {
@@ -96,26 +103,29 @@ namespace render_backend
       auto normal_matrix = glm::transpose(glm::inverse(glm::mat3(model_view)));
 
       glUniformMatrix4fv(uniforms[0], 1, GL_FALSE, &model[0][0]);
-      glUniformMatrix4fv(uniforms[8], 1, GL_FALSE, &model_view[0][0]);
-      glUniformMatrix3fv(uniforms[9], 1, GL_FALSE, &normal_matrix[0][0]);
+      glUniformMatrix4fv(uniforms[9], 1, GL_FALSE, &model_view[0][0]);
+      glUniformMatrix3fv(uniforms[10], 1, GL_FALSE, &normal_matrix[0][0]);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, m->get_texture());
 
       glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, m->get_metalness_texture());
+      glBindTexture(GL_TEXTURE_2D, m->get_texture(texture_kind::METALNESS));
 
       glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, m->get_roughness_texture());
+      glBindTexture(GL_TEXTURE_2D, m->get_texture(texture_kind::ROUGHNESS));
 
       glActiveTexture(GL_TEXTURE3);
-      glBindTexture(GL_TEXTURE_2D, m->get_ao_texture());
+      glBindTexture(GL_TEXTURE_2D, m->get_texture(texture_kind::AO));
 
       glActiveTexture(GL_TEXTURE4);
-      glBindTexture(GL_TEXTURE_2D, m->get_normal_texture());
+      glBindTexture(GL_TEXTURE_2D, m->get_texture(texture_kind::NORMAL));
+
+      glActiveTexture(GL_TEXTURE5);
+      glBindTexture(GL_TEXTURE_2D, m->get_texture(texture_kind::DISPLACEMENT));
 
       glBindVertexArray(m->get_vao());
-      glDrawArrays(GL_TRIANGLES, 0, m->get_vertices().size());
+      glDrawArrays(GL_PATCHES, 0, m->get_vertices().size());
     }
   }
 }

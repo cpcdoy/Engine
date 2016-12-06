@@ -1,0 +1,94 @@
+#version 410
+
+layout (vertices = 1) out;
+
+in vec3 frag_pos[];
+in vec2 tex_coords[];
+in vec3 normal[];
+
+uniform vec3 cam_pos;
+
+struct out_patch
+{
+  vec3 frag_pos_B030;
+  vec3 frag_pos_B021;
+  vec3 frag_pos_B012;
+  vec3 frag_pos_B003;
+  vec3 frag_pos_B102;
+  vec3 frag_pos_B201;
+  vec3 frag_pos_B300;
+  vec3 frag_pos_B210;
+  vec3 frag_pos_B120;
+  vec3 frag_pos_B111;
+  vec3 normal[3];
+  vec2 tex_coords[3];
+};
+
+patch out out_patch o_patch;
+
+float tess_level = 1.0;
+
+vec3 project_to_plane(vec3 point, vec3 plane_point, vec3 plane_normal)
+{
+  vec3 v = point - plane_point;
+  float len = dot(v, plane_normal);
+  vec3 d = len * plane_normal;
+  return (point - d);
+}
+
+void calc_positions()
+{
+  o_patch.frag_pos_B030 = frag_pos[0];
+  o_patch.frag_pos_B003 = frag_pos[1];
+  o_patch.frag_pos_B300 = frag_pos[2];
+
+  vec3 EdgeB300 = o_patch.frag_pos_B003 - o_patch.frag_pos_B030;
+  vec3 EdgeB030 = o_patch.frag_pos_B300 - o_patch.frag_pos_B003;
+  vec3 EdgeB003 = o_patch.frag_pos_B030 - o_patch.frag_pos_B300;
+
+  o_patch.frag_pos_B021 = o_patch.frag_pos_B030 + EdgeB300 / 3.0;
+  o_patch.frag_pos_B012 = o_patch.frag_pos_B030 + EdgeB300 * 2.0 / 3.0;
+  o_patch.frag_pos_B102 = o_patch.frag_pos_B003 + EdgeB030 / 3.0;
+  o_patch.frag_pos_B201 = o_patch.frag_pos_B003 + EdgeB030 * 2.0 / 3.0;
+  o_patch.frag_pos_B210 = o_patch.frag_pos_B300 + EdgeB003 / 3.0;
+  o_patch.frag_pos_B120 = o_patch.frag_pos_B300 + EdgeB003 * 2.0 / 3.0;
+
+  o_patch.frag_pos_B021 = project_to_plane(o_patch.frag_pos_B021, o_patch.frag_pos_B030,
+      o_patch.normal[0]);
+  o_patch.frag_pos_B012 = project_to_plane(o_patch.frag_pos_B012, o_patch.frag_pos_B003,
+      o_patch.normal[1]);
+  o_patch.frag_pos_B102 = project_to_plane(o_patch.frag_pos_B102, o_patch.frag_pos_B003,
+      o_patch.normal[1]);
+  o_patch.frag_pos_B201 = project_to_plane(o_patch.frag_pos_B201, o_patch.frag_pos_B300,
+      o_patch.normal[2]);
+  o_patch.frag_pos_B210 = project_to_plane(o_patch.frag_pos_B210, o_patch.frag_pos_B300,
+      o_patch.normal[2]);
+  o_patch.frag_pos_B120 = project_to_plane(o_patch.frag_pos_B120, o_patch.frag_pos_B030,
+      o_patch.normal[0]);
+
+  vec3 center = (o_patch.frag_pos_B003 + o_patch.frag_pos_B030 + o_patch.frag_pos_B300) / 3.0;
+  o_patch.frag_pos_B111 = (o_patch.frag_pos_B021 + o_patch.frag_pos_B012 + o_patch.frag_pos_B102 +
+      o_patch.frag_pos_B201 + o_patch.frag_pos_B210 + o_patch.frag_pos_B120) / 6.0;
+  o_patch.frag_pos_B111 += (o_patch.frag_pos_B111 - center) / 2.0;
+}
+
+void main()
+{
+  for (int i = 0 ; i < 3 ; i++)
+  {
+    o_patch.normal[i] = normal[i];
+    o_patch.tex_coords[i] = tex_coords[i];
+  }
+
+  vec3 mesh_pos = cam_pos - frag_pos[0];
+  float cam_dist = dot(mesh_pos, mesh_pos);
+
+  tess_level = clamp((40.0 - cam_dist), 1.0, 3.0);
+
+  calc_positions();
+
+  gl_TessLevelOuter[0] = tess_level;
+  gl_TessLevelOuter[1] = tess_level;
+  gl_TessLevelOuter[2] = tess_level;
+  gl_TessLevelInner[0] = tess_level;
+}

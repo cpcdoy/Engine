@@ -21,22 +21,32 @@ int main(void)
   e.load_texture("res/tex/dds/T_Brick_Yellow_N.dds", m3, texture_kind::NORMAL);
   e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m3, texture_kind::AO);
 
-  mesh m4 = e.load_mesh("res/obj/california.obj");
-  e.load_texture("res/tex/dds/fake_tex.dds", m4);
-  e.load_texture("res/tex/dds/default_AO.dds", m4, texture_kind::AO);
-  e.load_texture("res/tex/dds/brushed_metal_N.dds", m4, texture_kind::NORMAL);
-  m4->set_pos(glm::vec3(0, 0.15, 0));
-  /*
+  mesh m4 = e.load_mesh("res/obj/sphere_s.obj");
+  e.load_texture("res/tex/dds/rock_D.dds", m4);
+  e.load_texture("res/tex/dds/rock_AO.dds", m4, texture_kind::AO);
+  e.load_texture("res/tex/dds/rock_N.dds", m4, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/rock_R.dds", m4, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/rock_DI.dds", m4, texture_kind::DISPLACEMENT);
+  m4->set_scale(glm::vec3(1.2, 1, 1));
+  m4->set_pos(glm::vec3(0, 1, -0.2));
 
-  mesh m6 = e.load_mesh("res/obj/vase.obj");
-  e.load_texture("res/tex/dds/fake_tex.dds", m6);
-  e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m6, texture_kind::METALNESS);
-  e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m6, texture_kind::ROUGHNESS);
-  e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m6, texture_kind::AO);
-  m6->set_pos(glm::vec3(2, -0.8, 0));
-  m6->set_scale(glm::vec3(0.7));
+  mesh m8 = e.load_mesh("res/obj/sphere_s.obj");
+  e.load_texture("res/tex/dds/block_D.dds", m8);
+  e.load_texture("res/tex/dds/block_AO.dds", m8, texture_kind::AO);
+  e.load_texture("res/tex/dds/block_N.dds", m8, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/block_R.dds", m8, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/block_DI.dds", m8, texture_kind::DISPLACEMENT);
+  m8->set_pos(glm::vec3(0, 1, 2));
 
-  mesh m7 = e.load_mesh("res/obj/nanosuit.obj");
+  mesh m10 = e.load_mesh("res/obj/sphere_s.obj");
+  e.load_texture("res/tex/dds/greasy_D.dds", m10);
+  e.load_texture("res/tex/dds/default_AO.dds", m10, texture_kind::AO);
+  e.load_texture("res/tex/dds/greasy_N.dds", m10, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/greasy_R.dds", m10, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/greasy_M.dds", m10, texture_kind::METALNESS);
+  m10->set_pos(glm::vec3(-4, 1, 0));
+
+  /*mesh m7 = e.load_mesh("res/obj/nanosuit.obj");
   e.load_texture("res/tex/dds/fake_tex.dds", m7);
   e.load_texture("res/tex/dds/default_AO.dds", m7, texture_kind::AO);
   m7->set_pos(glm::vec3(2, 0.15, 0));
@@ -44,13 +54,13 @@ int main(void)
 
   mesh m2 = e.load_mesh("res/obj/sphere_s.obj");
   m2->set_lod_distance(0, 100);
-  e.add_mesh_lod("res/obj/sphere_s_lod_1.obj", m2, 200, 1);
   e.load_texture("res/tex/dds/wood_albedo.dds", m2);
   e.load_texture("res/tex/dds/wood_metalness.dds", m2, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/wood_roughness.dds", m2, texture_kind::ROUGHNESS);
-  e.load_texture("res/tex/dds/default_N.dds", m2, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/wood_N.dds", m2, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/wood_DI.dds", m2, texture_kind::DISPLACEMENT);
   e.load_texture("res/tex/dds/default_AO.dds", m2, texture_kind::AO);
-  m2->set_pos(glm::vec3(-0.1, 5, -1));
+  m2->set_pos(glm::vec3(-4, 1, 2));
 
   /*mesh m9 = e.load_mesh("res/obj/Objects_001.obj");
   m9->set_lod_distance(0, 100);
@@ -63,23 +73,50 @@ int main(void)
 
   mesh m1 = e.load_mesh("res/obj/sphere_s.obj");
   m1->set_lod_distance(0, 100);
-  e.add_mesh_lod("res/obj/sphere_s_lod_1.obj", m1, 200, 1);
   e.load_texture("res/tex/dds/T_Tile_White_D.dds", m1);
   e.load_texture("res/tex/dds/T_Tile_White_M.dds", m1, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Tile_White_R.dds", m1, texture_kind::ROUGHNESS);
   e.load_texture("res/tex/dds/T_Tile_White_N.dds", m1, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/T_Tile_White_DI.dds", m1, texture_kind::DISPLACEMENT);
   e.load_texture("res/tex/dds/T_Tile_White_AO.dds", m1, texture_kind::AO);
-  m1->set_pos(glm::vec3(-0.1, 5, 1.3));
+  m1->set_pos(glm::vec3(-8, 1, 0));
 
   mesh m5 = e.load_mesh("res/obj/sphere_s.obj");
   m5->set_lod_distance(0, 100);
-  e.add_mesh_lod("res/obj/sphere_s_lod_1.obj", m5, 200, 1);
   e.load_texture("res/tex/dds/T_Brick_Yellow_D.dds", m5);
   e.load_texture("res/tex/dds/T_Brick_Yellow_M.dds", m5, texture_kind::METALNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_R.dds", m5, texture_kind::ROUGHNESS);
   e.load_texture("res/tex/dds/T_Brick_Yellow_N.dds", m5, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/T_Brick_Yellow_DI.dds", m5, texture_kind::DISPLACEMENT);
   e.load_texture("res/tex/dds/T_Brick_Yellow_AO.dds", m5, texture_kind::AO);
-  m5->set_pos(glm::vec3(-0.1, 7, 1.3));
+  m5->set_pos(glm::vec3(-8, 1, 2));
+
+  mesh m11 = e.load_mesh("res/obj/sphere_s.obj");
+  m11->set_lod_distance(0, 100);
+  e.load_texture("res/tex/dds/rust_D.dds", m11);
+  e.load_texture("res/tex/dds/rust_M.dds", m11, texture_kind::METALNESS);
+  e.load_texture("res/tex/dds/rust_R.dds", m11, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/rust_N.dds", m11, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/default_AO.dds", m11, texture_kind::AO);
+  m11->set_pos(glm::vec3(3, 1, 0));
+
+  mesh m12 = e.load_mesh("res/obj/sphere_s.obj");
+  e.load_texture("res/tex/dds/rough_rock_D.dds", m12);
+  e.load_texture("res/tex/dds/rough_rock_R.dds", m12, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/rough_rock_N.dds", m12, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/rough_rock_DI.dds", m12, texture_kind::DISPLACEMENT);
+  e.load_texture("res/tex/dds/rough_rock_AO.dds", m12, texture_kind::AO);
+  m12->set_pos(glm::vec3(3, 1, 2));
+
+  mesh m14 = e.load_mesh("res/obj/statue.obj");
+  e.load_texture("res/tex/dds/marble_D.dds", m14);
+  e.load_texture("res/tex/dds/marble_M.dds", m14, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/marble_R.dds", m14, texture_kind::METALNESS);
+  e.load_texture("res/tex/dds/marble_N.dds", m14, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/marble_AO.dds", m14, texture_kind::AO);
+  m14->set_pos(glm::vec3(5, 0.26, 1));
+  m14->set_scale(glm::vec3(0.05));
+  m14->set_rotation(-1.65f, glm::vec3(1, 0, 0));
 
   camera cam = e.create_camera();
   e.set_current_camera(cam);

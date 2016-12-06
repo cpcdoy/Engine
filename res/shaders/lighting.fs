@@ -1,6 +1,6 @@
-#version 330 core
-//#define BRDF_FD_OREN_NAYAR
-#define BRDF_FD_LAMBERT
+#version 330
+#define BRDF_FD_OREN_NAYAR
+//#define BRDF_FD_LAMBERT
 
 vec3 sh_color;
 
@@ -23,13 +23,7 @@ const vec3 L22  = vec3(0.37, 0.31, 0.20);
 
 out vec4 frag_color;
 
-in VS_OUT {
-  vec3 frag_pos;
-  vec3 normal;
-  vec2 tex_coords;
-  vec4 frag_pos_light_space;
-} fs_in;
-
+in vec2 tex_coords;
 
 uniform mat4 light_space_matrix;
 
@@ -51,7 +45,7 @@ uniform mat4 projection;
 #define PI 3.1415926535897932
 #define ONE_OVER_PI 0.318309
 
-vec2 ss_coords = fs_in.tex_coords;
+vec2 ss_coords = tex_coords;
 
 vec3 metalness_roughness_baked_ao = texture2D(metalness_roughness_baked_ao_map, ss_coords).rgb;
 float metalness = clamp(metalness_roughness_baked_ao.r, 0.02, 0.99);//1.0;
@@ -59,7 +53,7 @@ float roughness = 1.0 - max(metalness_roughness_baked_ao.g, 0.001);//0.68;
 
 vec4 frag_info_fs = texture(g_position_depth, ss_coords).rgba;
 vec3 frag_pos_fs = (inverse(view) * vec4(frag_info_fs.rgb, 1.0)).rgb;
-float depth_fs = frag_info_fs.a;
+float depth_fs = frag_info_fs.z;
 vec3 normal_fs = texture(g_normal, ss_coords).rgb;
 vec4 frag_pos_fs_light_space = light_space_matrix * vec4(frag_pos_fs, 1.0);
 
@@ -111,7 +105,7 @@ vec3 fresnel_schlick(float cos_t, vec3 f0)
 
 float schlick_geometry(float n_dot_l, float n_dot_v, float roughness)
 {
-  float a = roughness + 1.0; //Disney: reducde "hotness"
+  float a = roughness + 1.0; //Disney: reduced "hotness"
   float k = a * a * 0.125;
   float one_minus_k = 1 - k;
 
@@ -232,11 +226,6 @@ void main()
     discard;*/
 
   vec3 light_color = vec3(0.98, 0.83, 0.64);
-  if (depth_fs == 1.0f)
-  {
-    frag_color = vec4(light_color, 1.0);
-    discard;
-  }
 
   sh_color = C1 * L22 * (normal_fs.x * normal_fs.x - normal_fs.y * normal_fs.y) +
              C3 * L20 * normal_fs.z * normal_fs.z +
@@ -250,13 +239,14 @@ void main()
   vec3 color = texture(diffuse_map, ss_coords).rgb;
   base_color = vec4(color, 1.0);
 
-  vec3 lightDir = mat3(view) * light_pos - frag_pos_fs;
+  vec3 lightDir = mat3(view) * (light_pos - frag_pos_fs);
   vec3 l = normalize(lightDir);
 
-  vec3 viewDirUnNorm = mat3(view) * view_pos - frag_pos_fs;
+  vec3 viewDirUnNorm = mat3(view) * (view_pos - frag_pos_fs);
   vec3 v = normalize(viewDirUnNorm);
+  vec3 v_pos = normalize(-frag_pos_fs);
 
-  vec3 n = normalize(normal_fs);
+  vec3 n = normal_fs;
 
   vec3 h = normalize(v + l);
 
@@ -272,10 +262,15 @@ void main()
 #endif
   vec3 fs = brdf_cook_torrance(v_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
 
-  vec3 ambient = vec3(0.2 * texture(ao_map, ss_coords).r * baked_ao);
+  vec3 ambient = vec3(0.2 * texture(ao_map, ss_coords).r);
 
   float shadow = compute_shadows(frag_pos_fs_light_space, n, l);
-  vec3 lighting = (ambient + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * sh_color * color; //(ambient + (1.0 - shadow) * (diffuse + specular)) * color;
+
+  vec3 vLTLight = l + n;
+  float fLTDot = pow(clamp(dot(v, -vLTLight), 0.0, 1.0), 4.f) * 5.f;
+  vec3 fLT = (fLTDot + ambient) * 0.5f;
+
+  vec3 lighting = (fLT + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * sh_color * color;
 
   frag_color = vec4(exposure(lighting), fd.a);
 }

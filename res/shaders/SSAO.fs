@@ -1,6 +1,8 @@
 #version 140
 
-out vec4 frag_color;
+out vec4 ssao_color;
+out vec4 sss_color;
+
 in vec2 tex_coords;
 
 uniform sampler2D g_position_depth;
@@ -37,6 +39,7 @@ void main()
   vec3 tangent = normalize(random_vec - normal * dot(random_vec, normal));
   vec3 bitangent = cross(normal, tangent);
   mat3 TBN = mat3(tangent, bitangent, normal);
+  //mat3 TBinvN = mat3(tangent, bitangent, -normal);
 
   float occlusion = 0.0;
   for (int i = 0; i < KERNEL_SIZE; ++i)
@@ -63,5 +66,5 @@ void main()
   }
   occlusion = 1.0 - (occlusion / KERNEL_SIZE);
 
-  frag_color = vec4(occlusion);
+  ssao_color = vec4(occlusion);
 }

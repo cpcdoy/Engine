@@ -56,6 +56,20 @@ namespace render_backend
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
       debug::log::get(debug::log_level::logERROR) << "SSAO Framebuffer not complete" << std::endl;
 
+    GLuint sss_texture;
+    // - SSAO color buffer
+    glGenTextures(1, &sss_texture);
+    glBindTexture(GL_TEXTURE_2D, sss_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, w, h, 0, GL_RED, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, sss_texture, 0);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      debug::log::get(debug::log_level::logERROR) << "SSS Framebuffer not complete" << std::endl;
+
+    GLuint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+    glDrawBuffers(2, attachments);
+
     static const GLfloat quad_vertex_buffer[] =
     {
       -1.0f, 1.0f, 0.0f,
@@ -93,10 +107,11 @@ namespace render_backend
     uniforms.push_back(glGetUniformLocation(program, "samples"));
     uniforms.push_back(glGetUniformLocation(program, "inv_proj"));
 
-        for (GLuint i = 0; i < 32; ++i)
-            glUniform3fv(glGetUniformLocation(program, ("samples[" + std::to_string(i) + "]").c_str()), 1, &ssao_kernel[i][0]);
+    for (GLuint i = 0; i < 32; ++i)
+      glUniform3fv(glGetUniformLocation(program, ("samples[" + std::to_string(i) + "]").c_str()), 1, &ssao_kernel[i][0]);
 
     opengl_pipeline_state::instance().add_state("ssao_texture", ssao_texture);
+    opengl_pipeline_state::instance().add_state("sss_texture", sss_texture);
 
     glUniform1i(glGetUniformLocation(program, "g_position_depth"), 0);
     glUniform1i(glGetUniformLocation(program, "g_normal"), 1);
@@ -109,7 +124,6 @@ namespace render_backend
   void opengl_shader_pass_ssao::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>&, std::shared_ptr<scene::camera> cam, long)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, ssao_fbo);
-    glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(program);
 
@@ -121,7 +135,6 @@ namespace render_backend
     glBindTexture(GL_TEXTURE_2D, noise_texture);
 
     glUniformMatrix4fv(uniforms[0], 1, GL_FALSE, &cam->get_projection_matrix()[0][0]);
-    //glUniformMatrix4fv(uniforms[2], 1, GL_FALSE, &glm::inverse(cam->get_projection_matrix())[0][0]);
 
     glBindVertexArray(quad_vao);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

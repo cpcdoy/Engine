@@ -18,19 +18,8 @@ namespace resource
 {
   struct gl_material
   {
-      GLuint albedo_tex = 0;
-      GLuint normal_tex = 0;
-      GLuint metalness_tex = 0;
-      GLuint roughness_tex = 0;
-      GLuint ao_tex = 0;
-
-      /*std::shared_ptr<streamed_texture> albedo_streamed_tex;
-      std::shared_ptr<streamed_texture> normal_streamed_tex;
-      std::shared_ptr<streamed_texture> metalness_streamed_tex;
-      std::shared_ptr<streamed_texture> roughness_streamed_tex;
-      std::shared_ptr<streamed_texture> ao_streamed_tex;*/
-
-      std::array<std::shared_ptr<streamed_texture>, 5> streamed_texs;
+      std::array<GLuint, 6> tex_ids;
+      std::array<std::shared_ptr<streamed_texture>, 6> streamed_texs;
 
       bool has_tex = false;
 
@@ -47,36 +36,13 @@ namespace resource
       void set_vao(GLuint vao);
       GLuint get_vao();
 
-      void set_texture(GLuint tex);
-      GLuint get_texture();
-
-      void set_normal_texture(GLuint tex);
-      GLuint get_normal_texture();
-
-      void set_roughness_texture(GLuint tex);
-      GLuint get_roughness_texture();
-
-      void set_metalness_texture(GLuint tex);
-      GLuint get_metalness_texture();
-
-      void set_ao_texture(GLuint tex);
-      GLuint get_ao_texture();
+      //GL tex ids
+      void set_texture(GLuint tex, texture_kind kind = texture_kind::ALBEDO);
+      GLuint get_texture(texture_kind kind = texture_kind::ALBEDO);
 
       //Streamed texs
-      void set_streamed_texture(std::shared_ptr<streamed_texture> tex);
-      std::shared_ptr<streamed_texture>& get_streamed_texture();
-
-      void set_streamed_normal_texture(std::shared_ptr<streamed_texture> tex);
-      std::shared_ptr<streamed_texture>& get_streamed_normal_texture();
-
-      void set_streamed_roughness_texture(std::shared_ptr<streamed_texture> tex);
-      std::shared_ptr<streamed_texture>& get_streamed_roughness_texture();
-
-      void set_streamed_metalness_texture(std::shared_ptr<streamed_texture> tex);
-      std::shared_ptr<streamed_texture>& get_streamed_metalness_texture();
-
-      void set_streamed_ao_texture(std::shared_ptr<streamed_texture> tex);
-      std::shared_ptr<streamed_texture>& get_streamed_ao_texture();
+      void set_streamed_texture(std::shared_ptr<streamed_texture> tex, texture_kind kind = texture_kind::ALBEDO);
+      std::shared_ptr<streamed_texture>& get_streamed_texture(texture_kind kind = texture_kind::ALBEDO);
 
       virtual void add_lod(int dist, int lod, std::shared_ptr<mesh>& mesh) override;
       virtual void query_texture_unloading() override;

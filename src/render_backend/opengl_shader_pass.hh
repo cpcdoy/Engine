@@ -20,9 +20,9 @@ namespace render_backend
   class opengl_shader_pass
   {
     public:
-      opengl_shader_pass(std::string vs, std::string fs)
+      opengl_shader_pass(std::string vs, std::string fs, std::string tcs = "", std::string tes = "", std::string gs = "", std::string cs = "")
       {
-        program = load_shaders(vs.c_str(), fs.c_str());
+        program = opengl_pipeline_state::instance().get_shader_manager().compile_shaders(vs, fs, tcs, tes, gs, cs);
 
         w = opengl_pipeline_state::instance().get_state_of("width");
         h = opengl_pipeline_state::instance().get_state_of("height");
@@ -30,8 +30,6 @@ namespace render_backend
 
       virtual ~opengl_shader_pass()
       {
-        glUseProgram(0);
-        glDeleteShader(program);
       }
 
       virtual void process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long rq_size = 1) = 0;

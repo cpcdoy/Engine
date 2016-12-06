@@ -7,5 +7,6 @@ enum texture_kind
   METALNESS,
   ROUGHNESS,
   AO,
+  DISPLACEMENT,
   ALL,
 };

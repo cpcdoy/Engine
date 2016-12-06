@@ -42,7 +42,7 @@ namespace render_backend
 
     //pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/no_lighting.vs", "res/shaders/no_lighting.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_shadow_map>("res/shaders/shadow_map.vs", "res/shaders/shadow_map.fs"));
-    pipeline.push_back(std::make_shared<opengl_shader_pass_geometry>("res/shaders/geometry.vs", "res/shaders/geometry.fs"));
+    pipeline.push_back(std::make_shared<opengl_shader_pass_geometry>("res/shaders/geometry.vs_t", "res/shaders/geometry.fs", "res/shaders/geometry.tcs", "res/shaders/geometry.tes"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_ssao>("res/shaders/SSAO.vs", "res/shaders/SSAO.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_lighting>("res/shaders/lighting.vs", "res/shaders/lighting.fs"));
     //pipeline.push_back(std::make_shared<opengl_shader_pass_atmosphere>("res/shaders/atmospheric_scattering.vs", "res/shaders/atmospheric_scattering.fs"));
@@ -62,6 +62,7 @@ namespace render_backend
     glCullFace(GL_BACK);
 
     glEnable(GL_FRAMEBUFFER_SRGB);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //glEnable(GL_MULTISAMPLE);
 
     return true;
@@ -85,17 +86,7 @@ namespace render_backend
   {
     auto gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
     auto tex = tex_streamer->query_streamed_texture(path);
-
-    if (k == texture_kind::ALBEDO)
-      gl_mesh->set_streamed_texture(tex);
-    else if (k == texture_kind::NORMAL)
-      gl_mesh->set_streamed_normal_texture(tex);
-    else if (k == texture_kind::METALNESS)
-      gl_mesh->set_streamed_metalness_texture(tex);
-    else if (k == texture_kind::ROUGHNESS)
-      gl_mesh->set_streamed_roughness_texture(tex);
-    else if (k == texture_kind::AO)
-      gl_mesh->set_streamed_ao_texture(tex);
+    gl_mesh->set_streamed_texture(tex, k);
   }
 
   void opengl_backend::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, unsigned char* tex, int width, int height, texture_kind k)
@@ -112,18 +103,7 @@ namespace render_backend
     glGenerateMipmap(GL_TEXTURE_2D);
 
     auto gl_mesh = std::static_pointer_cast<resource::gl_mesh>(mesh);
-    if (k == texture_kind::ALBEDO)
-      gl_mesh->set_texture(texture);
-    else if (k == texture_kind::NORMAL)
-      gl_mesh->set_normal_texture(texture);
-    else if (k == texture_kind::METALNESS)
-      gl_mesh->set_metalness_texture(texture);
-    else if (k == texture_kind::ROUGHNESS)
-      gl_mesh->set_roughness_texture(texture);
-    else if (k == texture_kind::AO)
-      gl_mesh->set_ao_texture(texture);
-
-    //debug::log::get(debug::logINDENT, 5) << "tex : " << texture << std::endl;
+    gl_mesh->set_texture(texture, k);
   }
 
   GLuint opengl_backend::generate_vao(std::shared_ptr<resource::gl_mesh> mesh)
