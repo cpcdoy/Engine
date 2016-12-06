@@ -72,7 +72,7 @@ namespace resource
 
   void resource_manager::load_texture(std::string path, std::shared_ptr<mesh>& mesh, texture_kind k)
   {
-    debug::log::get(debug::logINFO) << "Queuing the texture \"" << path << "\"" << " to be streamed" << std::endl;
+    debug::log::get(debug::logINFO) << "Queuing the texture \"" << path << "\"" << " for streaming" << std::endl;
     rb->set_compatible_texture(mesh, path, k);
   }
 

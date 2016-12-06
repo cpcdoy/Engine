@@ -266,9 +266,9 @@ void main()
 
   float shadow = compute_shadows(frag_pos_fs_light_space, n, l);
 
-  vec3 vLTLight = l + n * 1.5f;
-  float fLTDot = pow(clamp(dot(v, -vLTLight), 0.0, 1.0), 1.2f) * 1.2f;
-  vec3 fLT = (fLTDot + ambient) * 0.3f * vec3(1.2, 1.0, 1.0);
+  vec3 vLTLight = l + n;
+  float fLTDot = pow(clamp(dot(v, -vLTLight), 0.0, 1.0), 4.f) * 5.f;
+  vec3 fLT = (fLTDot + ambient) * 0.5f;
 
   vec3 lighting = (fLT + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * sh_color * color;
 

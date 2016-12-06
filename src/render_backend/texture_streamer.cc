@@ -186,7 +186,6 @@ namespace render_backend
               glFinish();
 
               i = 1 - i;
-              std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
             else
               std::this_thread::yield();

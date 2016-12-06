@@ -108,11 +108,15 @@ int main(void)
   e.load_texture("res/tex/dds/rough_rock_AO.dds", m12, texture_kind::AO);
   m12->set_pos(glm::vec3(3, 1, 2));
 
-  mesh m13 = e.load_mesh("res/obj/sphere_s.obj");
-  e.load_texture("res/tex/dds/fake_tex.dds", m13);
-  e.load_texture("res/tex/dds/default_N.dds", m13, texture_kind::NORMAL);
-  e.load_texture("res/tex/dds/default_AO.dds", m13, texture_kind::AO);
-  m13->set_pos(glm::vec3(5, 1, 0));
+  mesh m14 = e.load_mesh("res/obj/statue.obj");
+  e.load_texture("res/tex/dds/marble_D.dds", m14);
+  e.load_texture("res/tex/dds/marble_M.dds", m14, texture_kind::ROUGHNESS);
+  e.load_texture("res/tex/dds/marble_R.dds", m14, texture_kind::METALNESS);
+  e.load_texture("res/tex/dds/marble_N.dds", m14, texture_kind::NORMAL);
+  e.load_texture("res/tex/dds/marble_AO.dds", m14, texture_kind::AO);
+  m14->set_pos(glm::vec3(5, 0.26, 1));
+  m14->set_scale(glm::vec3(0.05));
+  m14->set_rotation(-1.65f, glm::vec3(1, 0, 0));
 
   camera cam = e.create_camera();
   e.set_current_camera(cam);
