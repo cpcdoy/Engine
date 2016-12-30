@@ -7,17 +7,19 @@
 # endif
 # include <iostream>
 # include <cstring>
+# include <condition_variable>
+# include <mutex>
 
+# include "../resource/streamed_texture.hh"
 # include "streamer.hh"
 # include "../resource/dds_loader.hh"
 # include "../resource/soil_loader.hh"
+# include "../event/events.hh"
 
 namespace resource
 {
   class streamed_texture;
 }
-
-#include "../resource/streamed_texture.hh"
 
 namespace render_backend
 {
@@ -48,6 +50,8 @@ namespace render_backend
       virtual void stream() override;
       void set_fake_window(GLFWwindow* w);
 
+      void operator()(const event::texture_streaming_event& event);
+
     protected:
       void generate_pbos(int size);
 
@@ -57,19 +61,23 @@ namespace render_backend
       GLFWwindow* main_window = nullptr;
 
       GLuint pbos[2];
+      int i = 0;
 
       GLuint fake_tex;
 
-      int max_tex_size = 2048*2048*4*sizeof(GLubyte);
+      int max_tex_size = 2048 * 2048 * 4 * sizeof(GLubyte);
 
       std::thread data_streamer_thread;
 
       std::shared_ptr<resource::dds_loader> sl;
 
       std::atomic<bool> end_streaming;
+      std::condition_variable cond_var;
+      std::mutex queue_mutex;
 
-      streaming_queue<GLuint> texture_binding_pool;
+      concurrent_queue<GLuint> texture_binding_pool;
 
       float anisotropy_level = 0.0f;
+      event::texture_streaming_event event;
   };
 }

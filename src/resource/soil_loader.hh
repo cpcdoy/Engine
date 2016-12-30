@@ -5,7 +5,7 @@
 
 # include "../debug/log.hh"
 # include "texture_loader.hh"
-# include "../include/SOIL/src/SOIL.h"
+# include "../../3rd_party/SOIL/src/SOIL.h"
 
 namespace resource
 {

@@ -2,14 +2,15 @@
 
 # include <algorithm>
 # include <memory>
+# include <cstdlib>
 
 # include "../resource/resource_manager.hh"
 # include "../render_backend/render_manager.hh"
 # include "../ui/ui_manager.hh"
 # include "../debug/debug_manager.hh"
 # include "../scene/scene_manager.hh"
-
 # include "../render_backend/backend_plugins.hh"
+# include "../event/events.hh"
 
 typedef std::shared_ptr<resource::mesh> mesh;
 typedef std::shared_ptr<scene::camera> camera;
@@ -39,6 +40,16 @@ namespace engine
 
       template<typename... Functions>
         void run(Functions... fs);
+
+      void operator()(const event::engine_stop_event& event)
+      {
+        auto circ = event.circumstances != "";
+        debug::log::get(event.error ? debug::logERROR : debug::logINFO) << "Engine shutdown" << (circ ? " with errors :" : "") << std::endl;
+        if (circ)
+          debug::log::get(debug::logINDENT, 5) << event.circumstances << std::endl;
+        if (event.error)
+          std::abort();
+      }
 
     private:
       std::shared_ptr<render_backend::render_manager> rb;

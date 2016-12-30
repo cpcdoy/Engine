@@ -9,7 +9,7 @@
 namespace render_backend
 {
   template <typename T>
-    class streamer : public util::streaming_queue<T>
+    class streamer : public util::concurrent_queue<T>
   {
     public:
       virtual void add_streamed_element(std::string path)

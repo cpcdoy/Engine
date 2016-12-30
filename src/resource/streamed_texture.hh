@@ -9,7 +9,20 @@
 # include <vector>
 # include <memory>
 
-# include "../render_backend/opengl_pipeline_state.hh"
+# include "../event/channel.hh"
+
+namespace resource
+{
+  class streamed_texture;
+}
+
+namespace event
+{
+  struct texture_streaming_event
+  {
+    resource::streamed_texture* tex;
+  };
+}
 
 namespace resource
 {
@@ -23,11 +36,11 @@ namespace resource
   class streamed_texture
   {
     public:
-      streamed_texture(GLuint fake_tex, std::string path, long unload_time=10);
+      streamed_texture(GLuint fake_tex, std::string path, long unload_time = 10);
       ~streamed_texture();
 
       GLuint query_texture();
-      
+
       void unload_if_unused();
 
       std::string get_path();
@@ -44,5 +57,7 @@ namespace resource
 
       long last_used;
       long unload_time = 10;
+
+      event::texture_streaming_event event;
   };
 }

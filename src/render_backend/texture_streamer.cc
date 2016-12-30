@@ -1,4 +1,5 @@
 #include "texture_streamer.hh"
+#include "opengl_pipeline_state.hh"
 
 namespace render_backend
 {
@@ -100,6 +101,8 @@ namespace render_backend
     : end_streaming(false)
   {
     sl = std::make_shared<resource::dds_loader>();
+
+    event::channel::add<event::texture_streaming_event>(this);
   }
 
   void texture_streamer::init_shared_context(GLFWwindow* main_window)
@@ -120,8 +123,6 @@ namespace render_backend
 
     if (!sl->load(t->get_path().c_str()))
       return;
-
-    queue.push(texture_streaming_job(t, sl));
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -151,6 +152,9 @@ namespace render_backend
 
     sl->clean();
     texture_binding_pool.push(texture);
+
+    queue.push(texture_streaming_job(t, sl));
+    cond_var.notify_one();
   }
 
   std::shared_ptr<resource::streamed_texture> texture_streamer::query_streamed_texture(std::string path)
@@ -170,9 +174,9 @@ namespace render_backend
           glfwMakeContextCurrent(tex_streamer_fake_window);
           glfwWindowHint(GLFW_VISIBLE, false);
 
-          int i = 0;
-
-          while (!end_streaming)
+          while (true)
+          {
+            std::unique_lock<std::mutex> lock(queue_mutex);
             if (!empty())
             {
               texture_streaming_job job = pop();
@@ -183,12 +187,11 @@ namespace render_backend
               job.process(pbos, i, tex);
               opengl_pipeline_state::instance().unlock();
 
-              glFinish();
-
               i = 1 - i;
             }
             else
-              std::this_thread::yield();
+              cond_var.wait(lock);
+          }
         });
   }
 
@@ -222,5 +225,10 @@ namespace render_backend
     unsigned int size = ((sl->get_width() + 3) / 4) * ((sl->get_height() + 3) / 4) * sl->get_block_size();
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, sl->get_format(), sl->get_width(), sl->get_height(), 0, size, sl->get_generated_texture());
     glGenerateMipmap(GL_TEXTURE_2D);
+  }
+
+  void texture_streamer::operator()(const event::texture_streaming_event& event)
+  {
+    query_texture_streaming_job(event.tex);
   }
 }

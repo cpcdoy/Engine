@@ -11,8 +11,8 @@ uniform sampler2D tex_noise;
 
 const float radius = 1.0;
 
-#define KERNEL_SIZE 16
-uniform vec3 samples[KERNEL_SIZE];
+uniform int kernel_size = 16;
+uniform vec3 samples[32];
 uniform vec2 screen_res;
 
 uniform mat4 projection;
@@ -42,7 +42,7 @@ void main()
   //mat3 TBinvN = mat3(tangent, bitangent, -normal);
 
   float occlusion = 0.0;
-  for (int i = 0; i < KERNEL_SIZE; ++i)
+  for (int i = 0; i < kernel_size; ++i)
   {
     vec3 sample = TBN * samples[i];
     sample = fragPos + sample * radius;
@@ -64,7 +64,7 @@ void main()
           sample_depth));
     occlusion += (sample_depth >= sample.z ? 1.0 : 0.0)  * range_check;
   }
-  occlusion = 1.0 - (occlusion / KERNEL_SIZE);
+  occlusion = 1.0 - (occlusion / kernel_size);
 
   ssao_color = vec4(occlusion);
 }

@@ -8,6 +8,7 @@ namespace resource
     fake_tex(fake_tex),
     unload_time(unload_time)
   {
+    event.tex = this;
   }
 
   streamed_texture::~streamed_texture()
@@ -21,7 +22,8 @@ namespace resource
     if (state == data_state::unloaded)
     {
       state = data_state::loading;
-      render_backend::opengl_pipeline_state::instance().query_texture_streaming_job(this);
+      //render_backend::opengl_pipeline_state::instance().query_texture_streaming_job(this);
+      event::channel::broadcast(event);
     }
     if (state == data_state::loaded)
       return loaded_tex;

@@ -15,6 +15,12 @@ namespace engine
     w = 800;
     h = 600;
     title = "Engine";
+
+    event::channel::add<event::engine_stop_event>(rb.get());
+    event::channel::add<event::engine_stop_event>(ui.get());
+    event::channel::add<event::engine_stop_event>(dm.get());
+    event::channel::add<event::engine_stop_event>(sm.get());
+    event::channel::add<event::engine_stop_event>(this);
   }
 
   engine::~engine()

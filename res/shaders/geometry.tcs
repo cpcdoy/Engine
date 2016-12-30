@@ -83,7 +83,7 @@ void main()
   vec3 mesh_pos = cam_pos - frag_pos[0];
   float cam_dist = dot(mesh_pos, mesh_pos);
 
-  tess_level = clamp((40.0 - cam_dist), 1.0, 3.0);
+  tess_level = clamp((10.0 - cam_dist), 1.0, 3.0);
 
   calc_positions();
 

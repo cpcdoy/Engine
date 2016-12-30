@@ -26,6 +26,6 @@ namespace engine
 
         ui->update_ui();
       }
-      debug::log::get(debug::logINDENT, 5) << "Finished" << std::endl;
+      event::channel::broadcast(event::engine_stop_event {});
     }
 }

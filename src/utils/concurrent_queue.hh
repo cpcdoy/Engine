@@ -1,29 +1,30 @@
 #pragma once
 
-//
-// Copyright (c) 2013 Juan Palacios juan.palacios.puyana@gmail.com
-// Subject to the BSD 2-Clause License
-// - see < http://opensource.org/licenses/BSD-2-Clause>
-//
-
 # include <queue>
 # include <thread>
 # include <mutex>
 # include <condition_variable>
+# include <memory>
 
 namespace util
 {
   template <typename T>
-    class streaming_queue
+    class concurrent_queue
     {
       public:
-        T pop() 
+        T pop()
         {
           std::unique_lock<std::mutex> mlock(mutex_);
-          while (queue.empty())
-          {
-            cond_.wait(mlock);
-          }
+          cond_.wait(mlock, [this] { return !queue.empty(); });
+          auto val = queue.front();
+          queue.pop();
+          return val;
+        }
+
+        T pop_stoppable()
+        {
+          std::unique_lock<std::mutex> mlock(mutex_);
+          cond_.wait(mlock, [this] { return !queue.empty() || stop; });
           auto val = queue.front();
           queue.pop();
           return val;
@@ -33,9 +34,8 @@ namespace util
         {
           std::unique_lock<std::mutex> mlock(mutex_);
           while (queue.empty())
-          {
             cond_.wait(mlock);
-          }
+
           item = queue.front();
           queue.pop();
         }
@@ -57,5 +57,7 @@ namespace util
         std::queue<T> queue;
         std::mutex mutex_;
         std::condition_variable cond_;
+
+        bool stop = false;
     };
 }

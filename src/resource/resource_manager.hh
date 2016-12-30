@@ -8,16 +8,17 @@
 # include <vector>
 # include <memory>
 
-namespace render_backend
-{
-  class render_manager;
-}
-
 # include "texture_kind.hh"
 # include "../render_backend/render_manager.hh"
 # include "mesh.hh"
 # include "loaders.hh"
 # include "../base/manager.hh"
+# include "../event/events.hh"
+
+namespace render_backend
+{
+  class render_manager;
+}
 
 namespace resource
 {
@@ -40,6 +41,11 @@ namespace resource
       unsigned char* load_texture(std::string path);
 
       std::vector<std::shared_ptr<mesh>> get_meshes();
+
+      void operator()(const event::engine_stop_event&)
+      {
+        debug::log::get(debug::logINFO) << "Resource manager shutting down..." << std::endl;
+      }
 
     private:
       std::vector<std::shared_ptr<mesh>> meshes;

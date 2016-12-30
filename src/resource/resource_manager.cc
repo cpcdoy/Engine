@@ -10,6 +10,7 @@ namespace resource
     tex_loaders.push_back(std::make_shared<soil_loader>());
 
     this->rb = rb;
+    event::channel::add<event::engine_stop_event>(this);
   }
 
   resource_manager::resource_manager(std::shared_ptr<render_backend::render_manager> rb)
@@ -34,6 +35,8 @@ namespace resource
       debug::log::get(debug::logINDENT, 5) << "Trying loader \"" << (*i)->get_loader_id()
                                            << "\"" << std::endl;
 
+      std::function<void()> f = [] {  };
+      event::channel::submit_job<event::model_loading_job>(f);
       if ((*i)->load(path.c_str()))
       {
         meshes.push_back(rb->generate_compatible_mesh((*i)->generate_mesh()));
@@ -43,7 +46,7 @@ namespace resource
     }
 
     debug::log::get(debug::logERROR) << "Resource loading of " << path << " failed"
-                                    << std::endl;
+                                     << std::endl;
     return nullptr;
   }
 

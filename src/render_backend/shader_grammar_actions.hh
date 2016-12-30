@@ -21,7 +21,7 @@ namespace render_backend
   template <>
   struct action_glsl<version>
   {
-    static void apply(const pegtl::action_input& in)
+    static void apply(const pegtl::action_input&)
     {
         auto pack = translator_state::emission_stream().unpack();
         translator_state::emission_stream().get_stream() << shader_generator<opengl_shader_backend>::generate_version(pack[0], shader_generator<opengl_shader_backend>::core);
@@ -40,7 +40,7 @@ namespace render_backend
   template <>
   struct action_glsl<vardec>
   {
-    static void apply(const pegtl::action_input& in)
+    static void apply(const pegtl::action_input&)
     {
         auto type_pack = translator_state::emission_stream().type_stream().unpack();
         auto pack = translator_state::emission_stream().unpack();

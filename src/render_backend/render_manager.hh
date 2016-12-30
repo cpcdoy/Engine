@@ -2,6 +2,7 @@
 
 # include "backend_plugins.hh"
 # include "../base/manager.hh"
+# include "../event/events.hh"
 
 namespace scene
 {
@@ -40,5 +41,10 @@ namespace render_backend
       void add_state(std::string s, long r);
 
       void set_clear_color(float r, float g, float b);
+
+      void operator()(const event::engine_stop_event&)
+      {
+        debug::log::get(debug::logINFO) << "Render manager shutting down..." << std::endl;
+      }
   };
 }

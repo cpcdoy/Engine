@@ -1,6 +1,8 @@
 #pragma once
 
 # include <memory>
+# include <string>
+# include <vector>
 
 # include "../debug/log.hh"
 # include "mesh.hh"
@@ -36,5 +38,6 @@ namespace resource
 
     protected:
       std::string loader_id = "virtual empty mesh loader";
+      std::vector<std::string> paths;
   };
 }

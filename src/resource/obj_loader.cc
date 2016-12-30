@@ -19,9 +19,12 @@ namespace resource
     out_bitangents.clear();
   }
 
-  void obj_loader::load_obj(const char *path)
+  bool obj_loader::load(const char *path)
   {
-    load(path);
+    load_obj(path);
+    //paths.push_back(std::string(path));
+
+    return true;
   }
 
   inline
@@ -52,7 +55,7 @@ namespace resource
     return m;
   }
 
-  bool obj_loader::load(const char* path)
+  void obj_loader::load_obj(const char* path)
   {
     glm::vec3 min_vertex;
     debug::log::get(debug::logINFO) << "Loading OBJ file " << path << std::endl;
@@ -66,7 +69,6 @@ namespace resource
     if (file == NULL)
     {
       debug::log::get(debug::logERROR) << "Cannot open the file (most likely not found): " << path << std::endl;
-      return false;
     }
 
     while (1)
@@ -125,7 +127,6 @@ namespace resource
           if (matches != 6)
             debug::log::get(debug::logERROR) << "File can't be processed, try triangularizing the faces"
               << std::endl;
-          return false;
         }
         vertex_indices.push_back(vertex_index[0]);
         vertex_indices.push_back(vertex_index[1]);
@@ -172,8 +173,6 @@ namespace resource
 
     //compute_tangent_basis();
     //average_tangents();
-
-    return true;
   }
 
   void obj_loader::compute_tangent_basis()

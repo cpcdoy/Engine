@@ -11,7 +11,7 @@ const float C4 = 0.886227;
 const float C5 = 0.247708;
 
 // Funston Beach Sunset
-const vec3 L00  = vec3(0.68, 0.69, 0.70);
+/*const vec3 L00  = vec3(0.68, 0.69, 0.70);
 const vec3 L1m1 = vec3(0.32, 0.37, 0.44);
 const vec3 L10  = vec3(0.17, 0.17, 0.17);
 const vec3 L11  = vec3(0.45, 0.42, 0.34);
@@ -19,7 +19,17 @@ const vec3 L2m2 = vec3(0.17, 0.17, 0.15);
 const vec3 L2m1 = vec3(0.08, 0.09, 0.10);
 const vec3 L20  = vec3(0.03, 0.03, 0.01);
 const vec3 L21  = vec3(0.16, 0.14, 0.10);
-const vec3 L22  = vec3(0.37, 0.31, 0.20);
+const vec3 L22  = vec3(0.37, 0.31, 0.20);*/
+
+const vec3 L00  = vec3(   0.3168843f,  0.3073441f,  0.3495361f);
+const vec3 L1m1 = vec3(   0.3711289f,  0.3682168f,  0.4292092f);
+const vec3 L10  = vec3(  -0.0034406f, -0.0031891f, -0.0039797f);
+const vec3 L11  = vec3(  -0.0084237f, -0.0087049f, -0.0116718f);
+const vec3 L2m2 = vec3(  -0.0190313f, -0.0192164f, -0.0250836f);
+const vec3 L2m1 = vec3(  -0.0110002f, -0.0102972f, -0.0119522f);
+const vec3 L20  = vec3(  -0.2787319f, -0.2752035f, -0.3184335f);
+const vec3 L21  = vec3(   0.0011448f,  0.0009613f,  0.0008975f);
+const vec3 L22  = vec3( -0.2419374f, -0.2410955f, -0.2842899f );
 
 out vec4 frag_color;
 
@@ -181,11 +191,11 @@ float compute_shadows(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
   //float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
   // PCF
   float shadow = 0.0;
-  vec2 texelSize = 1.0 / textureSize(shadow_map, 0);
+  vec2 texel_size = 1.0 / textureSize(shadow_map, 0);
   for(int x = -1; x <= 1; ++x)
     for(int y = -1; y <= 1; ++y)
     {
-      float pcfDepth = texture(shadow_map, projCoords.xy + vec2(x, y) * texelSize).r;
+      float pcfDepth = texture(shadow_map, projCoords.xy + vec2(x, y) * texel_size).r;
       shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
     }
   shadow /= 9.0;
@@ -233,10 +243,10 @@ void main()
              2.0 * C1 * (L2m2 * normal_fs.x * normal_fs.y + L21 * normal_fs.x * normal_fs.z + L2m1 * normal_fs.y * normal_fs.z) +
              2.0 * C2 * (L11 * normal_fs.x + L1m1 * normal_fs.y + L10 * normal_fs.z);
 
-  sh_color *= 2.5f;
+  sh_color *= 3.5f;
 
   vec3 baked_ao = vec3(metalness_roughness_baked_ao.b);
-  vec3 color = texture(diffuse_map, ss_coords).rgb;
+  vec3 color = pow(texture(diffuse_map, ss_coords).rgb, vec3(2.2));
   base_color = vec4(color, 1.0);
 
   vec3 lightDir = mat3(view) * (light_pos - frag_pos_fs);
@@ -262,13 +272,13 @@ void main()
 #endif
   vec3 fs = brdf_cook_torrance(v_dot_h, n_dot_h, n_dot_v, n_dot_l, roughness);
 
-  vec3 ambient = vec3(0.2 * texture(ao_map, ss_coords).r);
+  vec3 ambient = vec3(0.2 * texture(ao_map, ss_coords).r) * baked_ao;
 
   float shadow = compute_shadows(frag_pos_fs_light_space, n, l);
 
   vec3 vLTLight = l + n;
   float fLTDot = pow(clamp(dot(v, -vLTLight), 0.0, 1.0), 4.f) * 5.f;
-  vec3 fLT = (fLTDot + ambient) * 0.5f;
+  vec3 fLT = (fLTDot + ambient) * 0.5f * vec3(1.2, 1.0, 1.0);
 
   vec3 lighting = (fLT + ((fd.rgb * fd.a + fs) * n_dot_l * (1.0 - shadow))) * light_color * sh_color * color;
 

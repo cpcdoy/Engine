@@ -6,6 +6,7 @@
 # include "../base/manager.hh"
 # include "base_ui.hh"
 # include "uis.hh"
+# include "../event/events.hh"
 
 namespace ui
 {
@@ -22,5 +23,10 @@ namespace ui
       void set_backend_context_version(int major, int minor);
 
       std::shared_ptr<base_ui> get_ui();
+
+      void operator()(const event::engine_stop_event&)
+      {
+        debug::log::get(debug::logINFO) << "UI manager shutting down..." << std::endl;
+      }
   };
 }
