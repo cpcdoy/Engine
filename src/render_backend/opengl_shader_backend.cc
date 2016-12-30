@@ -3,6 +3,7 @@
 #include "../utils/utils.hh"
 
 #include "opengl_shader_backend.hh"
+#include "../event/events.hh"
 
 namespace render_backend
 {
@@ -45,11 +46,7 @@ namespace render_backend
   void opengl_shader_manager::set_state(enum shader_stage stage)
   {
     current_shader_type_str = shader_stages_info[stage].name;
-    if (stage == vertex || stage == fragment)
-      is_stage_optimizable = true;
-    else
-      is_stage_optimizable = false;
-
+    is_stage_optimizable = stage == vertex || stage == fragment;
     current_stage = shader_stages_info[stage].gl_id;
   }
 
@@ -94,7 +91,7 @@ namespace render_backend
       }
       else if (is_stage_optimizable)
       {
-        debug::log::get(debug::logERROR) << "Could not optimize " << current_shader_type_str << " shader:" << std::endl;
+        debug::log::get(debug::logWARN) << "Could not optimize " << current_shader_type_str << " shader:" << std::endl;
         debug::log::get(debug::logINDENT, 5 + 6) << glslopt_get_log(shader_opt) << std::endl;
       }
 
@@ -127,6 +124,8 @@ namespace render_backend
     }
 
     shader_ids[stage] = shader_id;
+
+    return true;
   }
 
   GLuint opengl_shader_manager::link_program()
@@ -157,7 +156,13 @@ namespace render_backend
       id = 0;
     }
 
-    assert(!opengl_shader_backend_compilation_error);
+    if (opengl_shader_backend_compilation_error)
+    {
+      event::engine_stop_event event;
+      event.error = true;
+      event.circumstances = "Could not link shaders, see the above errors.";
+      event::channel::broadcast(event);
+    }
 
     programs.push_back(program_id);
     return program_id;

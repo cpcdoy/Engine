@@ -128,4 +128,9 @@ namespace render_backend
       glDrawArrays(GL_PATCHES, 0, m->get_vertices().size());
     }
   }
+
+  void opengl_shader_pass_geometry::operator()(const event::performance_statistics_event&)
+  {
+
+  }
 }

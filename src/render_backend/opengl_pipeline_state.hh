@@ -9,8 +9,8 @@
 # include <map>
 # include <mutex>
 
-# include "texture_streamer.hh"
 # include "opengl_shader_backend.hh"
+# include "texture_streamer.hh"
 
 namespace render_backend
 {

@@ -13,6 +13,7 @@ namespace render_backend
     caps.push_back("GL_ARB_sparse_texture");
     caps.push_back("GL_ARB_uniform_buffer_object");
     caps.push_back("GL_ARB_shader_storage_buffer_object");
+    caps.push_back("GL_ARB_shader_draw_parameters");
 
     return caps;
   }

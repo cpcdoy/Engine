@@ -10,6 +10,7 @@
 # include <fstream>
 # include <algorithm>
 
+# include "opengl_pipeline_state.hh"
 # include "../scene/camera.hh"
 //# include "texture_streamer.hh"
 # include "render_backend.hh"
@@ -19,9 +20,8 @@
 
 # include "opengl_passes.hh"
 
-#include "shader_translator.hh"
+# include "shader_translator.hh"
 
-//# include "opengl_pipeline_state.hh"
 
 namespace render_backend
 {
@@ -75,6 +75,5 @@ namespace render_backend
 
       shader_generator<opengl_shader_backend> sg;
       //shader_parser<shader_backend::glsl> sp;
-
   };
 }

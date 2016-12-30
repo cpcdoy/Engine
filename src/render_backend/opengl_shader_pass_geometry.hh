@@ -11,6 +11,7 @@ namespace render_backend
     public:
       opengl_shader_pass_geometry(std::string vs, std::string fs, std::string tcs = "", std::string tes = "");
       virtual void process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long) override;
+      virtual void operator()(const event::performance_statistics_event& event) override;
 
     private:
       GLuint g_buffer;

@@ -65,7 +65,7 @@ namespace render_backend
     glUniform1i(uniforms[13], 5);
   }
 
-  void opengl_shader_pass_lighting::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long rq_size)
+  void opengl_shader_pass_lighting::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>&, std::shared_ptr<scene::camera> cam, long)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_DEPTH_BUFFER_BIT);
@@ -112,5 +112,9 @@ namespace render_backend
 
     glBindVertexArray(quad_vao);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+  }
+
+  void opengl_shader_pass_lighting::operator()(const event::performance_statistics_event&)
+  {
   }
 }

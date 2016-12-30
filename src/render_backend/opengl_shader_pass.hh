@@ -13,7 +13,8 @@
 # include "../resource/gl_mesh.hh"
 # include "../scene/camera.hh"
 //# include "../resource/streamed_texture.hh"
-//# include "opengl_pipeline_state.hh"
+# include "opengl_pipeline_state.hh"
+# include "../event/events.hh"
 
 namespace render_backend
 {
@@ -26,6 +27,8 @@ namespace render_backend
 
         w = opengl_pipeline_state::instance().get_state_of("width");
         h = opengl_pipeline_state::instance().get_state_of("height");
+
+        event::channel::add<event::performance_statistics_event>(this);
       }
 
       virtual ~opengl_shader_pass()
@@ -33,6 +36,8 @@ namespace render_backend
       }
 
       virtual void process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>& render_queue, std::shared_ptr<scene::camera> cam, long rq_size = 1) = 0;
+
+      virtual void operator()(const event::performance_statistics_event& event) = 0;
 
     protected:
       std::vector<GLint> uniforms;

@@ -119,6 +119,8 @@ namespace render_backend
 
     uniforms.push_back(glGetUniformLocation(program, "screen_res"));
     glUniform2fv(uniforms.back(), 1, &glm::vec2(w, h)[0]);
+
+    uniforms.push_back(glGetUniformLocation(program, "kernel_size"));
   }
 
   void opengl_shader_pass_ssao::process_pass(std::vector<std::shared_ptr<resource::gl_mesh>>&, std::shared_ptr<scene::camera> cam, long)
@@ -134,9 +136,21 @@ namespace render_backend
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, noise_texture);
 
+    glUniform1i(uniforms.back(), kernel_size);
     glUniformMatrix4fv(uniforms[0], 1, GL_FALSE, &cam->get_projection_matrix()[0][0]);
 
     glBindVertexArray(quad_vao);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+  }
+
+  void opengl_shader_pass_ssao::operator()(const event::performance_statistics_event& event)
+  {
+    auto fps = event.fps;
+    if (fps <= 20)
+      kernel_size = 8;
+    else if (fps <= 40)
+      kernel_size = 16;
+    else
+      kernel_size = 32;
   }
 }

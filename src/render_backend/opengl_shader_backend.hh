@@ -2,6 +2,7 @@
 
 # include <map>
 # include <array>
+# include <vector>
 
 # include "../../3rd_party/glsl-optimizer/src/glsl/glsl_optimizer.h"
 

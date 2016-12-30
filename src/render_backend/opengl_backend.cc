@@ -42,7 +42,10 @@ namespace render_backend
 
     //pipeline.push_back(std::make_shared<opengl_shader_pass_no_lighting>("res/shaders/no_lighting.vs", "res/shaders/no_lighting.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_shadow_map>("res/shaders/shadow_map.vs", "res/shaders/shadow_map.fs"));
+    // PN-Triangles tessellation
     pipeline.push_back(std::make_shared<opengl_shader_pass_geometry>("res/shaders/geometry.vs_t", "res/shaders/geometry.fs", "res/shaders/geometry.tcs", "res/shaders/geometry.tes"));
+    // Basic interpolation tessellation
+    //pipeline.push_back(std::make_shared<opengl_shader_pass_geometry>("res/shaders/geometry.vs_s", "res/shaders/geometry.fs", "res/shaders/geometry.tcs_s", "res/shaders/geometry.tes_s"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_ssao>("res/shaders/SSAO.vs", "res/shaders/SSAO.fs"));
     pipeline.push_back(std::make_shared<opengl_shader_pass_lighting>("res/shaders/lighting.vs", "res/shaders/lighting.fs"));
     //pipeline.push_back(std::make_shared<opengl_shader_pass_atmosphere>("res/shaders/atmospheric_scattering.vs", "res/shaders/atmospheric_scattering.fs"));
@@ -63,24 +66,24 @@ namespace render_backend
 
     glEnable(GL_FRAMEBUFFER_SRGB);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    //glEnable(GL_MULTISAMPLE);
+    glEnable(GL_MULTISAMPLE);
 
     return true;
   }
 
-  void opengl_backend::set_clear_color(float r, float g, float b)
+  void opengl_backend::set_clear_color(float, float, float)
   {
     //add_state<glm::vec3>("clear_color", glm::vec3(r, g, b));
   }
 
   std::shared_ptr<resource::mesh>
-  opengl_backend::generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh)
-  {
-    std::shared_ptr<resource::gl_mesh> gl_mesh = std::make_shared<resource::gl_mesh>(mesh);
-    gl_mesh->set_vao(generate_vao(gl_mesh));
+    opengl_backend::generate_compatible_mesh(std::shared_ptr<resource::mesh> mesh)
+    {
+      std::shared_ptr<resource::gl_mesh> gl_mesh = std::make_shared<resource::gl_mesh>(mesh);
+      gl_mesh->set_vao(generate_vao(gl_mesh));
 
-    return gl_mesh;
-  }
+      return gl_mesh;
+    }
 
   void opengl_backend::set_compatible_texture(std::shared_ptr<resource::mesh>& mesh, std::string path, texture_kind k)
   {
@@ -188,32 +191,38 @@ namespace render_backend
 
   void opengl_backend::render(long rq_size)
   {
-		static double elapsedTime = 0;
+    static double elapsed_time = 0;
     static int nb_frames = 0;
     nb_frames++;
 
-		double currentTime = glfwGetTime();
-    for (auto pass : pipeline)
-    {
-      opengl_pipeline_state::instance().lock();
-      pass->process_pass(render_queue, cam, rq_size);
-      opengl_pipeline_state::instance().unlock();
-    }
+    double currentTime = glfwGetTime();
 
-		if (currentTime - elapsedTime >= 1.0)
-		{
+    opengl_pipeline_state::instance().lock();
+    for (auto pass : pipeline)
+      pass->process_pass(render_queue, cam, rq_size);
+    opengl_pipeline_state::instance().unlock();
+
+    if (currentTime - elapsed_time >= 1.0)
+    {
       double ms = 1000.0 / double(nb_frames);
 
       debug::log::get(debug::logINFO) << ms << " ms --> " << nb_frames << " fps" << std::endl;
-			nb_frames = 0;
-			elapsedTime += 1.0;
-		}
+      if (nb_frames <= 60)
+      {
+        event::performance_statistics_event event;
+        event.fps = nb_frames;
+        event::channel::broadcast(event);
+      }
+
+      nb_frames = 0;
+      elapsed_time += 1.0;
+    }
   }
 
   void opengl_backend::update_renderer()
   {
     cam->update(opengl_pipeline_state::instance().get_state_of("width"),
-                opengl_pipeline_state::instance().get_state_of("height"));
+        opengl_pipeline_state::instance().get_state_of("height"));
   }
 
   void opengl_backend::add_state(std::string s, long r)

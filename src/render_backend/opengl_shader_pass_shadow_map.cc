@@ -63,4 +63,14 @@ namespace render_backend
 
     glViewport(0, 0, w, h);
   }
+
+  void opengl_shader_pass_shadow_map::operator()(const event::performance_statistics_event& event)
+  {
+    if (event.fps <= 20)
+      shadow_map_res = 512;
+    else if (event.fps <= 40)
+      shadow_map_res = 1024;
+    else
+      shadow_map_res = 4096;
+  }
 }
