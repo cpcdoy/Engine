@@ -1,0 +1,39 @@
+#version 410
+layout (vertices = 3) out;
+
+uniform vec3 cam_pos;
+
+in vec3 frag_pos[];
+in vec2 tex_coords[];
+in vec3 normal[];
+
+out vec3 frag_pos_tcs[];
+out vec2 tex_coords_tcs[];
+out vec3 normal_tcs[];
+
+
+float GetTessLevel(float Distance0, float Distance1)
+{
+  float AvgDistance = (Distance0 + Distance1) / 2.0;
+
+  if (AvgDistance <= 2.0)
+    return 3.0;
+  else
+    return 1.0;
+}
+
+void main()
+{
+  tex_coords_tcs[gl_InvocationID] = tex_coords[gl_InvocationID];
+  normal_tcs[gl_InvocationID] = normal[gl_InvocationID];
+  frag_pos_tcs[gl_InvocationID] = frag_pos[gl_InvocationID];
+
+  float EyeToVertexDistance0 = distance(cam_pos, frag_pos_tcs[0]);
+  float EyeToVertexDistance1 = distance(cam_pos, frag_pos_tcs[1]);
+  float EyeToVertexDistance2 = distance(cam_pos, frag_pos_tcs[2]);
+
+  gl_TessLevelOuter[0] = GetTessLevel(EyeToVertexDistance1, EyeToVertexDistance2);
+  gl_TessLevelOuter[1] = GetTessLevel(EyeToVertexDistance2, EyeToVertexDistance0);
+  gl_TessLevelOuter[2] = GetTessLevel(EyeToVertexDistance0, EyeToVertexDistance1);
+  gl_TessLevelInner[0] = gl_TessLevelOuter[2];
+}
