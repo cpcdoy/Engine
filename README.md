@@ -19,8 +19,10 @@ A 3D real-time rendering Engine
 5. [Appendix](#Appendix)
 
 <a name="Build"/>
-## Build
-### Dependencies
+
+##  Build
+
+###  Dependencies
 
 Ubuntu:
 
@@ -61,11 +63,13 @@ or
 `make` or `make check`
 
 <a name="TODO"/>
+
 ## Task list
 
 Check the TO DO list [here](https://trello.com/b/B5hQOW6n/engine)
 
 <a name="Archi"/>
+
 ## Architecture
 Here is the current architecture:
 
@@ -73,11 +77,13 @@ Here is the current architecture:
 
 
 <a name="Example"/>
+
 ## Example usage
 
 [Here](https://github.com/cpcdoy/Engine/blob/dev/tests/debug/main.cc), you can take a look at an example.
 
 <a name="Appendix"/>
+
 ## Appendix
 
 ### Articles
