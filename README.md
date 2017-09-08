@@ -86,6 +86,11 @@ Here is the current architecture:
 
 ## Appendix
 
+### In-Engine screenshot
+
+![Scene with different materials](/images/materials_screen1.png)
+
+
 ### Articles
 
 - [SSAO](https://hackercorp.eu/ssao.html)
