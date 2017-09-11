@@ -88,7 +88,10 @@ Here is the current architecture:
 
 ### In-Engine screenshot
 
+- Different materials:
+
 ![Scene with different materials](/images/materials_screen1.png)
+
 
 
 ### Articles
