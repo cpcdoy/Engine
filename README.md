@@ -5,7 +5,9 @@
 
 
 
-A 3D real-time rendering Engine
+A 3D real-time rendering Engine.
+
+It features advanced rendering techniques such as microfacet-based lighting models like Cook-Torrance and Oren-Nayar for Physically Based Rendering using roughness, metalness, albedo, normal and baked Ambient Occlusion maps. Also, it features Spherical Harmonics lighting, asynchronous texture streaming, shadow mapping, SSAO, an adaptive LOD tessellation system and other such techniques.
 
 ## Table of content
 1. [Build](#Build)
