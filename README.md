@@ -92,6 +92,9 @@ Here is the current architecture:
 
 ![Scene with different materials](/images/materials_screen1.png)
 
+- Vegetation with debug targets:
+
+![Scene with different materials](/images/screen2.png)
 
 
 ### Articles
